@@ -1,0 +1,97 @@
+#root {
+    margin: 0;
+    padding: 0;
+}
+
+#main {
+    width: 100vw;
+    background-color: #016ca1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#main>div {
+    width: 901px;
+}
+
+.board {
+    width: 100%;
+    height: 793px;
+    background-image: url(../assets/map/catanUniverse.jpg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+.actionPanel {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.ownCards {
+    width: 500px;
+    height: 70px;
+    border-radius: 10px;
+    background-color: #eee;
+}
+
+.actions {
+    width: 350px;
+    height: 90px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.actions button {
+    width: 50px;
+    height: 50px;
+    background-color: #eee;
+}
+
+.actions button div {
+    width: 100%;
+    height: 100%;
+}
+
+.development div {
+    background-color: bisque;
+    /* background-image: ; */
+}
+
+.buildRoad div {
+    background-image: url(../assets/playerBlue/blueRoad.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+.buildVillage div {
+    background-image: url(../assets/playerBlue/blueVillage.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+.buildCity div {
+    background-image: url(../assets/playerBlue/blueCity.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+.size-6 {
+    width: 100%;
+    height: 100%;
+    fill: #123d92;
+}
+
+.playerPanel {
+    width: 300px;
+    background-color: blue;
+}
