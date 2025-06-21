@@ -1,13 +1,13 @@
 // 플레이어의 행동(건설, 도둑 이동, 교환 등)을 처리하는 로직입니다.
 
 //1) 플레이어 건설
-const useBuildActions = ({players, setPlayers}) => {
+export const useBuildActions = ({players, setPlayers}) => {
     const buildSettlement = (playerId, location, adjacentHexes) => {
         const cost = {
-            '나무' : 1,
-            '벽돌' : 1,
-            '밀' : 1,
-            '양' : 1,
+            나무 : 1,
+            벽돌 : 1,
+            밀 : 1,
+            양 : 1,
         };
 
         const player = players.find(p => p.id === playerId);
@@ -16,8 +16,75 @@ const useBuildActions = ({players, setPlayers}) => {
             throw new Error('이미 건물이 있는 위치입니다.');
         }
 
-        const hasResources = Object.entries(cost).every([type, amount]) => (player.resources[type])
-    }
+        const hasResources = Object.entries(cost).every(
+            ([type, amount]) => (player.resources[type] || 0) >= amount
+        );
+
+        if(!hasResources) {
+            throw new Error('자원이 부족합니다.');
+        }
+
+        const newBuilding = {
+            type : 'settlement', location, adjacentHexes
+        };
+
+        const updatedPlayer = {
+            ...player,
+            resources : Object.fromEntries(
+                Object.entries(player.resources).map(([type, value]) => [
+                    type,
+                    value - (cost[type] || 0),
+                ])
+            ),
+
+            buildings: [...player.buildings, newBuilding],
+        };
+
+        setPlayers(players.map(p => p.id === playerId ? updatedPlayer : p));
+    };
+
+    //마을을 도시로 바꿀때 로직
+    const upgradeToCity = (playerId, location) => {
+        const cost = {
+            밀 : 2, 
+            철 : 3,
+        };
+
+        const player = players.find(p => p.id === playerId);
+        const index = player.buildings.findIndex(b => b.location === location && b.type === 'settlement');
+        if(index === -1) {
+            throw new Error('정착지가 없습니다.');
+        };
+
+        const hasResources = Object.entries(cost).every(
+            ([type, amount]) => (player.resources[type] || 0) >= amount
+        );
+        if(!hasResources) {
+            throw new Error('자원이 부족합니다.');
+        }
+
+        const updatedBuildings = [...player.buildings];
+        updatedBuildings[index].type = 'city';
+
+        const updatedPlayer = {
+            ...player,
+            resources: Object.fromEntries(
+                Object.entries(player.resources).map(([type, value]) => [
+                    type,
+                    value - (cost[type] || 0),
+                ])
+            ),
+            buildings : updatedBuildings,
+        };
+
+        setPlayers(players.map(p => (p.id === playerId ? updatedPlayer : p)));
+    };
+
+    return {
+        buildSettlement, upgradeToCity
+    };
+
+
 }
 
 
@@ -101,3 +168,7 @@ const rollDice = () => {
         }
     })
 }
+
+
+
+//3) 자원 교환
