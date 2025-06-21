@@ -1,11 +1,14 @@
 #root {
     margin: 0;
     padding: 0;
+    font-family: 'KakaoSmallSans';
+    font-weight: 400;
+    font-style: normal;
 }
 
 #main {
     width: 100vw;
-    background-color: #016ca1;
+    background-color: #1369a8;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -90,32 +93,54 @@
 .size-6 {
     width: 100%;
     height: 100%;
-    fill: #123d92;
+    fill: #1369a8;
 }
 
 .playerPanel {
     width: 300px;
-    background-color: blue;
+    background-color: #1369a8;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
 }
 
-.log {
-    width: 90%;
-    height: 40%;
+.playerPanel div {
     background-color: #fff;
+    border-radius: 10px;
+    width: 90%;
+}
+
+.log {
+    height: 40%;
+    text-align: center;
+    font-size: 24px;
+    color: #000;
 }
 
 .otherPlayers {
-    width: 90%;
     height: 30%;
-    background-color: #fff;
+}
+
+.otherPlayers>div {
+    width: 100%;
+    height: 25%;
+    box-sizing: border-box;
+}
+
+.bank {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.size-5 {
+    width: 100%;
+    height: 70%;
+    fill: #a85613;
 }
 
 .myProfile {
-    width: 90%;
     height: 25%;
-    background-color: #fff;
 }
