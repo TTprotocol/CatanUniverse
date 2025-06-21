@@ -1,8 +1,20 @@
 // 플레이어의 행동(건설, 도둑 이동, 교환 등)을 처리하는 로직입니다.
 
+//1) 플레이어 건설
+const useBuildActions = ({players, setPlayers}) => {
+    const buildSettlement = (playerId, location, adjacentHexes) => {
+        const cost = {
+            '나무' : 1,
+            '벽돌' : 1,
+            '밀' : 1,
+            '양' : 1,
+        };
 
+        const player = players.find(p => p.id === playerId);
 
-
+        if
+    }
+}
 
 
 
