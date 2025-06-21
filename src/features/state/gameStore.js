@@ -115,6 +115,12 @@ const useGameStore = create(
 			// 게임 상태 초기화 함수
 			initAll: () =>
 				set({
+					currentPlayerIndex: 0,
+					players: [],
+					board: {
+						tiles: [],
+						robber: null,
+					},
 					log: [],
 					dice1: null,
 					dice2: null,
