@@ -167,5 +167,3 @@ export default useGameStore;
  * });
  *
  */
-
-// 테스트2
