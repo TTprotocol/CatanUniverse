@@ -60,8 +60,10 @@
 }
 
 .development div {
-    background-color: bisque;
-    /* background-image: ; */
+    background-image: url(../assets/progCard/progressiveCard-back.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
 }
 
 .buildRoad div {
