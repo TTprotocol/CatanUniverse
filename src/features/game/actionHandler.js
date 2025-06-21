@@ -12,7 +12,11 @@ const useBuildActions = ({players, setPlayers}) => {
 
         const player = players.find(p => p.id === playerId);
 
-        if
+        if(player.buildings.some(b => b.location === location)) {
+            throw new Error('이미 건물이 있는 위치입니다.');
+        }
+
+        const hasResources = Object.entries(cost).every([type, amount]) => (player.resources[type])
     }
 }
 
