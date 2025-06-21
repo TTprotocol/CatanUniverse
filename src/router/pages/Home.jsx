@@ -40,7 +40,7 @@ const Home = () => {
 					</section>
 				</div>
 				<section className="playerPanel">
-					<div className="Log"></div>
+					<div className="log"></div>
 					<div className="otherPlayers"></div>
 					<div className="myProfile"></div>
 				</section>

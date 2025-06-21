@@ -96,4 +96,26 @@
 .playerPanel {
     width: 300px;
     background-color: blue;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.log {
+    width: 90%;
+    height: 40%;
+    background-color: #fff;
+}
+
+.otherPlayers {
+    width: 90%;
+    height: 30%;
+    background-color: #fff;
+}
+
+.myProfile {
+    width: 90%;
+    height: 25%;
+    background-color: #fff;
 }
