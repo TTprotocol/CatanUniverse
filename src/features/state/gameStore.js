@@ -4,6 +4,8 @@
 import { create } from "zustand"; // 상태 관리를 위한 라이브러리
 import { persist } from "zustand/middleware";
 
+import distributeResourcesByDice from "../game/resourceDistributor";
+
 // set : 상태 업데이트할 때 사용
 // get : 현재 상태를 가져올 때 사용
 const useGameStore = create(
@@ -61,7 +63,9 @@ const useGameStore = create(
 				const dice2 = Math.floor(Math.random() * 6 + 1);
 				const dice = dice1 + dice2;
 				set({ dice1, dice2, dice }); // set({ dice1, dice2, dice }): dice 상태를 새 값으로 업데이트
+
 				// 주사위 숫자에 따라 자원 분배 로직을 이후에 연결
+				resourceDistributor(diceSum, hexes, players, setPlayers, robberHex);
 
 				// 🎲 로그 저장
 				get().addLog(
@@ -90,18 +94,14 @@ const useGameStore = create(
 			// 정착지를 건설할 때 사용하는 함수
 			// get()으로 현재 상태 확인, set()으로 업데이트
 			buildSettlement: (position) => {
-				const index = get().currentPlayerIndex;
-				const players = [...get().players]; // 기존 배열 복사
+				const index = get().currentPlayerIndex; // 현재 플레이어의 인덱스
+				const players = [...get().players]; // 기존 플레이어 배열 복사
 				players[index].settlements.push(position); // 현재 플레이어의 정착지(마을) 추가
 				players[index].points += 1; // 점수 1점 추가
 
 				// 로그 저장
 				get().addLog(
-					`${
-						get().players[get().currentPlayerIndex % get().players.length].name
-					} 님이 턴을 넘겼습니다 : ${
-						get().players[get().currentPlayerIndex % get().players.length].name
-					} -> ${get().players[nextIndex].name}`
+					`${players[index].name} 님이 ${position} 위치에 정착지를 건설했습니다.`
 				);
 
 				set({ players }); // 상태 업데이트
@@ -155,8 +155,10 @@ export default useGameStore;
 /**
  * 사용하는 방법
  *
- * 읽기 : useGameStore(state => state.players)
- * 쓰기 : useGameStore.getState().buildSettlement(...) or useGameStore(state => state.buildSettlement)
+ * 읽기 (컴포넌트 안에서, 리렌더링이 필요할 때) : useGameStore(state => state.players)  // state.(읽고 싶은 데이터의 변수 혹은 함수)
+ * 읽기 (컴포넌트 밖에서, 렌더링 없이 값만 가져올 때) : useGameStore.getState().players  // state.(읽고 싶은 데이터의 변수 혹은 함수)
+ * 쓰기 (gameStroe에 관련 메서드가 있음) : useGameStore.getState().buildSettlement(...) or useGameStore(state => state.buildSettlement)
+ * 쓰기 (gameStroe에 관련 메서드가 없음) : useGameStore.setState({ players: newPlayers })
  *
  * 초기화 함수 예시
  * // 초기 상태를 강제로 재설정할 때 (예: 새 게임 시작 버튼 클릭 시)
