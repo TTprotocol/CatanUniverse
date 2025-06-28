@@ -141,6 +141,38 @@
     fill: #a85613;
 }
 
+.bank>div {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.bankTree {
+    background-image: url(../assets/resourceCard/resourceCardTree.png);
+}
+
+.bankBrick {
+    background-image: url(../assets/resourceCard/resourceCardBrick.png);
+}
+
+.bankSheep {
+    background-image: url(../assets/resourceCard/resourceCardSheep.png);
+}
+
+.bankWheat {
+    background-image: url(../assets/resourceCard/resourceCardWheat.png);
+}
+
+.bankSteel {
+    background-image: url(../assets/resourceCard/resourceCardSteel.png);
+}
+
+.bankprog {
+    background-image: url(../assets/progCard/progressiveCard-back.png);
+}
+
 .myProfile {
     height: 25%;
 }
