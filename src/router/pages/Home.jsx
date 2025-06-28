@@ -40,7 +40,7 @@ const Home = () => {
 					</section>
 				</div>
 				<section className="playerPanel">
-					<div className="log">글자를 찌끄려보자고!</div>
+					<div className="log"></div>
 					<div className="otherPlayers">
 						<div className="bank">
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
@@ -56,6 +56,20 @@ const Home = () => {
 							<div className="bankprog"></div>
 						</div>
 						<div className="player1">
+							<div className="icon"></div>
+							<div className="countSourceCard"></div>
+							<div className="countProgCard"></div>
+							<div className="countKnight"></div>
+							<div className="countBridge"></div>
+						</div>
+						<div className="player2">
+							<div className="icon"></div>
+							<div className="countSourceCard"></div>
+							<div className="countProgCard"></div>
+							<div className="countKnight"></div>
+							<div className="countBridge"></div>
+						</div>
+						<div className="player3">
 							<div className="icon"></div>
 							<div className="countSourceCard"></div>
 							<div className="countProgCard"></div>
