@@ -228,7 +228,7 @@
 
 .player .countKnight {
     width: 15%;
-    background-image: url(../assets/progCard/progressiveCard-knight.png);/* 흑백기사만 따기 */
+    background-image: url(../assets/theif.png);
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
