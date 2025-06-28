@@ -1,6 +1,6 @@
 // zustand와는 별개의 저장 항목을 localStorage에 저장
+// 예: 유저 설정, 사운드 ON/OFF, AI 난이도 등 => 당장은 필요하지 않음!
 
-// 예: 유저 설정, 사운드 ON/OFF, AI 난이도 등
 const LOCAL_KEYS = {
 	SETTINGS: "catan-settings",
 };
