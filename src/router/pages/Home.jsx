@@ -2,14 +2,16 @@
 
 import React from "react";
 import "../../styles/Home.css";
+import GameBoard from './Canvas';
 
 const Home = () => {
+
 	return (
 		<>
 			<main id="main">
 				<div>
 					<section className="board">
-						<div></div>
+						<GameBoard />
 					</section>
 					<section className="actionPanel">
 						<div className="ownCards"></div>
