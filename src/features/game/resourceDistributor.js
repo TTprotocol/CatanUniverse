@@ -1,154 +1,160 @@
 // 주사위 결과에 따라 자원을 각 플레이어에게 분배하는 로직을 처리합니다.
-
-
+import useGameStore from "../game/gameStore";
 
 //자원 타일 데이터
-const hexes = [
+const tiles = [
     {
-        id : 'hex1',
+        id : 'tile1',
         number : 2,
         resource : '양',
     },
 
     {
-        id : 'hex2',
+        id : 'tile2',
         number : 3,
         resource : '나무',
     },
 
     {
-        id : 'hex3',
+        id : 'tile3',
         number : 3,
         resource : '철',
     },
 
     {
-        id : 'hex4',
+        id : 'tile4',
         number : 4,
         resource : '밀',
     },
 
     {
-        id : 'hex5',
+        id : 'tile5',
         number : 4,
         resource : '양',
     },
 
     {
-        id : 'hex6',
+        id : 'tile6',
         number : 5,
         resource : '양',
     },
 
     {
-        id : 'hex7',
+        id : 'tile7',
         number : 5,
         resource : '벽돌',
     },
 
     {
-        id : 'hex8',
+        id : 'tile8',
         number : 6,
         resource : '벽돌',
     },
 
     {
-        id : 'hex9',
+        id : 'tile9',
         number : 6,
         resource : '밀',
     },
 
     {
-        id : 'hex10',
+        id : 'tile10',
         number : 7,
         resource : '사막',
     },
 
     {
-        id : 'hex11',
+        id : 'tile11',
         number : 8,
         resource : '철',
     },
 
     {
-        id : 'hex12',
+        id : 'tile12',
         number : 8,
         resource : '나무',
     },
 
     {
-        id : 'hex13',
+        id : 'tile13',
         number : 9,
         resource : '밀',
     },
 
     {
-        id : 'hex14',
+        id : 'tile14',
         number : 9,
         resource : '나무',
     },
 
     {
-        id : 'hex15',
+        id : 'tile15',
         number : 10,
         resource : '벽돌',
     },
 
     {
-        id : 'hex16',
+        id : 'tile16',
         number : 10,
         resource : '철',
     },
 
     {
-        id : 'hex17',
+        id : 'tile17',
         number : 11,
         resource : '양',
     },
 
     {
-        id : 'hex18',
+        id : 'tile18',
         number : 11,
         resource : '나무',
     },
 
     {
-        id : 'hex19',
+        id : 'tile19',
         number : 12,
         resource : '밀',
     },
 ];
 
-//자원 분배 로직
-const distributeResourcesByDice = (diceSum, hexes, players, setPlayers, robberHex) => {
-    
-    //1.주사위 숫자에 해당하는 타일 찾기
-    const matchedHexes = hexes.filter(hex => hex.number === diceSum);
 
-    if(matchedHexes.length === 0) {
-        return;
-    }
+const distributeResourcesByDice = () => {
+  const { players, board, currentPlayerIndex } = useGameStore.getState();
+  const dice = useGameStore.getState().dice;
+  const { tiles, robber } = board;
 
-    const updatedPlayers = players.map(player => {
-        const updatedResources = {...player.resources};
-        player.buildings?.forEach(building => {
-            building.adjacentHexes.forEach(hexId => {
-                const hex = matchedHexes.find(h => h.id === hexId);
-                
-                //도둑이 있는 타일은 자원 생산 불가
-                if(!hex || hex.id === robberHex) {
-                    return;
-                }
+  if (!dice || dice === 7) return; // 도둑 이벤트는 여기서 제외
 
-                const amount = building.type === 'city' ? 2 : 1;
-                updatedResources[hex.resource] = (updatedResources[hex.resource] || 0) + amount;
-            });
-        });
+  // 1. 주사위 숫자에 해당하는 타일 찾기
+  const matchedTiles = tiles.filter((tile) => tile.number === dice);
+  if (matchedTiles.length === 0) return;
 
-        return {...player, resources: updatedResources};
+  // 2. 각 플레이어 자원 계산
+  const updatedPlayers = players.map((player) => {
+    const newResources = { ...player.resources };
+
+    player.buildings?.forEach((building) => {
+      building.adjacentTiles.forEach((tileId) => {
+        const tile = matchedTiles.find((t) => t.id === tileId);
+        if (!tile || tile.id === robber || tile.resource === "사막") return;
+
+        const amount = building.type === "city" ? 2 : 1;
+        newResources[tile.resource] = (newResources[tile.resource] || 0) + amount;
+      });
     });
 
-    setPlayers(updatedPlayers);
+    return { ...player, resources: newResources };
+  });
 
-}
+  // 3. 상태 저장
+  useGameStore.setState({ players: updatedPlayers });
+
+  // 4. 로그 기록
+  const currentPlayer = players[currentPlayerIndex];
+  useGameStore.getState().addLog(`${currentPlayer.name}의 주사위 결과에 따라 자원을 분배했습니다.`);
+};
+
+export default distributeResourcesByDice;
+
 
