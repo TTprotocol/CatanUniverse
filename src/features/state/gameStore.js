@@ -6,6 +6,122 @@ import { persist } from "zustand/middleware";
 
 import distributeResourcesByDice from "../game/resourceDistributor";
 
+const defaultTiles = [
+	{
+		id: "tile1",
+		number: 2,
+		resource: "양",
+	},
+
+	{
+		id: "tile2",
+		number: 3,
+		resource: "나무",
+	},
+
+	{
+		id: "tile3",
+		number: 3,
+		resource: "철",
+	},
+
+	{
+		id: "tile4",
+		number: 4,
+		resource: "밀",
+	},
+
+	{
+		id: "tile5",
+		number: 4,
+		resource: "양",
+	},
+
+	{
+		id: "tile6",
+		number: 5,
+		resource: "양",
+	},
+
+	{
+		id: "tile7",
+		number: 5,
+		resource: "벽돌",
+	},
+
+	{
+		id: "tile8",
+		number: 6,
+		resource: "벽돌",
+	},
+
+	{
+		id: "tile9",
+		number: 6,
+		resource: "밀",
+	},
+
+	{
+		id: "tile10",
+		number: 7,
+		resource: "사막",
+	},
+
+	{
+		id: "tile11",
+		number: 8,
+		resource: "철",
+	},
+
+	{
+		id: "tile12",
+		number: 8,
+		resource: "나무",
+	},
+
+	{
+		id: "tile13",
+		number: 9,
+		resource: "밀",
+	},
+
+	{
+		id: "tile14",
+		number: 9,
+		resource: "나무",
+	},
+
+	{
+		id: "tile15",
+		number: 10,
+		resource: "벽돌",
+	},
+
+	{
+		id: "tile16",
+		number: 10,
+		resource: "철",
+	},
+
+	{
+		id: "tile17",
+		number: 11,
+		resource: "양",
+	},
+
+	{
+		id: "tile18",
+		number: 11,
+		resource: "나무",
+	},
+
+	{
+		id: "tile19",
+		number: 12,
+		resource: "밀",
+	},
+];
+
 // set : 상태 업데이트할 때 사용
 // get : 현재 상태를 가져올 때 사용
 const useGameStore = create(
@@ -65,7 +181,7 @@ const useGameStore = create(
 				set({ dice1, dice2, dice }); // set({ dice1, dice2, dice }): dice 상태를 새 값으로 업데이트
 
 				// 주사위 숫자에 따라 자원 분배 로직을 이후에 연결
-				resourceDistributor(diceSum, hexes, players, setPlayers, robberHex);
+				distributeResourcesByDice();
 
 				// 🎲 로그 저장
 				get().addLog(
@@ -110,7 +226,12 @@ const useGameStore = create(
 			// 게임 시작용 초기화 함수
 			initPlayers: (playerList) => set({ players: playerList }), // 플레이어 설정
 			initBoard: (tiles, robberPos) =>
-				set({ board: { tiles, robber: robberPos } }), // 보드 설정
+				set({
+					board: {
+						tiles: tiles.length === 0 ? defaultTiles : tiles,
+						robber: robberPos === null ? "tile7" : robberPos,
+					},
+				}), // 보드 설정
 
 			// 게임 상태 초기화 함수
 			initAll: () =>
