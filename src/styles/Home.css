@@ -210,7 +210,7 @@
 
 .player .countSourceCard {
     width: 15%;
-    background-image: url(../assets/resourceCard/resourceCardBrick.png);/* ?!이미지만들기 */
+    background-image: url(../assets/resourceCard/resourceLessThan8.png);
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -227,16 +227,16 @@
 .player .countKnight {
     width: 15%;
     background-image: url(../assets/theif.png);
-    background-size: contain;
+    background-size: 90%;
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .player .countBridge {
     width: 15%;
-    background-image: url(../assets/playerBlue/blueRoad.png);/* 흑백다리 */
+    background-image: url(../assets/resourceCard/blackRoad.png);
     background-position: center;
-    background-size: contain;
+    background-size: 60%;
     background-repeat: no-repeat;
 }
 
