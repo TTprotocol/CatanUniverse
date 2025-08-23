@@ -3,124 +3,9 @@
 
 import { create } from "zustand"; // 상태 관리를 위한 라이브러리
 import { persist } from "zustand/middleware";
+import { DEFAULT_TILES } from "@/utils/constants";
 
-import distributeResourcesByDice from "../game/resourceDistributor";
-
-const defaultTiles = [
-	{
-		id: "tile1",
-		number: 2,
-		resource: "양",
-	},
-
-	{
-		id: "tile2",
-		number: 3,
-		resource: "나무",
-	},
-
-	{
-		id: "tile3",
-		number: 3,
-		resource: "철",
-	},
-
-	{
-		id: "tile4",
-		number: 4,
-		resource: "밀",
-	},
-
-	{
-		id: "tile5",
-		number: 4,
-		resource: "양",
-	},
-
-	{
-		id: "tile6",
-		number: 5,
-		resource: "양",
-	},
-
-	{
-		id: "tile7",
-		number: 5,
-		resource: "벽돌",
-	},
-
-	{
-		id: "tile8",
-		number: 6,
-		resource: "벽돌",
-	},
-
-	{
-		id: "tile9",
-		number: 6,
-		resource: "밀",
-	},
-
-	{
-		id: "tile10",
-		number: 7,
-		resource: "사막",
-	},
-
-	{
-		id: "tile11",
-		number: 8,
-		resource: "철",
-	},
-
-	{
-		id: "tile12",
-		number: 8,
-		resource: "나무",
-	},
-
-	{
-		id: "tile13",
-		number: 9,
-		resource: "밀",
-	},
-
-	{
-		id: "tile14",
-		number: 9,
-		resource: "나무",
-	},
-
-	{
-		id: "tile15",
-		number: 10,
-		resource: "벽돌",
-	},
-
-	{
-		id: "tile16",
-		number: 10,
-		resource: "철",
-	},
-
-	{
-		id: "tile17",
-		number: 11,
-		resource: "양",
-	},
-
-	{
-		id: "tile18",
-		number: 11,
-		resource: "나무",
-	},
-
-	{
-		id: "tile19",
-		number: 12,
-		resource: "밀",
-	},
-];
+import distributeResourcesByDice from "../game/resourceDistributor"; // 자원분배 로직
 
 // set : 상태 업데이트할 때 사용
 // get : 현재 상태를 가져올 때 사용
@@ -164,6 +49,11 @@ const useGameStore = create(
 			largestArmyOwner: null, // 최강 기사단 보유자 (플레이어 ID)
 			winner: null, // 승자가 결정되면 플레이어 ID 저장
 
+			// 현재 턴을 진행중인 플레이어를 반환
+			getCurPlayer: () => {
+				return players[currentPlayerIndex];
+			},
+
 			// 게임의 로그를 저장하는 함수
 			addLog: (message) => {
 				const prev = get().log; // 이전 로그 값을 가져온다.
@@ -180,6 +70,7 @@ const useGameStore = create(
 				const dice = dice1 + dice2;
 				set({ dice1, dice2, dice }); // set({ dice1, dice2, dice }): dice 상태를 새 값으로 업데이트
 
+				console.log(`dice1 : ${dice1}, dice2: ${dice2}, dice: ${dice}`);
 				// 주사위 숫자에 따라 자원 분배 로직을 이후에 연결
 				distributeResourcesByDice();
 
@@ -225,13 +116,25 @@ const useGameStore = create(
 
 			// 게임 시작용 초기화 함수
 			initPlayers: (playerList) => set({ players: playerList }), // 플레이어 설정
-			initBoard: (tiles, robberPos) =>
+			initBoard: (tiles, robberPos) => {
+				console.log("initBoard tiles : ", tiles);
+				console.log("initBoard robberPos : ", robberPos);
 				set({
 					board: {
-						tiles: tiles.length === 0 ? defaultTiles : tiles,
-						robber: robberPos === null ? "tile7" : robberPos,
+						tiles: tiles.length === 0 ? DEFAULT_TILES : tiles,
+						robber:
+							robberPos === null || robberPos === undefined
+								? {
+										id: "tile7",
+										number: 7,
+										resourceId: -1,
+										resource: "robber",
+										resourceName: "도둑",
+								  }
+								: robberPos,
 					},
-				}), // 보드 설정
+				});
+			}, // 보드 설정
 
 			// 게임 상태 초기화 함수
 			initAll: () =>
@@ -296,3 +199,42 @@ export default useGameStore;
  * });
  *
  */
+
+// // 게임 보드 및 모든 UI를 포함하는 메인 화면입니다.
+
+// import React from "react";
+// import "../../styles/Home.css";
+// import GameBoard from "./Canvas";
+// import useGameStore from "../../features/state/gameStore";
+
+// const Home = () => {
+// 	const rollDice = useGameStore((state) => state.rollDice);
+// 	const initPlayers = useGameStore((state) => state.initPlayers);
+// 	const initBoard = useGameStore((state) => state.initBoard);
+
+// 	const click = () => {
+// 		initPlayers([
+// 			{
+// 				id: 1, // 아이디
+// 				name: "플레이어1", // 이름
+// 				resources: {}, // 자원 카드 현황
+// 				roads: [], // 건설한 도로의 위치
+// 				settlements: [], // 건설한 정착지(마을)의 위치
+// 				cities: [], // 도시의 위치
+// 				devCards: [], // 보유한 개발 카드 목록
+// 				points: 0, // 현재 승점
+// 			},
+// 		]);
+
+// 		initBoard([]);
+// 		rollDice();
+// 	};
+
+// 	return (
+// 		<>
+// 			<button onClick={click}>테스트</button>
+// 		</>
+// 	);
+// };
+
+// export default Home;
