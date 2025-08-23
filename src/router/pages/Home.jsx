@@ -9,6 +9,7 @@ const Home = () => {
 	const [visibleCornerPins, setVisibleCornerPins] = useState([]);
 	const [visibleEdgePins, setVisibleEdgePins] = useState([]);
 	const [visibleTilePins, setVisibleTilePins] = useState([]);
+	const [showChangePanel, setShowChangePanel] = useState(false);
 
   	// 버튼 핸들러
 	const handleBuildRoad = () => {
@@ -30,7 +31,7 @@ const Home = () => {
 	};
 
 	const handleExchange = () => {
-		//교환창만들기
+		setShowChangePanel(prev => !prev);
 	};
 
 	return (
@@ -45,13 +46,35 @@ const Home = () => {
 				</section>
 				<section className="actionPanel">
 					<div className="ownCards"></div>
+					{showChangePanel && (
+						<div className="changeCardPanel">
+							<div>
+								<div className="wantedCard">
+									<button className="treeWanted"></button>
+									<button className="brickWanted"></button>
+									<button className="sheepWanted"></button>
+									<button className="wheatWanted"></button>
+									<button className="steelWanted"></button>
+								</div>
+								<div className="tradeCard">
+									<div className="receiveCard"></div>
+									<div className="giveCard"></div>
+								</div>
+							</div>
+							<button className="changeCardSubmit">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6-1">
+									<path fill-rule="evenodd" d="M11.47 2.47a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 1 1-1.06 1.06l-6.22-6.22V21a.75.75 0 0 1-1.5 0V4.81l-6.22 6.22a.75.75 0 1 1-1.06-1.06l7.5-7.5Z" clip-rule="evenodd" />
+								</svg>
+							</button>
+						</div>
+					)}
 					<div className="actions">
-						<button className="changeCards">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
-								<path fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z" clipRule="evenodd" />
+						<button className="changeCards" onClick={handleExchange}>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+								<path fill-rule="evenodd" d="M15.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 1 1-1.06-1.06l3.22-3.22H7.5a.75.75 0 0 1 0-1.5h11.69l-3.22-3.22a.75.75 0 0 1 0-1.06Zm-7.94 9a.75.75 0 0 1 0 1.06l-3.22 3.22H16.5a.75.75 0 0 1 0 1.5H4.81l3.22 3.22a.75.75 0 1 1-1.06 1.06l-4.5-4.5a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
 							</svg>
 						</button>
-						<button className="development" onClick={handleExchange}>
+						<button className="development">
 							<div></div>
 						</button>
 						<button className="buildRoad" onClick={handleBuildRoad}>

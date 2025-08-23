@@ -29,6 +29,7 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    position: relative;
 }
 
 .ownCards {
@@ -56,6 +57,86 @@
 .actions button div {
     width: 100%;
     height: 100%;
+}
+
+.changeCardPanel {
+    position: absolute;
+    top: -220px;
+    left: 20px;
+    display: flex;
+}
+
+.wantedCard {
+    width: 500px;
+    height: 70px;
+    background-color: #eee;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.wantedCard button {
+    width: 40px;
+    height: 50px;
+    margin-left: 10px;
+    background-color: #eee;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.treeWanted {
+    background-image: url(../assets/resourceCard/resourceCardTree.png);
+}
+
+.brickWanted {
+    background-image: url(../assets/resourceCard/resourceCardBrick.png);
+}
+
+.sheepWanted {
+    background-image: url(../assets/resourceCard/resourceCardSheep.png);
+}
+
+.wheatWanted {
+    background-image: url(../assets/resourceCard/resourceCardWheat.png);
+}
+
+.steelWanted {
+    background-image: url(../assets/resourceCard/resourceCardSteel.png);
+}
+
+.tradeCard {
+    width: 500px;
+    height: 140px;
+    background-color: #eee;
+    border-radius: 10px;
+}
+
+.tradeCard div {
+    width: 100%;
+    height: 50%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.receiveCard {
+    border-bottom: 1px solid #999;
+}
+
+.changeCardSubmit {
+    width: 50px;
+    height: 50px;
+    background-color: #eee;
+    position: relative;
+    top: 170px;
+    left: 10px;
+}
+
+.size-6-1 {
+    width: 100%;
+    height: 100%;
+    fill: #000;
 }
 
 .development div {
