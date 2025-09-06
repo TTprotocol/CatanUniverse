@@ -19,7 +19,7 @@
 
 import {useState, useEffect, useRef, useCallback} from 'react';
 
-export default function useCatanTurnManage(players) {
+export default function useCatanTurnManager(players) {
     //현재 턴 플레이어 인덱스(0부터 시작)
     const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
@@ -44,6 +44,32 @@ export default function useCatanTurnManage(players) {
         setLog((prev) => [...prev, text]);
     }, []); 
 
+    //턴 종료
+    //auto=true 인 경우(시간 초과 등) 주사위 미굴림이어도 종료 허용
+    const endTurn = useCallback((auto = false) => {
+
+        //플레이어 없으면 종료 불필요
+
+        if(!players || players.length === 0) return;
+
+        //수동 종료인데 주사위를 안굴렸다면 제한
+        if (!diceRolled && !auto) {
+            logAction("주사위를 굴리기 전에는 턴을 종료할 수 없습니다.");
+            return;
+        }
+
+        //타이머 정리
+        if(timerRef.current) clearTimeout(timerRef.current);
+
+        const player = players[currentPlayerIndex];
+        logAction(`${formatPlayer(player)}의 턴 종료`);
+
+        //다음 플레이어 인덱스로 순환 이동
+        const nextIndex = (currentPlayerIndex + 1) % player.length;
+        setCurrentPlayerIndex(nextIndex);
+    }, [players, currentPlayerIndex, diceRolled, logAction, formatPlayer]);
+
+
     //턴 시작
     const startTurn = useCallback(() => {
         //방어 : 플레이어가 없으면 아무 것도 하지 않음
@@ -59,7 +85,7 @@ export default function useCatanTurnManage(players) {
             logAction(`${formatPlayer(player)}의 시간 초과! 턴을 자동 종료합니다.`);
             endTurn(true); //auto=true: 주사위 전 종료 허용
         }, 60_000);
-    }, [players, currentPlayerIndex, logAction, formatPlayer]);
+    }, [players, currentPlayerIndex, logAction, formatPlayer, endTurn]);
 
     
     // 주사위 굴리기
@@ -105,30 +131,7 @@ export default function useCatanTurnManage(players) {
         logAction("교환 실행");
     }, [diceRolled, logAction]);
 
-    //턴 종료
-    //auto=true 인 경우(시간 초과 등) 주사위 미굴림이어도 종료 허용
-    const endTurn = useCallback((auto = false) => {
-
-        //플레이어 없으면 종료 불필요
-
-        if(!players || players.length === 0) return;
-
-        //수동 종료인데 주사위를 안굴렸다면 제한
-        if (!diceRolled && !auto) {
-            logAction("주사위를 굴리기 전에는 턴을 종료할 수 없습니다.");
-            return;
-        }
-
-        //타이머 정리
-        if(timerRef.current) clearTimeout(timerRef.current);
-
-        const player = players[currentPlayerIndex];
-        logAction(`${formatPlayer(player)}의 턴 종료`);
-
-        //다음 플레이어 인덱스로 순환 이동
-        const nextIndex = (currentPlayerIndex + 1) % player.length;
-        setCurrentPlayerIndex(nextIndex);
-    }, [players, currentPlayerIndex, diceRolled, logAction, formatPlayer]);
+    
 
     // 턴이 바뀔때마다 자동으로 새 턴 시작
     useEffect(() => {
