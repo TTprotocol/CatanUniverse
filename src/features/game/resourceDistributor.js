@@ -44,7 +44,9 @@ const distributeResourcesByDice = () => {
 
 		// 1. 정착지 순회
 		player.settlements.length !== 0 &&
-			player.settlements.forEach((building) => {});
+			player.settlements.forEach((building) => {
+				console.log("distributeResourcesByDice building : ", building);
+			});
 
 		// 2. 도시 순회
 
