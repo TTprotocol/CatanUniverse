@@ -44,9 +44,8 @@ const distributeResourcesByDice = () => {
 
 		//플레이어가 보유한 건물(정착지, 도시)를 순회
 		// 1. 정착지 순회
-		player.settlements.length !== 0 && player.settlements.forEach((building) => {
-
-		});
+		player.settlements.length !== 0 &&
+			player.settlements.forEach((building) => {});
 
 		// 2. 도시 순회
 

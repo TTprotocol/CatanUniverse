@@ -3,7 +3,7 @@
 
 import { create } from "zustand"; // 상태 관리를 위한 라이브러리
 import { persist } from "zustand/middleware";
-import { DEFAULT_TILES } from "@/utils/constants";
+import { TILE_PIN } from "@/utils/constants";
 
 import distributeResourcesByDice from "../game/resourceDistributor"; // 자원분배 로직
 
@@ -121,7 +121,7 @@ const useGameStore = create(
 				console.log("initBoard robberPos : ", robberPos);
 				set({
 					board: {
-						tiles: tiles.length === 0 ? DEFAULT_TILES : tiles,
+						tiles: tiles.length === 0 ? TILE_PIN : tiles,
 						robber:
 							robberPos === null || robberPos === undefined
 								? {
