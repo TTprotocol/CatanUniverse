@@ -1,11 +1,6 @@
 // 보드 타일 관련 유틸 함수 모음입니다. (좌표 계산 등)
 
-import {
-	DEFAULT_TILES,
-	CORNER_PIN,
-	EDGE_PIN,
-	TILE_PIN,
-} from "@/utils/constants";
+import { CORNER_PIN, EDGE_PIN, TILE_PIN } from "@/utils/constants";
 
 // 타일 숫자 매핑 (하나의 핀에서 인접한 타일들의 좌표를 매핑하는 함수)
 /**
