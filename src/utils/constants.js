@@ -30,7 +30,6 @@ export const DEFAULT_TILES = [
 		resourceName: "양",
 	},
 	{
-<<<<<<< HEAD
 		id: "tile2",
 		number: 3,
 		resourceId: 0,
@@ -128,16 +127,12 @@ export const DEFAULT_TILES = [
 
 	{
 		id: "tile14",
-=======
-		id: 3,
->>>>>>> f5c3e8197526d4c9f8ad58550a772352ea120066
 		number: 9,
 		resourceId: 0,
 		resource: "tree",
 		resourceName: "나무",
 	},
 	{
-<<<<<<< HEAD
 		id: "tile15",
 		number: 10,
 		resourceId: 1,
@@ -171,9 +166,6 @@ export const DEFAULT_TILES = [
 
 	{
 		id: "tile19",
-=======
-		id: 4,
->>>>>>> f5c3e8197526d4c9f8ad58550a772352ea120066
 		number: 12,
 		resourceId: 3,
 		resource: "wheat",
