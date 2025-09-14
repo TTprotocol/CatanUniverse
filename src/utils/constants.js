@@ -1,6 +1,6 @@
 // 자원 종류, 개발 카드 목록, 기본 규칙 등의 상수 값 정의입니다.
 
-export const RESOURCE_TYPE = ["brick", "sheep", "steel", "tree", "wheat"]; // 0: 벽돌, 1: 양, 2: 철, 3: 나무, 4: 밀
+export const RESOURCE_TYPE = ["tree", "brick", "sheep", "wheat", "steel"]; // 0: 나무, 1: 벽돌, 2: 양, 3: 밀, 4: 철
 
 export const DEVELOPMENT_CARD = [
 	"knight", // 0: 기사 - 도둑을 이동시킨다. 최대 14장
@@ -18,7 +18,7 @@ export const DEFAULT_TILES = [
 	{
 		id: "tile1",
 		number: 2,
-		resourceId: 1,
+		resourceId: 2,
 		resource: "sheep",
 		resourceName: "양",
 	},
@@ -26,7 +26,7 @@ export const DEFAULT_TILES = [
 	{
 		id: "tile2",
 		number: 3,
-		resourceId: 3,
+		resourceId: 0,
 		resource: "tree",
 		resourceName: "나무",
 	},
@@ -34,7 +34,7 @@ export const DEFAULT_TILES = [
 	{
 		id: "tile3",
 		number: 3,
-		resourceId: 2,
+		resourceId: 4,
 		resource: "steel",
 		resourceName: "철",
 	},
@@ -50,7 +50,7 @@ export const DEFAULT_TILES = [
 	{
 		id: "tile5",
 		number: 4,
-		resourceId: 1,
+		resourceId: 2,
 		resource: "sheep",
 		resourceName: "양",
 	},
@@ -66,7 +66,7 @@ export const DEFAULT_TILES = [
 	{
 		id: "tile7",
 		number: 5,
-		resourceId: 0,
+		resourceId: 1,
 		resource: "brick",
 		resource: "벽돌",
 	},
@@ -74,7 +74,7 @@ export const DEFAULT_TILES = [
 	{
 		id: "tile8",
 		number: 6,
-		resourceId: 0,
+		resourceId: 1,
 		resource: "brick",
 		resource: "벽돌",
 	},
@@ -98,7 +98,7 @@ export const DEFAULT_TILES = [
 	{
 		id: "tile11",
 		number: 8,
-		resourceId: 2,
+		resourceId: 4,
 		resource: "steel",
 		resourceName: "철",
 	},
@@ -106,7 +106,7 @@ export const DEFAULT_TILES = [
 	{
 		id: "tile12",
 		number: 8,
-		resourceId: 3,
+		resourceId: 0,
 		resource: "tree",
 		resourceName: "나무",
 	},
@@ -122,7 +122,7 @@ export const DEFAULT_TILES = [
 	{
 		id: "tile14",
 		number: 9,
-		resourceId: 3,
+		resourceId: 0,
 		resource: "tree",
 		resourceName: "나무",
 	},
@@ -130,7 +130,7 @@ export const DEFAULT_TILES = [
 	{
 		id: "tile15",
 		number: 10,
-		resourceId: 0,
+		resourceId: 1,
 		resource: "brick",
 		resource: "벽돌",
 	},
@@ -138,7 +138,7 @@ export const DEFAULT_TILES = [
 	{
 		id: "tile16",
 		number: 10,
-		resourceId: 2,
+		resourceId: 4,
 		resource: "steel",
 		resourceName: "철",
 	},
@@ -146,7 +146,7 @@ export const DEFAULT_TILES = [
 	{
 		id: "tile17",
 		number: 11,
-		resourceId: 1,
+		resourceId: 2,
 		resource: "sheep",
 		resourceName: "양",
 	},
@@ -154,7 +154,7 @@ export const DEFAULT_TILES = [
 	{
 		id: "tile18",
 		number: 11,
-		resourceId: 3,
+		resourceId: 0,
 		resource: "tree",
 		resourceName: "나무",
 	},

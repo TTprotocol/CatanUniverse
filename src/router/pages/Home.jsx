@@ -3,6 +3,7 @@
 import React, {useState} from "react";
 import "../../styles/Home.css";
 import GameBoard from './Canvas';
+import ResourceCard from './ResourceCard';
 
 const Home = () => {
 	// 핀 표시 상태
@@ -34,6 +35,42 @@ const Home = () => {
 		setShowChangePanel(prev => !prev);
 	};
 
+	const [selectedReceiveResources, setSelectedReceiveResources] = useState([]);
+	const [selectedGiveResources, setSelectedGiveResources] = useState([]);
+
+	const handleClick = (resourceType, context) => {
+		if (context === "receive") {
+			setSelectedReceiveResources((prev) => [...prev, resourceType]);
+		} else if (context === "give") {
+			setSelectedGiveResources((prev) => [...prev, resourceType]);
+		}
+	};
+
+	const handleReset = (context) => {
+		if (context === "receive") {
+			setSelectedReceiveResources([]);
+		} else if (context === "give") {
+			setSelectedGiveResources([]);
+		}
+	};
+
+	// ReceiveCard용
+	const receiveCounts = selectedReceiveResources.reduce((acc, type) => {
+		acc[type] = (acc[type] || 0) + 1;
+		return acc;
+	}, {});
+
+	const uniqueReceiveResources = [...new Set(selectedReceiveResources)];
+
+	// GiveCard용
+	const giveCounts = selectedGiveResources.reduce((acc, type) => {
+		acc[type] = (acc[type] || 0) + 1;
+		return acc;
+	}, {});
+
+	const uniqueGiveResources = [...new Set(selectedGiveResources)];
+
+
 	return (
 		<main id="main">
 			<div>
@@ -45,20 +82,70 @@ const Home = () => {
 					/>
 				</section>
 				<section className="actionPanel">
-					<div className="ownCards"></div>
+					<div className="ownCards">
+						<div className="ownResourceCard"></div>
+						<div className="ownDevelopmentCard"></div>
+					</div>
 					{showChangePanel && (
 						<div className="changeCardPanel">
 							<div>
-								<div className="wantedCard">
-									<button className="treeWanted"></button>
-									<button className="brickWanted"></button>
-									<button className="sheepWanted"></button>
-									<button className="wheatWanted"></button>
-									<button className="steelWanted"></button>
-								</div>
 								<div className="tradeCard">
-									<div className="receiveCard"></div>
-									<div className="giveCard"></div>
+									<div className="receiveCard">
+										<div className="cardGroup">
+											<div className="cardDisp">
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+													<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-.53 14.03a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V8.25a.75.75 0 0 0-1.5 0v5.69l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3Z" clip-rule="evenodd" />
+												</svg>
+											</div>
+											<div className="wantedCard">
+												<button className="treeWanted" onClick={() => handleClick("tree", "receive")}></button>
+												<button className="brickWanted" onClick={() => handleClick("brick", "receive")}></button>
+												<button className="sheepWanted" onClick={() => handleClick("sheep", "receive")}></button>
+												<button className="wheatWanted" onClick={() => handleClick("wheat", "receive")}></button>
+												<button className="steelWanted" onClick={() => handleClick("steel", "receive")}></button>
+											</div>
+										</div>
+										<div className="cardDisplay">
+											<div className="cardsWrapper">
+												{uniqueReceiveResources.map((res) => (
+													<ResourceCard key={res} type={res} count={receiveCounts[res]} />
+												))}
+											</div>
+											<button className="resetButton" onClick={() => handleReset("receive")}>
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+													<path fill-rule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z" clip-rule="evenodd" />
+												</svg>
+											</button>
+										</div>
+									</div>
+									<div className="giveCard">
+										<div className="cardGroup">
+											<div className="cardDisp">
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+													<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.53 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v5.69a.75.75 0 0 0 1.5 0v-5.69l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z" clip-rule="evenodd" />
+												</svg>
+											</div>
+											<div className="wantedCard">
+												<button className="treeWanted" onClick={() => handleClick("tree", "give")}></button>
+												<button className="brickWanted" onClick={() => handleClick("brick", "give")}></button>
+												<button className="sheepWanted" onClick={() => handleClick("sheep", "give")}></button>
+												<button className="wheatWanted" onClick={() => handleClick("wheat", "give")}></button>
+												<button className="steelWanted" onClick={() => handleClick("steel", "give")}></button>
+											</div>
+										</div>
+										<div className="cardDisplay">
+											<div className="cardsWrapper">
+												{uniqueGiveResources.map((res) => (
+													<ResourceCard key={res} type={res} count={giveCounts[res]} />
+												))}
+											</div>
+											<button className="resetButton" onClick={() => handleReset("give")}>
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+													<path fill-rule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z" clip-rule="evenodd" />
+												</svg>
+											</button>
+										</div>
+									</div>
 								</div>
 							</div>
 							<button className="changeCardSubmit">
