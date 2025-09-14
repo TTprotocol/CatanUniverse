@@ -3,7 +3,7 @@
 
 import { create } from "zustand"; // 상태 관리를 위한 라이브러리
 import { persist } from "zustand/middleware";
-import { TILE_PIN } from "@/utils/constants";
+import { DEFAULT_TILES, TILE_PIN } from "@/utils/constants";
 
 import distributeResourcesByDice from "../game/resourceDistributor"; // 자원분배 로직
 
@@ -24,10 +24,10 @@ const useGameStore = create(
 				// {
 				// 	id: 1, // 아이디
 				// 	name: "플레이어1", // 이름
-				// 	resources: {}, // 자원 카드 현황
-				// 	roads: [], // 건설한 도로의 위치
-				// 	settlements: [], // 건설한 정착지(마을)의 위치
-				// 	cities: [], // 도시의 위치
+				// 	resources: [], // 자원 카드 현황
+				// 	roads: [], // 건설한 도로의 위치 (EDGE_PIN의 id)
+				// 	settlements: [], // 건설한 정착지(마을)의 위치 (CORNER_PIN의 id)
+				// 	cities: [], // 도시의 위치 (CORNER_PIN의 id)
 				// 	devCards: [], // 보유한 개발 카드 목록
 				// 	points: 0, // 현재 승점
 				// },
@@ -61,6 +61,7 @@ const useGameStore = create(
 				set({ log: [...prev, `[${time}] ${message}`] }); // 로그에 현재 시간과 현재 로그를 기록한다.
 			},
 
+			// 로그 초기화
 			resetLog: () => set({ log: [] }),
 
 			// ✅ 주사위를 굴리는 함수
@@ -121,7 +122,7 @@ const useGameStore = create(
 				console.log("initBoard robberPos : ", robberPos);
 				set({
 					board: {
-						tiles: tiles.length === 0 ? TILE_PIN : tiles,
+						tiles: tiles.length === 0 ? DEFAULT_TILES : tiles,
 						robber:
 							robberPos === null || robberPos === undefined
 								? {

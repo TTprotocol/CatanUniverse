@@ -1,10 +1,16 @@
 // 주사위 결과에 따라 자원을 각 플레이어에게 분배하는 로직을 처리합니다.
 import useGameStore from "../state/gameStore";
+import {
+	DEFAULT_TILES,
+	CORNER_PIN,
+	EDGE_PIN,
+	TILE_PIN,
+} from "@/utils/constants";
 
 const distributeResourcesByDice = () => {
 	//현재 플레이어 정보, 보드 상태, 현재 턴 인덱스를 가져옴
 	const { players, board, currentPlayerIndex } = useGameStore.getState();
-	
+
 	console.log("distributeResourcesByDice players : ", players);
 	console.log("distributeResourcesByDice board : ", board);
 	console.log(
@@ -28,9 +34,27 @@ const distributeResourcesByDice = () => {
 	if (robber.number === dice) return;
 
 	// 1. 주사위 숫자에 해당하는 타일 필터링해서 찾기
-	const matchedTiles = tiles.filter((tile) => tile.number === dice);
-
+	const matchedTiles = [...tiles].filter((tile) => tile.number === dice); // 주사위 숫자의 타일 찾기 => id, resourceId 필요
+	const matchedId = new Set(matchedTiles.map((tile) => tile.id)); // 해당 타일의 id만 추출
 	console.log("distributeResourcesByDice matchedTiles : ", matchedTiles);
+
+	const matchedCornerPins = TILE_PIN.filter((tile) => matchedId.has(tile.id)); // 타일 id로 TILE_PIN의 타일 찾기 => corner 배열 필요
+	console.log(
+		"distributeResourcesByDice matchedCornerPins : ",
+		matchedCornerPins
+	);
+
+	const getTiles = [...matchedTiles].forEach((tile) => {
+		const tileId = tile.id;
+		const corner = matchedCornerPins
+			.filter((tilePin) => tilePin.id === tileId)
+			.pop().corner;
+		console.log("corner : ", corner);
+
+		tile.corner = corner ?? [];
+	});
+
+	console.log("distributeResourcesByDice edited matchedTiles : ", getTiles);
 
 	// if (matchedTiles.length === 0) return;   // 주사위 숫자에 해당하지 않는 타일이 없을 수가 있나...?
 
