@@ -18,7 +18,7 @@ export const DEFAULT_TILES = [
 	{
 		id: 1,
 		number: 10,
-		resourceId: 2,
+		resourceId: 4,
 		resource: "steel",
 		resourceName: "철",
 	},
@@ -30,142 +30,14 @@ export const DEFAULT_TILES = [
 		resourceName: "양",
 	},
 	{
-		id: "tile2",
-		number: 3,
-		resourceId: 0,
-		resource: "tree",
-		resourceName: "나무",
-	},
-
-	{
-		id: "tile3",
-		number: 3,
-		resourceId: 4,
-		resource: "steel",
-		resourceName: "철",
-	},
-
-	{
-		id: "tile4",
-		number: 4,
-		resourceId: 3,
-		resource: "wheat",
-		resourceName: "밀",
-	},
-
-	{
-		id: "tile5",
-		number: 4,
-		resourceId: 2,
-		resource: "sheep",
-		resourceName: "양",
-	},
-
-	{
-		id: "tile6",
-		number: 5,
-		resourceId: 1,
-		resource: "sheep",
-		resourceName: "양",
-	},
-
-	{
-		id: "tile7",
-		number: 5,
-		resourceId: 1,
-		resource: "brick",
-		resource: "벽돌",
-	},
-
-	{
-		id: "tile8",
-		number: 6,
-		resourceId: 1,
-		resource: "brick",
-		resource: "벽돌",
-	},
-
-	{
-		id: "tile9",
-		number: 6,
-		resourceId: 3,
-		resource: "wheat",
-		resourceName: "밀",
-	},
-
-	{
-		id: "tile10",
-		number: 7,
-		resourceId: -1,
-		resource: "desert",
-		resourceName: "사막",
-	},
-
-	{
-		id: "tile11",
-		number: 8,
-		resourceId: 4,
-		resource: "steel",
-		resourceName: "철",
-	},
-
-	{
-		id: "tile12",
-		number: 8,
-		resourceId: 0,
-		resource: "tree",
-		resourceName: "나무",
-	},
-
-	{
-		id: "tile13",
-		number: 9,
-		resourceId: 3,
-		resource: "wheat",
-		resourceName: "밀",
-	},
-
-	{
-		id: "tile14",
+		id: 3,
 		number: 9,
 		resourceId: 0,
 		resource: "tree",
 		resourceName: "나무",
 	},
 	{
-		id: "tile15",
-		number: 10,
-		resourceId: 1,
-		resource: "brick",
-		resource: "벽돌",
-	},
-
-	{
-		id: "tile16",
-		number: 10,
-		resourceId: 4,
-		resource: "steel",
-		resourceName: "철",
-	},
-
-	{
-		id: "tile17",
-		number: 11,
-		resourceId: 2,
-		resource: "sheep",
-		resourceName: "양",
-	},
-
-	{
-		id: "tile18",
-		number: 11,
-		resourceId: 0,
-		resource: "tree",
-		resourceName: "나무",
-	},
-
-	{
-		id: "tile19",
+		id: 4,
 		number: 12,
 		resourceId: 3,
 		resource: "wheat",
@@ -174,21 +46,21 @@ export const DEFAULT_TILES = [
 	{
 		id: 5,
 		number: 6,
-		resourceId: 0,
+		resourceId: 1,
 		resource: "brick",
 		resource: "벽돌",
 	},
 	{
 		id: 6,
 		number: 4,
-		resourceId: 1,
+		resourceId: 2,
 		resource: "sheep",
 		resourceName: "양",
 	},
 	{
 		id: 7,
 		number: 10,
-		resourceId: 0,
+		resourceId: 1,
 		resource: "brick",
 		resource: "벽돌",
 	},
@@ -202,7 +74,7 @@ export const DEFAULT_TILES = [
 	{
 		id: 9,
 		number: 11,
-		resourceId: 3,
+		resourceId: 0,
 		resource: "tree",
 		resourceName: "나무",
 	},
@@ -216,28 +88,28 @@ export const DEFAULT_TILES = [
 	{
 		id: 11,
 		number: 3,
-		resourceId: 3,
+		resourceId: 0,
 		resource: "tree",
 		resourceName: "나무",
 	},
 	{
 		id: 12,
 		number: 8,
-		resourceId: 2,
+		resourceId: 4,
 		resource: "steel",
 		resourceName: "철",
 	},
 	{
 		id: 13,
 		number: 8,
-		resourceId: 3,
+		resourceId: 0,
 		resource: "tree",
 		resourceName: "나무",
 	},
 	{
 		id: 14,
 		number: 3,
-		resourceId: 2,
+		resourceId: 4,
 		resource: "steel",
 		resourceName: "철",
 	},
@@ -251,14 +123,14 @@ export const DEFAULT_TILES = [
 	{
 		id: 16,
 		number: 5,
-		resourceId: 1,
+		resourceId: 2,
 		resource: "sheep",
 		resourceName: "양",
 	},
 	{
 		id: 17,
 		number: 5,
-		resourceId: 0,
+		resourceId: 1,
 		resource: "brick",
 		resource: "벽돌",
 	},
@@ -272,7 +144,7 @@ export const DEFAULT_TILES = [
 	{
 		id: 19,
 		number: 11,
-		resourceId: 1,
+		resourceId: 2,
 		resource: "sheep",
 		resourceName: "양",
 	},
