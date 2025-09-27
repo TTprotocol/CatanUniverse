@@ -26,7 +26,7 @@ function ResourceCard({ type, count }) {
         style={{ display: "block" }}
       />
       {count > 1 && (
-        <div>
+        <div className="countBadge">
           {count}
         </div>
       )}
