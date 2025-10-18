@@ -14,8 +14,8 @@ export default function ActionPanel({
     return (
         <section className="actionPanel">
         <OwnCards
-            // resourceCards = {{tree:2, brick:2, sheep:1, wheat:1, steel:2}}
-            // developmentCards = {{knight:1, monopoly:1, roadBuilding:1, victoryPoint:1}}
+            resourceCards = {{tree:2, brick:2, sheep:1, wheat:1, steel:2}}
+            developmentCards = {{knight:1, monopoly:2, roadBuilding:1, victoryPoint:1}}
         />
 
         {showChangePanel && (
