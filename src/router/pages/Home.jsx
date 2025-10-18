@@ -36,6 +36,18 @@ const Home = () => {
 		setShowChangePanel(prev => !prev);
 	};
 
+	const [cards, setCards] = useState([
+        { category: "resource", type: "tree", count: 2 },
+        { category: "resource", type: "brick", count: 2 },
+        { category: "resource", type: "sheep", count: 1 },
+        { category: "resource", type: "wheat", count: 1 },
+        { category: "resource", type: "steel", count: 2 },
+        { category: "development", type: "knight", count: 1 },
+        { category: "development", type: "victoryPoint", count: 1 },
+        { category: "development", type: "roadBuilding", count: 1 },
+        { category: "development", type: "monopoly", count: 2 },
+    ]);
+
 	return (
 		<main id="main">
 			<div>
@@ -52,9 +64,10 @@ const Home = () => {
 					handleBuildCity={handleBuildCity}
 					handleBuildRoad={handleBuildRoad}
 					handleBuildVillage={handleBuildVillage}
+					cards = {cards}
 				/>
 			</div>
-			<PlayerPanel/>
+			<PlayerPanel cards={cards} />
 		</main>
 	);
 };

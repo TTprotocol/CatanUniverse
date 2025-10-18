@@ -120,6 +120,7 @@
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
+    position: relative;
 }
 
 .player .countProgCard {
@@ -128,6 +129,7 @@
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
+    position: relative;
 }
 
 .player .countKnight {
@@ -136,6 +138,7 @@
     background-size: 90%;
     background-position: center;
     background-repeat: no-repeat;
+    position: relative;
 }
 
 .player .countBridge {
@@ -144,8 +147,23 @@
     background-position: center;
     background-size: 60%;
     background-repeat: no-repeat;
+    position: relative;
 }
 
 .myProfile {
-    height: 15%;
+    height: 11%;
+}
+
+.countBadge {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    color: #000;
+    background-color: #fff;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    user-select: none;
 }

@@ -4,19 +4,19 @@ import "../../styles/PlayerPanel.css";
 import Bank from "./Bank";
 import PlayerInfo from "./PlayerInfo";
 
-export default function PlayerPanel() {
+export default function PlayerPanel({ cards }) {
     return (
         <section className="playerPanel">
             <div className="log"></div>
 
             <div className="otherPlayers">
                 <Bank />
-                <PlayerInfo playerClass="player1" />
-                <PlayerInfo playerClass="player2" />
-                <PlayerInfo playerClass="player3" />
+                <PlayerInfo playerClass="player1" cards={cards} />
+                <PlayerInfo playerClass="player2" cards={cards} />
+                <PlayerInfo playerClass="player3" cards={cards} />
             </div>
 
-            <PlayerInfo isMe={true} playerClass="" />
+            <PlayerInfo isMe={true} playerClass="" cards={cards} />
         </section>
     );
 }

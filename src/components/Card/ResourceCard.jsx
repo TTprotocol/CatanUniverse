@@ -16,6 +16,8 @@ function ResourceCard({ type, count }) {
 
   const resource = cardInfo[type];
 
+  if (!resource) return null;
+
   return (
     <div className="resourceCard">
       <img
