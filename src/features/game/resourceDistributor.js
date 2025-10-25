@@ -1,6 +1,7 @@
 // 주사위 결과에 따라 자원을 각 플레이어에게 분배하는 로직을 처리합니다.
-import useGameStore from "../state/gameStore";
+import useGameStore, { gameLog } from "../state/gameStore";
 import {
+	RESOURCE_TYPE,
 	DEFAULT_TILES,
 	CORNER_PIN,
 	EDGE_PIN,
@@ -10,6 +11,7 @@ import {
 const distributeResourcesByDice = () => {
 	//현재 플레이어 정보, 보드 상태, 현재 턴 인덱스를 가져옴
 	const { players, board, currentPlayerIndex } = useGameStore.getState();
+	const { addLog } = gameLog.getState();
 
 	//주사위 총합 (두 주사위의 합) 값 가져오기
 	const dice = useGameStore.getState().dice;
@@ -38,7 +40,7 @@ const distributeResourcesByDice = () => {
 		return { id: tile.id, resourceId: tile.resourceId, corner };
 	});
 
-	console.log("getTiles : ", getTiles);
+	// console.log("getTiles : ", getTiles);
 
 	// if (matchedTiles.length === 0) return;   // 주사위 숫자에 해당하지 않는 타일이 없을 수가 있나...?
 
@@ -53,7 +55,12 @@ const distributeResourcesByDice = () => {
 			getTiles.forEach((tile) => {
 				player.settlements.forEach((settlement) => {
 					if (tile.corner.includes(settlement)) {
-						console.log("정착지 자원 ++");
+						// console.log(RESOURCE_TYPE[tile.resourceId] + " 정착지 자원 ++");
+						addLog(
+							`정착지 ${settlement}에 ${
+								RESOURCE_TYPE[tile.resourceId]
+							} 자원 1개를 추가합니다.`
+						);
 						newResources[tile.resourceId]++;
 					}
 				});
@@ -64,7 +71,12 @@ const distributeResourcesByDice = () => {
 			getTiles.forEach((tile) => {
 				player.cities.forEach((city) => {
 					if (tile.corner.includes(city)) {
-						console.log("도시 자원 += 2");
+						// console.log(RESOURCE_TYPE[tile.resourceId] + " 도시 자원 += 2");
+						addLog(
+							`도시 ${city}에 ${
+								RESOURCE_TYPE[tile.resourceId]
+							} 자원 2개를 추가합니다.`
+						);
 						newResources[tile.resourceId]++;
 					}
 				});
@@ -102,9 +114,7 @@ const distributeResourcesByDice = () => {
 
 	// 4. 게임 로그에 자원 분배 기록 추가
 	const currentPlayer = players[currentPlayerIndex];
-	useGameStore
-		.getState()
-		.addLog(`${currentPlayer.name}의 주사위 결과에 따라 자원을 분배했습니다.`);
+	addLog(`${currentPlayer.name}의 주사위 결과에 따라 자원을 분배했습니다.`);
 };
 
 export default distributeResourcesByDice;
