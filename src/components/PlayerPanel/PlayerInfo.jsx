@@ -1,22 +1,13 @@
 import React from "react";
 
-export default function PlayerInfo({ isMe, playerClass, cards = [] }) {
+export default function PlayerInfo({ isMe, playerClass, resources=[], devCards=[], roads=[], useKnight }) {
 
-    const resourceCount = cards
-        .filter(c => c.category === 'resource')
-        .reduce((sum, c) => sum+c.count,0);
-        
-    const developmentCount = cards
-        .filter(c => c.category === 'development')
-        .reduce((sum, c) => sum+c.count,0);
+    // 배열인지 확인, 아니면 빈 배열로 처리
+    const resourceCount = Array.isArray(resources) ? resources.reduce((sum, c) => sum + c, 0) : 0;
+    const developmentCount = Array.isArray(devCards) ? devCards.reduce((sum, c) => sum + c, 0) : 0;
 
-    const knightCount = cards
-        .filter(c => c.category === 'development' && c.type === 'knight')
-        .reduce((sum, c) => sum+c.count,0);
-
-    const bridgeCount = cards
-        .filter(c => c.category === 'development' && c.type === 'roadBuilding')
-        .reduce((sum, c) => sum+c.count,0);
+    const knightCount = typeof useKnight === "number" ? useKnight : 0;
+    const bridgeCount = Array.isArray(roads) ? roads.length : 0;
 
     return (
         <div className={`player ${playerClass} ${isMe ? "myProfile" : ""}`}>

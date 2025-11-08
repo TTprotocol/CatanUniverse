@@ -63,8 +63,8 @@ function GameBoard({
 						border: "3px solid #555",
 						cursor: "pointer",
 						opacity: "70%",
-						// display: visibleCorners.includes(pin.id) ? "block" : "none",
-						display: "block",
+						display: visibleCorners.includes(pin.id) ? "block" : "none",
+						// display: "block",
 					}}
 					onClick={() => {
 						alert(`마을/도시 건설: ${pin.id}`);

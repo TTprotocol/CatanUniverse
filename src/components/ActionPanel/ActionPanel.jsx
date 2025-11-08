@@ -10,11 +10,11 @@ export default function ActionPanel({
     handleBuildRoad,
     handleBuildVillage,
     handleBuildCity,
-    cards,
+    players,
 }) {
     return (
         <section className="actionPanel">
-        <OwnCards cards={cards} />
+        <OwnCards players={Array.isArray(players) ? players : []} />
 
         {showChangePanel && (
             <ChangeCardPanel />

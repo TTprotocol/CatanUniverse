@@ -4,19 +4,31 @@ import "../../styles/PlayerPanel.css";
 import Bank from "./Bank";
 import PlayerInfo from "./PlayerInfo";
 
-export default function PlayerPanel({ cards }) {
+export default function PlayerPanel({ players }) {
+
     return (
         <section className="playerPanel">
             <div className="log"></div>
 
             <div className="otherPlayers">
                 <Bank />
-                <PlayerInfo playerClass="player1" cards={cards} />
-                <PlayerInfo playerClass="player2" cards={cards} />
-                <PlayerInfo playerClass="player3" cards={cards} />
+                {players.slice(1).map((player, i) => (
+                    <PlayerInfo
+                        key={i}
+                        playerClass={`player${i+1}`}
+                        resources={player.resources}
+                        devCards={player.devCards}
+                        roads={player.roads}
+                        useKnight={player.useKnight}
+                    />
+                ))}
             </div>
 
-            <PlayerInfo isMe={true} playerClass="" cards={cards} />
+            <PlayerInfo isMe={true} playerClass="" 
+                resources={players[0]?.resources || 0}
+                devCards={players[0]?.devCards || 0}
+                roads={players[0]?.roads || 0}
+                useKnight={players[0]?.useKnight || 0} />
         </section>
     );
 }

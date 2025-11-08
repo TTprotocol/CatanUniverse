@@ -27,7 +27,7 @@ function DevelopmentCard({ type, count }) {
         height="50"
         style={{ display: "block" }}
       />
-      {count > 1 && (
+      {count >= 0 && (
         <div className="countBadge">
           {count}
         </div>
