@@ -259,7 +259,7 @@ export function makeStrategyHelpers({
 			resourceStats(ai) {
 			return {
 				diversity: resourceDiversity(ai.resources),
-				counts: { ...ai.resources },
+				counts: { ...(ai.resources || {} ) },
 			};
 		},
 	};

@@ -48,7 +48,7 @@ export const DEFAULT_TILES = [
 		number: 6,
 		resourceId: 1,
 		resource: "brick",
-		resource: "벽돌",
+		resourceName: "벽돌",
 	},
 	{
 		id: 6,
@@ -62,7 +62,7 @@ export const DEFAULT_TILES = [
 		number: 10,
 		resourceId: 1,
 		resource: "brick",
-		resource: "벽돌",
+		resourceName: "벽돌",
 	},
 	{
 		id: 8,
@@ -132,7 +132,7 @@ export const DEFAULT_TILES = [
 		number: 5,
 		resourceId: 1,
 		resource: "brick",
-		resource: "벽돌",
+		resourceName: "벽돌",
 	},
 	{
 		id: 18,
@@ -442,3 +442,17 @@ export const TILE_PIN = [
 	}, // 11번 타일
 ];
 // .map(([x, y], index) => ({ id: index + 1, x, y, label: "" }));
+
+
+export const PORT_POSITIONS = [
+  // 항구 위치를 육각형 바깥 가장자리 기준으로 지정
+  { x: 0, y: -320 },   // 위쪽
+  { x: 280, y: -160 }, // 오른쪽 위
+  { x: 340, y: 120 },  // 오른쪽 아래
+  { x: 140, y: 300 },  // 아래 오른쪽
+  { x: -140, y: 300 }, // 아래 왼쪽
+  { x: -340, y: 120 }, // 왼쪽 아래
+  { x: -340, y: -120 },// 왼쪽 위
+  { x: -140, y: -300 },// 위 왼쪽
+  { x: 140, y: -300 }, // 위 오른쪽
+];

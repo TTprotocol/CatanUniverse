@@ -65,7 +65,7 @@ export default function useCatanTurnManager(players) {
         logAction(`${formatPlayer(player)}의 턴 종료`);
 
         //다음 플레이어 인덱스로 순환 이동
-        const nextIndex = (currentPlayerIndex + 1) % player.length;
+        const nextIndex = (currentPlayerIndex + 1) % players.length;
         setCurrentPlayerIndex(nextIndex);
     }, [players, currentPlayerIndex, diceRolled, logAction, formatPlayer]);
 

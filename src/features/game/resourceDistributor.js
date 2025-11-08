@@ -21,7 +21,7 @@ const distributeResourcesByDice = () => {
 	if (!dice || dice === 7) return; // 도둑처리 진행
 
 	// 현재 도둑이 있는 타일에 걸렸다면, 도둑 처리 진행
-	if (robber.number === dice) return;
+	if (tiles.id === robber) return;
 
 	// 1. 주사위 숫자에 해당하는 타일 필터링해서 찾기
 	const matchedTiles = [...tiles].filter((tile) => tile.number === dice); // 주사위 숫자의 타일 찾기 => id, resourceId 필요
