@@ -1,6 +1,127 @@
 import React, { useRef, useEffect, useState } from "react";
+import useGameStore from "@/features/state/gamestore";
+import { useBuildActions } from "@/features/game/actionHandler";
+import {
+	RESOURCE_TYPE,
+	DEFAULT_TILES,
+	CORNER_PIN,
+	EDGE_PIN,
+	TILE_PIN,
+} from "@/utils/constants";
 import mapImage from "../../assets/map/catanUniverse.jpg";
-import { CORNER_PIN, EDGE_PIN, TILE_PIN } from "@/utils/constants";
+
+// console.log("CORNER_PIN : ", CORNER_PIN);
+
+function GameBoard({
+	visibleCorners = [],
+	visibleEdges = [],
+	visibleTiles = [],
+}) {
+	const canvasRef = useRef(null);
+	const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+
+	//현재 플레이어 정보, 보드 상태, 현재 턴 인덱스를 가져옴
+	const { players, board, currentPlayerIndex } = useGameStore.getState();
+	// const { buildSettlement, upgradeToCity } = useBuildActions();
+
+	useEffect(() => {
+		const canvas = canvasRef.current;
+		const ctx = canvas.getContext("2d");
+		const img = new Image();
+
+		img.src = mapImage;
+		img.onload = () => {
+			canvas.width = img.width;
+			canvas.height = img.height;
+			ctx.drawImage(img, 0, 0);
+			setCanvasSize({ width: img.width, height: img.height });
+		};
+	}, []);
+
+	return (
+		<div
+			style={{
+				position: "relative",
+				width: canvasSize.width,
+				height: canvasSize.height,
+			}}
+		>
+			<canvas ref={canvasRef} />
+
+			{CORNER_PIN.map((pin) => (
+				<button
+					key={`corner-${pin.id}`}
+					style={{
+						position: "absolute",
+						top: pin.y,
+						left: pin.x,
+						transform: "translate(-50%, -50%)",
+						background: "#eee",
+						borderRadius: "50%",
+						width: "30px",
+						height: "30px",
+						border: "3px solid #555",
+						cursor: "pointer",
+						opacity: "70%",
+						// display: visibleCorners.includes(pin.id) ? "block" : "none",
+						display: "block",
+					}}
+					onClick={() => {
+						alert(`마을/도시 건설: ${pin.id}`);
+					}}
+				/>
+			))}
+
+			{EDGE_PIN.map((pin) => (
+				<button
+					key={`edge-${pin.id}`}
+					style={{
+						position: "absolute",
+						top: pin.y,
+						left: pin.x,
+						transform: "translate(-50%, -50%)",
+						background: "#eee",
+						borderRadius: "50%",
+						width: "30px",
+						height: "30px",
+						border: "3px solid #555",
+						cursor: "pointer",
+						opacity: "70%",
+						display: visibleEdges.includes(pin.id) ? "block" : "none",
+					}}
+					onClick={() => {
+						alert(`도로 건설: ${pin.id}`);
+					}}
+				/>
+			))}
+
+			{TILE_PIN.map((pin) => (
+				<button
+					key={`tile-${pin.id}`}
+					style={{
+						position: "absolute",
+						top: pin.y,
+						left: pin.x,
+						transform: "translate(-50%, -50%)",
+						background: "#eee",
+						borderRadius: "50%",
+						width: "50px",
+						height: "50px",
+						border: "3px solid #555",
+						cursor: "pointer",
+						opacity: "70%",
+						display: visibleTiles.includes(pin.id) ? "block" : "none",
+					}}
+					onClick={() => {
+						alert(`도둑 옮기기: ${pin.id}`);
+					}}
+				/>
+			))}
+		</div>
+	);
+}
+
+export default GameBoard;
 
 // // 정착지, 도시를 건설하는 핀
 // const cornerPin = [
@@ -158,105 +279,3 @@ import { CORNER_PIN, EDGE_PIN, TILE_PIN } from "@/utils/constants";
 // 	[455, 600],
 // 	[575, 600],
 // ].map(([x, y], index) => ({ id: index + 1, x, y, label: "" }));
-
-console.log("CORNER_PIN : ", CORNER_PIN);
-
-function GameBoard({
-	visibleCorners = [],
-	visibleEdges = [],
-	visibleTiles = [],
-}) {
-	const canvasRef = useRef(null);
-	const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
-
-	useEffect(() => {
-		const canvas = canvasRef.current;
-		const ctx = canvas.getContext("2d");
-		const img = new Image();
-
-		img.src = mapImage;
-		img.onload = () => {
-			canvas.width = img.width;
-			canvas.height = img.height;
-			ctx.drawImage(img, 0, 0);
-			setCanvasSize({ width: img.width, height: img.height });
-		};
-	}, []);
-
-	return (
-		<div
-			style={{
-				position: "relative",
-				width: canvasSize.width,
-				height: canvasSize.height,
-			}}
-		>
-			<canvas ref={canvasRef} />
-
-			{CORNER_PIN.map((pin) => (
-				<button
-					key={`corner-${pin.id}`}
-					style={{
-						position: "absolute",
-						top: pin.y,
-						left: pin.x,
-						transform: "translate(-50%, -50%)",
-						background: "#eee",
-						borderRadius: "50%",
-						width: "30px",
-						height: "30px",
-						border: "3px solid #555",
-						cursor: "pointer",
-						opacity: "70%",
-						display: visibleCorners.includes(pin.id) ? "block" : "none",
-					}}
-					onClick={() => alert(`마을/도시 건설: ${pin.id}`)}
-				/>
-			))}
-
-			{EDGE_PIN.map((pin) => (
-				<button
-					key={`edge-${pin.id}`}
-					style={{
-						position: "absolute",
-						top: pin.y,
-						left: pin.x,
-						transform: "translate(-50%, -50%)",
-						background: "#eee",
-						borderRadius: "50%",
-						width: "30px",
-						height: "30px",
-						border: "3px solid #555",
-						cursor: "pointer",
-						opacity: "70%",
-						display: visibleEdges.includes(pin.id) ? "block" : "none",
-					}}
-					onClick={() => alert(`도로 건설: ${pin.id}`)}
-				/>
-			))}
-
-			{TILE_PIN.map((pin) => (
-				<button
-					key={`tile-${pin.id}`}
-					style={{
-						position: "absolute",
-						top: pin.y,
-						left: pin.x,
-						transform: "translate(-50%, -50%)",
-						background: "#eee",
-						borderRadius: "50%",
-						width: "50px",
-						height: "50px",
-						border: "3px solid #555",
-						cursor: "pointer",
-						opacity: "70%",
-						display: visibleTiles.includes(pin.id) ? "block" : "none",
-					}}
-					onClick={() => alert(`도둑 옮기기: ${pin.id}`)}
-				/>
-			))}
-		</div>
-	);
-}
-
-export default GameBoard;

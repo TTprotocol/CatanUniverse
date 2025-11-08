@@ -7,6 +7,58 @@ import { DEFAULT_TILES, TILE_PIN } from "@/utils/constants";
 
 import distributeResourcesByDice from "../game/resourceDistributor"; // 자원분배 로직
 
+// 모든 플레이어를 통틀어서 사용된 핀들을 관리.
+export const pinManagement = create(
+	persist(
+		(set, get) => ({
+			cornerPin: [],
+			edgePin: [],
+
+			addCornerPin: (pinId) =>
+				set((state) => ({ cornerPin: [...state.cornerPin, pinId] })),
+
+			addEdgePin: (pinId) =>
+				set((state) => ({ edgePin: [...state.edgePin, pinId] })),
+
+			reset: () => set({ cornerPin: [], edgePin: [] }),
+		}),
+		{
+			name: "pin_management",
+			getStorage: () => localStorage,
+			partialize: (state) => ({
+				cornerPin: state.cornerPin,
+				edgePin: state.edgePin,
+			}),
+		}
+	)
+);
+
+// 게임 전체 로그 관리
+export const gameLog = create(
+	persist(
+		(set, get) => ({
+			log: [], // 게임 로그 저장
+
+			// 게임의 로그를 저장하는 함수
+			addLog: (message) => {
+				const prev = get().log; // 이전 로그 값을 가져온다.
+				const time = new Date().toLocaleTimeString(); // 현재 시간을 구한다
+				set({ log: [...prev, `[${time}] ${message}`] }); // 로그에 현재 시간과 현재 로그를 기록한다.
+			},
+
+			// 로그 초기화
+			resetLog: () => set({ log: [] }),
+		}),
+		{
+			name: "game_log",
+			getStorage: () => localStorage,
+			partialize: (state) => ({
+				log: state.log,
+			}),
+		}
+	)
+);
+
 // set : 상태 업데이트할 때 사용
 // get : 현재 상태를 가져올 때 사용
 const useGameStore = create(
@@ -29,6 +81,7 @@ const useGameStore = create(
 				// 	settlements: [], // 건설한 정착지(마을)의 위치 (CORNER_PIN의 id)
 				// 	cities: [], // 도시의 위치 (CORNER_PIN의 id)
 				// 	devCards: [], // 보유한 개발 카드 목록
+				//  useKnight: 0,   // 사용한 기사 카드의 개수
 				// 	points: 0, // 현재 승점
 				// },
 			],
@@ -40,7 +93,6 @@ const useGameStore = create(
 			},
 
 			// ✅ 게임 상태
-			log: [], // 게임 로그 저장
 			dice1: null, // 첫 번째 주사위 숫자
 			dice2: null, // 두 번째 주사위 숫자
 			dice: null, // 두 주사위 합
@@ -51,18 +103,9 @@ const useGameStore = create(
 
 			// 현재 턴을 진행중인 플레이어를 반환
 			getCurPlayer: () => {
+				const { players, currentPlayerIndex } = get();
 				return players[currentPlayerIndex];
 			},
-
-			// 게임의 로그를 저장하는 함수
-			addLog: (message) => {
-				const prev = get().log; // 이전 로그 값을 가져온다.
-				const time = new Date().toLocaleTimeString(); // 현재 시간을 구한다
-				set({ log: [...prev, `[${time}] ${message}`] }); // 로그에 현재 시간과 현재 로그를 기록한다.
-			},
-
-			// 로그 초기화
-			resetLog: () => set({ log: [] }),
 
 			// ✅ 주사위를 굴리는 함수
 			rollDice: () => {
@@ -76,11 +119,14 @@ const useGameStore = create(
 				distributeResourcesByDice();
 
 				// 🎲 로그 저장
-				get().addLog(
-					`${
-						get().players[get().currentPlayerIndex % get().players.length].name
-					} 님이 주사위를 굴렸습니다: ${dice1} + ${dice2} = ${dice}`
-				);
+				gameLog
+					.getState()
+					.addLog(
+						`${
+							get().players[get().currentPlayerIndex % get().players.length]
+								.name
+						} 님이 주사위를 굴렸습니다: ${dice1} + ${dice2} = ${dice}`
+					);
 			},
 
 			// ✅ 다음 플레이어로 턴을 넘김
@@ -88,13 +134,17 @@ const useGameStore = create(
 				const nextIndex = (get().currentPlayerIndex + 1) % get().players.length; // get()으로 현재 상태를 가져와 nextIndex를 계산
 
 				// 로그 저장
-				get().addLog(
-					`${
-						get().players[get().currentPlayerIndex % get().players.length].name
-					} 님이 턴을 넘겼습니다 : ${
-						get().players[get().currentPlayerIndex % get().players.length].name
-					} -> ${get().players[nextIndex].name}`
-				);
+				gameLog
+					.getState()
+					.addLog(
+						`${
+							get().players[get().currentPlayerIndex % get().players.length]
+								.name
+						} 님이 턴을 넘겼습니다 : ${
+							get().players[get().currentPlayerIndex % get().players.length]
+								.name
+						} -> ${get().players[nextIndex].name}`
+					);
 
 				set({ currentPlayerIndex: nextIndex, phase: "ROLL", dice: null }); // set()으로 상태 변경
 			},
@@ -108,9 +158,35 @@ const useGameStore = create(
 				players[index].points += 1; // 점수 1점 추가
 
 				// 로그 저장
-				get().addLog(
-					`${players[index].name} 님이 ${position} 위치에 정착지를 건설했습니다.`
-				);
+				gameLog
+					.getState()
+					.addLog(
+						`${players[index].name} 님이 ${position} 위치에 정착지를 건설했습니다.`
+					);
+
+				set({ players }); // 상태 업데이트
+			},
+
+			// 정착지를 건설할 때 사용하는 함수
+			// get()으로 현재 상태 확인, set()으로 업데이트
+			buildCity: (position) => {
+				const index = get().currentPlayerIndex; // 현재 플레이어의 인덱스
+				const players = [...get().players]; // 기존 플레이어 배열 복사
+				if (players[index].settlements.includes(position)) {
+					// 정착지가 있는지 확인
+					players[index].cities.push(position); // 현재 플레이어의 도시 추가
+					players[index].settlements = players[index].settlements.filter(
+						(settlement) => settlement !== position
+					);
+				}
+				players[index].points += 1; // 점수 1점 추가
+
+				// 로그 저장
+				gameLog
+					.getState()
+					.addLog(
+						`${players[index].name} 님이 ${position} 위치에 정착지를 건설했습니다.`
+					);
 
 				set({ players }); // 상태 업데이트
 			},
@@ -146,7 +222,6 @@ const useGameStore = create(
 						tiles: [],
 						robber: null,
 					},
-					log: [],
 					dice1: null,
 					dice2: null,
 					dice: null,
@@ -162,7 +237,6 @@ const useGameStore = create(
 			partialize: (state) => ({
 				// 저장할 항목만 선택적으로 지정 (예: 보드, 플레이어 등)
 				currentPlayerIndex: state.currentPlayerIndex,
-				log: state.log,
 				players: state.players,
 				board: state.board,
 				dice: state.dice,

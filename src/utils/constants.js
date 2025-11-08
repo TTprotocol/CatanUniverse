@@ -14,6 +14,9 @@ export const LOCAL_STORAGE_KEYS = {
 	LOCALSTORAGE: "catan_store",
 };
 
+export const PHASE = ["ROLL", "BUILD", "TRADE"];
+
+// 기본 설정된 타일
 export const DEFAULT_TILES = [
 	{
 		id: 1,
@@ -150,7 +153,7 @@ export const DEFAULT_TILES = [
 	},
 ];
 
-// 정착지, 도시를 건설하는 핀
+// 정착지, 도시를 건설하는 핀 (꼭짓점)
 export const CORNER_PIN = [
 	{ id: 1, x: 340, y: 135, label: "", tile: [1], edge: [1, 2] },
 	{ id: 2, x: 455, y: 135, label: "", tile: [2], edge: [3, 4] },
@@ -209,7 +212,7 @@ export const CORNER_PIN = [
 ];
 // .map(([x, y], index) => ({ id: index + 1, x, y, label: "" }));
 
-// 도로를 건설하는 핀
+// 도로를 건설하는 핀 (모서리)
 export const EDGE_PIN = [
 	{ id: 1, x: 310, y: 150, label: "", tile: [1], corner: [1, 4] },
 	{ id: 2, x: 370, y: 150, label: "", tile: [1], corner: [1, 5] },
@@ -286,7 +289,7 @@ export const EDGE_PIN = [
 ];
 // .map(([x, y], index) => ({ id: index + 1, x, y, label: "" }));
 
-// 타일을 클릭하는 핀 (도둑 이동용)
+// 타일을 클릭하는 핀 (면) (도둑 이동용)
 export const TILE_PIN = [
 	{
 		id: 1,
@@ -295,6 +298,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [1, 4, 5, 8, 9, 13],
 		edge: [1, 2, 7, 8, 11, 12],
+		robber: false,
 	}, // 10번 타일
 	{
 		id: 2,
@@ -303,6 +307,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [2, 5, 6, 9, 10, 14],
 		edge: [2, 3, 4, 8, 9, 14],
+		robber: false,
 	}, // 2번 타일
 	{
 		id: 3,
@@ -311,6 +316,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [3, 6, 7, 10, 11, 15],
 		edge: [4, 5, 6, 9, 10, 16],
+		robber: false,
 	}, // 9번 타일
 	{
 		id: 4,
@@ -319,6 +325,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [12, 13, 17, 18, 23],
 		edge: [11, 12, 19, 20, 24, 25],
+		robber: false,
 	}, // 12번 타일
 	{
 		id: 5,
@@ -327,6 +334,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [9, 13, 14, 18, 19, 24],
 		edge: [12, 13, 20, 21, 26, 27],
+		robber: false,
 	}, // 6번 타일
 	{
 		id: 6,
@@ -335,6 +343,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [10, 14, 15, 19, 20, 25],
 		edge: [14, 15, 21, 22, 28, 29],
+		robber: false,
 	}, // 4번 타일
 	{
 		id: 7,
@@ -343,6 +352,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [20, 21, 26],
 		edge: [16, 17, 30, 31],
+		robber: false,
 	}, // 10번 타일
 	{
 		id: 8,
@@ -351,6 +361,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [22, 23, 28, 29, 34, 35],
 		edge: [24, 34, 35, 40, 41, 50],
+		robber: false,
 	}, // 9번 타일
 	{
 		id: 9,
@@ -359,6 +370,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [24, 29, 30, 35, 36, 19],
 		edge: [21, 35, 36, 42, 43, 20],
+		robber: false,
 	}, // 11번 타일
 	{
 		id: 10,
@@ -367,6 +379,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [24, 25, 30, 31, 36, 37],
 		edge: [27, 28, 36, 37, 44, 45],
+		robber: false,
 	}, // 7번 타일 (사막)
 	{
 		id: 11,
@@ -375,6 +388,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [25, 26, 31, 32, 37, 38],
 		edge: [29, 30, 37, 38, 46, 47],
+		robber: false,
 	}, // 3번 타일
 	{
 		id: 12,
@@ -383,6 +397,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [21, 26, 27, 32, 33],
 		edge: [31, 32, 33, 38, 39, 48, 49],
+		robber: false,
 	}, // 8번 타일
 	{
 		id: 13,
@@ -391,6 +406,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [29, 34, 35, 39, 40, 41],
 		edge: [41, 42, 50, 51, 55, 56],
+		robber: false,
 	}, // 8번 타일
 	{
 		id: 14,
@@ -399,6 +415,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [30, 35, 36, 40, 41, 45],
 		edge: [43, 44, 51, 52, 57, 58],
+		robber: false,
 	}, // 3번 타일
 	{
 		id: 15,
@@ -407,6 +424,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [31, 36, 37, 41, 42, 46],
 		edge: [45, 46, 52, 53, 59, 60],
+		robber: false,
 	}, // 4번 타일
 	{
 		id: 16,
@@ -415,6 +433,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [32, 37, 38, 42, 43, 47],
 		edge: [47, 48, 53, 54, 61, 62],
+		robber: false,
 	}, // 5번 타일
 	{
 		id: 17,
@@ -423,6 +442,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [40, 44, 45, 48, 49, 52],
 		edge: [55, 56, 63, 64, 67, 68],
+		robber: false,
 	}, // 5번 타일
 	{
 		id: 18,
@@ -431,6 +451,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [41, 45, 46, 49, 50, 53],
 		edge: [56, 57, 64, 65, 69, 70],
+		robber: false,
 	}, // 6번 타일
 	{
 		id: 19,
@@ -439,6 +460,7 @@ export const TILE_PIN = [
 		label: "",
 		corner: [42, 46, 47, 50, 51, 54],
 		edge: [58, 59, 60, 61, 66, 71, 72],
+		robber: false,
 	}, // 11번 타일
 ];
 // .map(([x, y], index) => ({ id: index + 1, x, y, label: "" }));
