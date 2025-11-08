@@ -21,7 +21,8 @@ function GameBoard({
 	const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
 	//현재 플레이어 정보, 보드 상태, 현재 턴 인덱스를 가져옴
-	const { players, board, currentPlayerIndex } = useGameStore.getState();
+	const { players, board, currentPlayerIndex, buildSettlement, buildCity } =
+		useGameStore.getState();
 	// const { buildSettlement, upgradeToCity } = useBuildActions();
 
 	useEffect(() => {

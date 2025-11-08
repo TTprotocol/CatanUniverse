@@ -107,6 +107,12 @@ const useGameStore = create(
 				return players[currentPlayerIndex];
 			},
 
+			// 실제 게임 유저만 반환
+			getCurPlayer: (userId = 0) => {
+				const { players } = get();
+				return players[userId];
+			},
+
 			// ✅ 주사위를 굴리는 함수
 			rollDice: () => {
 				const dice1 = Math.floor(Math.random() * 6 + 1);
