@@ -3,8 +3,11 @@ import React from "react";
 import "../../styles/PlayerPanel.css";
 import Bank from "./Bank";
 import PlayerInfo from "./PlayerInfo";
+import useGameStore from "../../features/state/gameStore";
 
 export default function PlayerPanel({ players }) {
+
+    const currentPlayerIndex = useGameStore((state) => state.currentPlayerIndex);
 
     return (
         <section className="playerPanel">
@@ -12,6 +15,7 @@ export default function PlayerPanel({ players }) {
 
             <div className="otherPlayers">
                 <Bank />
+
                 {players.slice(1).map((player, i) => (
                     <PlayerInfo
                         key={i}
@@ -20,11 +24,14 @@ export default function PlayerPanel({ players }) {
                         devCards={player.devCards}
                         roads={player.roads}
                         useKnight={player.useKnight}
+                        isCurrent={currentPlayerIndex === i +1}
                     />
                 ))}
             </div>
 
-            <PlayerInfo isMe={true} playerClass="" 
+            <PlayerInfo
+                isMe={true}
+                playerClass="" 
                 resources={players[0]?.resources || 0}
                 devCards={players[0]?.devCards || 0}
                 roads={players[0]?.roads || 0}
