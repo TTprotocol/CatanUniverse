@@ -95,7 +95,7 @@ const Home = () => {
 
 	return (
 		<main id="main">
-			<div>
+			<div id="wrap">
 				<section className="board">
 					<GameBoard
 						visibleCorners={visibleCornerPins}

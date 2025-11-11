@@ -91,8 +91,7 @@
 
 .resourceCard {
     position: relative;
-    width: 40px;
-    height: 50px;
+    float: left;
 }
 
 .resourceCard div {
@@ -104,6 +103,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+
+.resourceCard img {
+    width: 55px;
+    height: 80px;
 }
 
 .countBadge {
@@ -155,10 +160,7 @@
 }
 
 .ownResourceCard {
-    width: 50%;
+    width: 60%;
     border-right: 1px solid #999;
 }
 
-.resourceCard {
-    float: left;
-}
