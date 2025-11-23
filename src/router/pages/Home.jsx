@@ -49,9 +49,9 @@ const Home = () => {
 				id: 1, //아이디
 				name: "플레이어1", //이름
 				resources: [1,2,4,2,1], //자원 카드 현황 ["tree", "brick", "sheep", "wheat", "steel"]
-				roads: [], //건설한 도로의 위치
-				settlements: [], //건설한 마을의 위치
-				cities: [], //도시의 위치
+				roads: [2,8], //건설한 도로의 위치
+				settlements: [1], //건설한 마을의 위치
+				cities: [9], //도시의 위치
 				devCards: [0,0,1,2,0], //보유한 개발 카드 목록 ["knight","victoryPoint", "roadBuilding", "yearOfPlenty", "monopoly"]
 				useKnight: 0,   // 사용한 기사 카드의 개수
 				points: 0, //현재 승점
@@ -71,7 +71,7 @@ const Home = () => {
 				id: 3,
 				name: "플레이어3",
 				resources: [0,0,0,0,0],
-				roads: [],
+				roads: [40],
 				settlements: [],
 				cities: [],
 				devCards: [1,2,3,1,0],
@@ -90,7 +90,7 @@ const Home = () => {
 				points: 0,
 			},
 		]);
-		initBoard([]);
+		initBoard([],10);
 	}, []);
 
 	return (

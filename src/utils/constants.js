@@ -1,6 +1,10 @@
 // 자원 종류, 개발 카드 목록, 기본 규칙 등의 상수 값 정의입니다.
 
 export const RESOURCE_TYPE = ["tree", "brick", "sheep", "wheat", "steel"]; // 0: 나무, 1: 벽돌, 2: 양, 3: 밀, 4: 철
+// 도로 : [1, 1, 0, 0, 0]
+// 마을 : [1, 1, 1, 1, 0], 포인트 += 1
+// 도시 : [0, 0, 0, 2, 3], 포인트 += 2
+// 발전 : [0, 0, 1, 1, 1]
 
 export const DEVELOPMENT_CARD = [
 	"knight", // 0: 기사 - 도둑을 이동시킨다. 최대 14장
@@ -503,78 +507,78 @@ export const CORNER_PIN = [
 
 // 도로를 건설하는 핀 (모서리)
 export const EDGE_PIN = [
-	{ id: 1, x: 310, y: 150, label: "", tile: [1], corner: [1, 4] },
-	{ id: 2, x: 370, y: 150, label: "", tile: [1], corner: [1, 5] },
-	{ id: 3, x: 425, y: 150, label: "", tile: [2], corner: [2, 5] },
-	{ id: 4, x: 485, y: 150, label: "", tile: [2], corner: [2, 6] },
-	{ id: 5, x: 545, y: 150, label: "", tile: [3], corner: [3, 6] },
-	{ id: 6, x: 600, y: 150, label: "", tile: [3], corner: [3, 7] },
-	{ id: 7, x: 280, y: 195, label: "", tile: [1], corner: [4, 8] },
-	{ id: 8, x: 398, y: 195, label: "", tile: [1, 2], corner: [5, 9] },
-	{ id: 9, x: 515, y: 195, label: "", tile: [2, 3], corner: [6, 10] },
-	{ id: 10, x: 625, y: 195, label: "", tile: [3], corner: [7, 11] },
-	{ id: 11, x: 254, y: 245, label: "", tile: [1, 4], corner: [8, 12] },
-	{ id: 12, x: 310, y: 245, label: "", tile: [1, 4], corner: [8, 13] },
-	{ id: 13, x: 370, y: 245, label: "", tile: [2, 5], corner: [9, 13] },
-	{ id: 14, x: 425, y: 245, label: "", tile: [2, 6], corner: [9, 14] },
-	{ id: 15, x: 485, y: 245, label: "", tile: [3, 6], corner: [10, 14] },
-	{ id: 16, x: 545, y: 245, label: "", tile: [3, 6], corner: [10, 15] },
-	{ id: 17, x: 600, y: 245, label: "", tile: [7], corner: [11, 15] },
-	{ id: 18, x: 655, y: 245, label: "", tile: [7], corner: [11, 16] },
-	{ id: 19, x: 228, y: 295, label: "", tile: [4], corner: [12, 17] },
-	{ id: 20, x: 340, y: 295, label: "", tile: [4, 5], corner: [13, 18] },
-	{ id: 21, x: 455, y: 295, label: "", tile: [5, 6], corner: [14, 19] },
-	{ id: 22, x: 575, y: 295, label: "", tile: [6, 7], corner: [15, 20] },
-	{ id: 23, x: 685, y: 295, label: "", tile: [7], corner: [16, 21] },
-	{ id: 24, x: 198, y: 345, label: "", tile: [4, 8], corner: [17, 22] },
-	{ id: 25, x: 254, y: 345, label: "", tile: [4, 8], corner: [17, 23] },
-	{ id: 26, x: 310, y: 345, label: "", tile: [5, 9], corner: [18, 23] },
-	{ id: 27, x: 370, y: 345, label: "", tile: [5, 9], corner: [18, 24] },
-	{ id: 28, x: 425, y: 345, label: "", tile: [6, 10], corner: [19, 24] },
-	{ id: 29, x: 485, y: 345, label: "", tile: [6, 10], corner: [19, 25] },
-	{ id: 30, x: 545, y: 345, label: "", tile: [6, 11], corner: [20, 25] },
-	{ id: 31, x: 600, y: 345, label: "", tile: [7, 11], corner: [20, 26] },
-	{ id: 32, x: 655, y: 345, label: "", tile: [7, 12], corner: [21, 26] },
-	{ id: 33, x: 715, y: 345, label: "", tile: [12], corner: [21, 27] },
-	{ id: 34, x: 170, y: 395, label: "", tile: [8], corner: [22, 28] },
-	{ id: 35, x: 280, y: 395, label: "", tile: [8, 9], corner: [23, 29] },
-	{ id: 36, x: 398, y: 395, label: "", tile: [9, 10], corner: [24, 30] },
-	{ id: 37, x: 515, y: 395, label: "", tile: [10, 11], corner: [25, 31] },
-	{ id: 38, x: 625, y: 395, label: "", tile: [11, 12], corner: [26, 32] },
-	{ id: 39, x: 740, y: 395, label: "", tile: [12], corner: [27, 33] },
-	{ id: 40, x: 198, y: 445, label: "", tile: [8, 13], corner: [28, 34] },
-	{ id: 41, x: 254, y: 445, label: "", tile: [8, 13], corner: [29, 34] },
-	{ id: 42, x: 310, y: 445, label: "", tile: [9, 13], corner: [29, 35] },
-	{ id: 43, x: 370, y: 445, label: "", tile: [9, 14], corner: [30, 35] },
-	{ id: 44, x: 425, y: 445, label: "", tile: [10, 14], corner: [30, 36] },
-	{ id: 45, x: 485, y: 445, label: "", tile: [10, 15], corner: [31, 36] },
-	{ id: 46, x: 545, y: 445, label: "", tile: [11, 15], corner: [31, 37] },
-	{ id: 47, x: 600, y: 445, label: "", tile: [11, 16], corner: [32, 37] },
-	{ id: 48, x: 655, y: 445, label: "", tile: [12, 16], corner: [32, 38] },
-	{ id: 49, x: 715, y: 445, label: "", tile: [16], corner: [33, 38] },
-	{ id: 50, x: 228, y: 494, label: "", tile: [13], corner: [34, 39] },
-	{ id: 51, x: 340, y: 494, label: "", tile: [13, 14], corner: [35, 40] },
-	{ id: 52, x: 455, y: 494, label: "", tile: [14, 15], corner: [36, 41] },
-	{ id: 53, x: 575, y: 494, label: "", tile: [15, 16], corner: [37, 42] },
-	{ id: 54, x: 685, y: 494, label: "", tile: [16], corner: [38, 43] },
-	{ id: 55, x: 254, y: 545, label: "", tile: [13, 17], corner: [39, 44] },
-	{ id: 56, x: 310, y: 545, label: "", tile: [17, 13], corner: [40, 44] },
-	{ id: 57, x: 370, y: 545, label: "", tile: [17, 14], corner: [40, 45] },
-	{ id: 58, x: 425, y: 545, label: "", tile: [18, 14], corner: [41, 45] },
-	{ id: 59, x: 485, y: 545, label: "", tile: [18, 15], corner: [41, 46] },
-	{ id: 60, x: 545, y: 545, label: "", tile: [19, 15], corner: [42, 46] },
-	{ id: 61, x: 600, y: 545, label: "", tile: [19, 16], corner: [42, 47] },
-	{ id: 62, x: 655, y: 545, label: "", tile: [19, 16], corner: [43, 47] },
-	{ id: 63, x: 280, y: 593, label: "", tile: [17], corner: [44, 48] },
-	{ id: 64, x: 398, y: 593, label: "", tile: [17, 18], corner: [45, 49] },
-	{ id: 65, x: 515, y: 593, label: "", tile: [18, 19], corner: [46, 50] },
-	{ id: 66, x: 625, y: 593, label: "", tile: [19], corner: [47, 51] },
-	{ id: 67, x: 310, y: 645, label: "", tile: [17], corner: [48, 52] },
-	{ id: 68, x: 370, y: 645, label: "", tile: [17, 18], corner: [49, 52] },
-	{ id: 69, x: 425, y: 645, label: "", tile: [18], corner: [49, 53] },
-	{ id: 70, x: 485, y: 645, label: "", tile: [18, 19], corner: [50, 53] },
-	{ id: 71, x: 545, y: 645, label: "", tile: [19], corner: [50, 54] },
-	{ id: 72, x: 600, y: 645, label: "", tile: [19], corner: [51, 54] },
+	{ id: 1, x: 310, y: 150, label: "", tile: [1], corner: [1, 4], angle:60 },
+	{ id: 2, x: 370, y: 150, label: "", tile: [1], corner: [1, 5], angle:120 },
+	{ id: 3, x: 425, y: 150, label: "", tile: [2], corner: [2, 5], angle:60 },
+	{ id: 4, x: 485, y: 150, label: "", tile: [2], corner: [2, 6], angle:120 },
+	{ id: 5, x: 545, y: 150, label: "", tile: [3], corner: [3, 6], angle:60 },
+	{ id: 6, x: 600, y: 150, label: "", tile: [3], corner: [3, 7], angle:120 },
+	{ id: 7, x: 280, y: 195, label: "", tile: [1], corner: [4, 8], angle:0 },
+	{ id: 8, x: 398, y: 195, label: "", tile: [1, 2], corner: [5, 9], angle:0 },
+	{ id: 9, x: 515, y: 195, label: "", tile: [2, 3], corner: [6, 10], angle:0 },
+	{ id: 10, x: 625, y: 195, label: "", tile: [3], corner: [7, 11], angle:0 },
+	{ id: 11, x: 254, y: 245, label: "", tile: [1, 4], corner: [8, 12], angle:60 },
+	{ id: 12, x: 310, y: 245, label: "", tile: [1, 4], corner: [8, 13], angle:120 },
+	{ id: 13, x: 370, y: 245, label: "", tile: [2, 5], corner: [9, 13], angle:60 },
+	{ id: 14, x: 425, y: 245, label: "", tile: [2, 6], corner: [9, 14], angle:120 },
+	{ id: 15, x: 485, y: 245, label: "", tile: [3, 6], corner: [10, 14], angle:60 },
+	{ id: 16, x: 545, y: 245, label: "", tile: [3, 6], corner: [10, 15], angle:120 },
+	{ id: 17, x: 600, y: 245, label: "", tile: [7], corner: [11, 15], angle:60 },
+	{ id: 18, x: 655, y: 245, label: "", tile: [7], corner: [11, 16], angle:120 },
+	{ id: 19, x: 228, y: 295, label: "", tile: [4], corner: [12, 17], angle:0 },
+	{ id: 20, x: 340, y: 295, label: "", tile: [4, 5], corner: [13, 18], angle:0 },
+	{ id: 21, x: 455, y: 295, label: "", tile: [5, 6], corner: [14, 19], angle:0 },
+	{ id: 22, x: 575, y: 295, label: "", tile: [6, 7], corner: [15, 20], angle:0 },
+	{ id: 23, x: 685, y: 295, label: "", tile: [7], corner: [16, 21], angle:0 },
+	{ id: 24, x: 198, y: 345, label: "", tile: [4, 8], corner: [17, 22], angle:60 },
+	{ id: 25, x: 254, y: 345, label: "", tile: [4, 8], corner: [17, 23], angle:120 },
+	{ id: 26, x: 310, y: 345, label: "", tile: [5, 9], corner: [18, 23], angle:60 },
+	{ id: 27, x: 370, y: 345, label: "", tile: [5, 9], corner: [18, 24], angle:120 },
+	{ id: 28, x: 425, y: 345, label: "", tile: [6, 10], corner: [19, 24], angle:60 },
+	{ id: 29, x: 485, y: 345, label: "", tile: [6, 10], corner: [19, 25], angle:120 },
+	{ id: 30, x: 545, y: 345, label: "", tile: [6, 11], corner: [20, 25], angle:60 },
+	{ id: 31, x: 600, y: 345, label: "", tile: [7, 11], corner: [20, 26], angle:120 },
+	{ id: 32, x: 655, y: 345, label: "", tile: [7, 12], corner: [21, 26], angle:60 },
+	{ id: 33, x: 715, y: 345, label: "", tile: [12], corner: [21, 27], angle:120 },
+	{ id: 34, x: 170, y: 395, label: "", tile: [8], corner: [22, 28], angle:0 },
+	{ id: 35, x: 280, y: 395, label: "", tile: [8, 9], corner: [23, 29], angle:0 },
+	{ id: 36, x: 398, y: 395, label: "", tile: [9, 10], corner: [24, 30], angle:0 },
+	{ id: 37, x: 515, y: 395, label: "", tile: [10, 11], corner: [25, 31], angle:0 },
+	{ id: 38, x: 625, y: 395, label: "", tile: [11, 12], corner: [26, 32], angle:0 },
+	{ id: 39, x: 740, y: 395, label: "", tile: [12], corner: [27, 33], angle:0 },
+	{ id: 40, x: 198, y: 445, label: "", tile: [8, 13], corner: [28, 34], angle:120 },
+	{ id: 41, x: 254, y: 445, label: "", tile: [8, 13], corner: [29, 34], angle:60 },
+	{ id: 42, x: 310, y: 445, label: "", tile: [9, 13], corner: [29, 35], angle:120 },
+	{ id: 43, x: 370, y: 445, label: "", tile: [9, 14], corner: [30, 35], angle:60 },
+	{ id: 44, x: 425, y: 445, label: "", tile: [10, 14], corner: [30, 36], angle:120 },
+	{ id: 45, x: 485, y: 445, label: "", tile: [10, 15], corner: [31, 36], angle:60 },
+	{ id: 46, x: 545, y: 445, label: "", tile: [11, 15], corner: [31, 37], angle:120 },
+	{ id: 47, x: 600, y: 445, label: "", tile: [11, 16], corner: [32, 37], angle:60 },
+	{ id: 48, x: 655, y: 445, label: "", tile: [12, 16], corner: [32, 38], angle:120 },
+	{ id: 49, x: 715, y: 445, label: "", tile: [16], corner: [33, 38], angle:60 },
+	{ id: 50, x: 228, y: 494, label: "", tile: [13], corner: [34, 39], angle:0 },
+	{ id: 51, x: 340, y: 494, label: "", tile: [13, 14], corner: [35, 40], angle:0 },
+	{ id: 52, x: 455, y: 494, label: "", tile: [14, 15], corner: [36, 41], angle:0 },
+	{ id: 53, x: 575, y: 494, label: "", tile: [15, 16], corner: [37, 42], angle:0 },
+	{ id: 54, x: 685, y: 494, label: "", tile: [16], corner: [38, 43], angle:0 },
+	{ id: 55, x: 254, y: 545, label: "", tile: [13, 17], corner: [39, 44], angle:120 },
+	{ id: 56, x: 310, y: 545, label: "", tile: [17, 13], corner: [40, 44], angle:60 },
+	{ id: 57, x: 370, y: 545, label: "", tile: [17, 14], corner: [40, 45], angle:120 },
+	{ id: 58, x: 425, y: 545, label: "", tile: [18, 14], corner: [41, 45], angle:60 },
+	{ id: 59, x: 485, y: 545, label: "", tile: [18, 15], corner: [41, 46], angle:120 },
+	{ id: 60, x: 545, y: 545, label: "", tile: [19, 15], corner: [42, 46], angle:60 },
+	{ id: 61, x: 600, y: 545, label: "", tile: [19, 16], corner: [42, 47], angle:120 },
+	{ id: 62, x: 655, y: 545, label: "", tile: [19, 16], corner: [43, 47], angle:60 },
+	{ id: 63, x: 280, y: 593, label: "", tile: [17], corner: [44, 48], angle:0 },
+	{ id: 64, x: 398, y: 593, label: "", tile: [17, 18], corner: [45, 49], angle:0 },
+	{ id: 65, x: 515, y: 593, label: "", tile: [18, 19], corner: [46, 50], angle:0 },
+	{ id: 66, x: 625, y: 593, label: "", tile: [19], corner: [47, 51], angle:0 },
+	{ id: 67, x: 310, y: 645, label: "", tile: [17], corner: [48, 52], angle:120 },
+	{ id: 68, x: 370, y: 645, label: "", tile: [17, 18], corner: [49, 52], angle:60 },
+	{ id: 69, x: 425, y: 645, label: "", tile: [18], corner: [49, 53], angle:120 },
+	{ id: 70, x: 485, y: 645, label: "", tile: [18, 19], corner: [50, 53], angle:60 },
+	{ id: 71, x: 545, y: 645, label: "", tile: [19], corner: [50, 54], angle:120},
+	{ id: 72, x: 600, y: 645, label: "", tile: [19], corner: [51, 54], angle:60 },
 ];
 // .map(([x, y], index) => ({ id: index + 1, x, y, label: "" }));
 
@@ -587,7 +591,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [1, 4, 5, 8, 9, 13],
 		edge: [1, 2, 7, 8, 11, 12],
-		robber: false,
 	}, // 10번 타일
 	{
 		id: 2,
@@ -596,7 +599,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [2, 5, 6, 9, 10, 14],
 		edge: [2, 3, 4, 8, 9, 14],
-		robber: false,
 	}, // 2번 타일
 	{
 		id: 3,
@@ -605,7 +607,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [3, 6, 7, 10, 11, 15],
 		edge: [4, 5, 6, 9, 10, 16],
-		robber: false,
 	}, // 9번 타일
 	{
 		id: 4,
@@ -614,7 +615,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [12, 13, 17, 18, 23],
 		edge: [11, 12, 19, 20, 24, 25],
-		robber: false,
 	}, // 12번 타일
 	{
 		id: 5,
@@ -623,7 +623,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [9, 13, 14, 18, 19, 24],
 		edge: [12, 13, 20, 21, 26, 27],
-		robber: false,
 	}, // 6번 타일
 	{
 		id: 6,
@@ -632,7 +631,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [10, 14, 15, 19, 20, 25],
 		edge: [14, 15, 21, 22, 28, 29],
-		robber: false,
 	}, // 4번 타일
 	{
 		id: 7,
@@ -641,7 +639,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [20, 21, 26],
 		edge: [16, 17, 30, 31],
-		robber: false,
 	}, // 10번 타일
 	{
 		id: 8,
@@ -650,7 +647,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [22, 23, 28, 29, 34, 35],
 		edge: [24, 34, 35, 40, 41, 50],
-		robber: false,
 	}, // 9번 타일
 	{
 		id: 9,
@@ -659,7 +655,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [24, 29, 30, 35, 36, 19],
 		edge: [21, 35, 36, 42, 43, 20],
-		robber: false,
 	}, // 11번 타일
 	{
 		id: 10,
@@ -668,7 +663,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [24, 25, 30, 31, 36, 37],
 		edge: [27, 28, 36, 37, 44, 45],
-		robber: false,
 	}, // 7번 타일 (사막)
 	{
 		id: 11,
@@ -677,7 +671,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [25, 26, 31, 32, 37, 38],
 		edge: [29, 30, 37, 38, 46, 47],
-		robber: false,
 	}, // 3번 타일
 	{
 		id: 12,
@@ -686,7 +679,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [21, 26, 27, 32, 33],
 		edge: [31, 32, 33, 38, 39, 48, 49],
-		robber: false,
 	}, // 8번 타일
 	{
 		id: 13,
@@ -695,7 +687,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [29, 34, 35, 39, 40, 41],
 		edge: [41, 42, 50, 51, 55, 56],
-		robber: false,
 	}, // 8번 타일
 	{
 		id: 14,
@@ -704,7 +695,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [30, 35, 36, 40, 41, 45],
 		edge: [43, 44, 51, 52, 57, 58],
-		robber: false,
 	}, // 3번 타일
 	{
 		id: 15,
@@ -713,7 +703,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [31, 36, 37, 41, 42, 46],
 		edge: [45, 46, 52, 53, 59, 60],
-		robber: false,
 	}, // 4번 타일
 	{
 		id: 16,
@@ -722,7 +711,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [32, 37, 38, 42, 43, 47],
 		edge: [47, 48, 53, 54, 61, 62],
-		robber: false,
 	}, // 5번 타일
 	{
 		id: 17,
@@ -731,7 +719,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [40, 44, 45, 48, 49, 52],
 		edge: [55, 56, 63, 64, 67, 68],
-		robber: false,
 	}, // 5번 타일
 	{
 		id: 18,
@@ -740,7 +727,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [41, 45, 46, 49, 50, 53],
 		edge: [56, 57, 64, 65, 69, 70],
-		robber: false,
 	}, // 6번 타일
 	{
 		id: 19,
@@ -749,7 +735,6 @@ export const TILE_PIN = [
 		label: "",
 		corner: [42, 46, 47, 50, 51, 54],
 		edge: [58, 59, 60, 61, 66, 71, 72],
-		robber: false,
 	}, // 11번 타일
 ];
 // .map(([x, y], index) => ({ id: index + 1, x, y, label: "" }));

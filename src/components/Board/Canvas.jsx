@@ -9,6 +9,10 @@ import {
 	TILE_PIN,
 } from "@/utils/constants";
 import mapImage from "../../assets/map/catanUniverse.jpg";
+import settlementImg from "@/assets/playerBlue/blueVillage.png";
+import cityImg from "@/assets/playerBlue/blueCity.png";
+import roadImg from "@/assets/playerBlue/blueRoad.png";
+import robberImg from "@/assets/theif.png";
 
 // console.log("CORNER_PIN : ", CORNER_PIN);
 
@@ -20,10 +24,14 @@ function GameBoard({
 	const canvasRef = useRef(null);
 	const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
+	const cornerPinMap = Object.fromEntries(CORNER_PIN.map(p => [p.id, p]));
+	const edgePinMap = Object.fromEntries(EDGE_PIN.map(p => [p.id, p]));
+
 	//현재 플레이어 정보, 보드 상태, 현재 턴 인덱스를 가져옴
-	const { players, board, currentPlayerIndex, buildSettlement, buildCity } =
+	const { board, currentPlayerIndex, buildSettlement, buildCity } =
 		useGameStore.getState();
 	// const { buildSettlement, upgradeToCity } = useBuildActions();
+	const { players } = useGameStore.getState(state => state.players);
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
@@ -38,6 +46,8 @@ function GameBoard({
 			setCanvasSize({ width: img.width, height: img.height });
 		};
 	}, []);
+
+	const robberTile = useGameStore(state => state.board.robber);
 
 	return (
 		<div
@@ -65,6 +75,7 @@ function GameBoard({
 						cursor: "pointer",
 						opacity: "70%",
 						display: visibleCorners.includes(pin.id) ? "block" : "none",
+						zIndex: 3,
 						// display: "block",
 					}}
 					onClick={() => {
@@ -72,6 +83,58 @@ function GameBoard({
 					}}
 				/>
 			))}
+
+			{/* 건설된 정착지 */}
+			{players.map(player =>
+				player.settlements.map(pinId => {
+					const pin = cornerPinMap[pinId];
+					if (!pin) return null;
+
+					return (
+						<img
+							key={`settlement-${player.id}-${pinId}`}
+							src={settlementImg}
+							alt="정착지"
+							style={{
+								position: "absolute",
+								top: pin.y,
+								left: pin.x,
+								transform: "translate(-50%, -50%)",
+								width: "50px",
+								height: "50px",
+								zIndex: 2,
+								pointerEvents: "none",
+							}}
+            			/>
+					);
+				})
+			)}
+
+			{/* 건설된 도시 */}
+			{players.map(player =>
+				player.cities.map(pinId => {
+					const pin = cornerPinMap[pinId];
+					if (!pin) return null;
+
+					return (
+						<img
+							key={`city-${player.id}-${pinId}`}
+							src={cityImg}
+							alt="도시"
+							style={{
+								position: "absolute",
+								top: pin.y,
+								left: pin.x,
+								transform: "translate(-50%, -50%)",
+								width: "50px",
+								height: "50px",
+								zIndex: 6,
+								pointerEvents: "none",
+							}}
+						/>
+					);
+				})
+			)}
 
 			{EDGE_PIN.map((pin) => (
 				<button
@@ -89,12 +152,39 @@ function GameBoard({
 						cursor: "pointer",
 						opacity: "70%",
 						display: visibleEdges.includes(pin.id) ? "block" : "none",
+						zIndex: 3,
 					}}
 					onClick={() => {
 						alert(`도로 건설: ${pin.id}`);
 					}}
 				/>
 			))}
+
+			{/* 건설된 도로 */}
+			{players.map(player =>
+				player.roads.map(pinId => {
+					const pin = edgePinMap[pinId];
+					if (!pin) return null;
+
+					return (
+						<img
+							key={`road-${player.id}-${pinId}`}
+							src={roadImg}
+							alt="도로"
+							style={{
+								position: "absolute",
+								top: pin.y,
+								left: pin.x,
+								transform: `translate(-50%, -50%) rotate(${pin.angle}deg)`,
+								width: "35px",
+								height: "70px",
+								zIndex: 1,
+								pointerEvents: "none",
+							}}
+						/>
+					);
+				})
+			)}
 
 			{TILE_PIN.map((pin) => (
 				<button
@@ -112,11 +202,32 @@ function GameBoard({
 						cursor: "pointer",
 						opacity: "70%",
 						display: visibleTiles.includes(pin.id) ? "block" : "none",
+						zIndex: 3,
 					}}
 					onClick={() => {
 						alert(`도둑 옮기기: ${pin.id}`);
 					}}
 				/>
+			))}
+
+			{TILE_PIN.map((pin) => (
+				pin.id === robberTile && (
+					<img
+						key="robber"
+						src={robberImg}
+						alt="도둑"
+						style={{
+							position: "absolute",
+							top: pin.y,
+							left: pin.x,
+							transform: "translate(-50%, -50%)",
+							width: "50px",
+							height: "50px",
+							zIndex: 7,
+							pointerEvents: "none",
+						}}
+					/>
+				)
 			))}
 		</div>
 	);
