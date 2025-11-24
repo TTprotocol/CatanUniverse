@@ -3,7 +3,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'KakaoSmallSans';
-    font-weight: 400;
+    font-weight: 700;
     font-style: normal;
 }
 
@@ -14,33 +14,32 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 20px;
+    box-sizing: border-box;
 }
 
 #main>div {
     width: 901px;
-    height: 800px;
+    height: 914px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 .board {
     width: 100%;
-    height: 100%;
+    flex: 1;
+    margin-bottom: 10px;
 }
 
 .actionPanel {
     width: 100%;
     height: 114px;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: flex-end;
     position: relative;
-}
-
-.ownCards {
-    width: 500px;
-    height: 100%;
-    border-radius: 10px;
-    background-color: #eee;
-    align-items: flex-end;
 }
 
 .actions {
@@ -50,18 +49,35 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    gap: 10px;
 }
 
 .actions button {
-    width: 50px;
-    height: 50px;
-    background-color: #eee;
+    width: 60px;
+    height: 60px;
+    background-color: #fff;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.actions button:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+    border-color: #1369a8;
+    box-shadow: 0 4px 12px rgba(19, 105, 168, 0.3);
+}
+
+.actions button:active {
+    transform: scale(0.98);
 }
 
 .actions button div {
     width: 100%;
     height: 100%;
 }
+
 
 .development div {
     background-image: url(../assets/progCard/progressiveCard-back.png);
