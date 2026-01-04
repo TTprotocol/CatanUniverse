@@ -144,8 +144,7 @@ export const useBuildActions = ({ players, setPlayers }) => {
  *   - newTileId                   : 도둑이 이동할 타일 id (UI 선택 결과)
  *   - setRobberTile               : 보드의 도둑 위치 갱신 함수(id 저장)
  *   - chooseVictimFn (선택)       	: 피해자 선택 함수(없으면 첫 번째 대상)
-*/
-
+ */
 
 export const rollDiceSevenHandler = ({
 	players,
