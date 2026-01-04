@@ -12,7 +12,7 @@ import mapImage from "../../assets/map/catanUniverse.jpg";
 import settlementImg from "@/assets/playerBlue/blueVillage.png";
 import cityImg from "@/assets/playerBlue/blueCity.png";
 import roadImg from "@/assets/playerBlue/blueRoad.png";
-import robberImg from "@/assets/theif.png";
+import robberImg from "@/assets/theif1.png";
 
 // console.log("CORNER_PIN : ", CORNER_PIN);
 
@@ -222,7 +222,7 @@ function GameBoard({
 							left: pin.x,
 							transform: "translate(-50%, -50%)",
 							width: "50px",
-							height: "50px",
+							height: "60px",
 							zIndex: 7,
 							pointerEvents: "none",
 						}}
