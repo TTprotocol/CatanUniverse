@@ -1,27 +1,50 @@
 .playerPanel {
-    width: 300px;
+    width: 320px;
+    height: 100vh;
     background-color: #1369a8;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: flex-end;
+    box-sizing: border-box;
 }
 
-.playerPanel>div {
-    background-color: #fff;
-    border-radius: 10px;
+.playerPanel > div {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
     width: 90%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+    padding: 12px 15px;
+    box-sizing: border-box;
 }
 
 .log {
-    height: 40%;
-    text-align: center;
-    font-size: 24px;
+    height: 360px;
+    text-align: left;
+    font-size: 16px;
     color: #000;
+    padding: 15px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+    margin-bottom: 15px;
+    word-break: break-word;
+    white-space: pre-wrap;
+    line-height: 1.4;
+}
+
+.log::-webkit-scrollbar {
+    width: 6px;
+}
+
+.log::-webkit-scrollbar-thumb {
+    background-color: #1369a8;
+    border-radius: 3px;
 }
 
 .otherPlayers {
-    height: 40%;
+    height: 360px;
+    margin-bottom: 15px;
 }
 
 .otherPlayers>div {
@@ -29,9 +52,11 @@
     height: 25%;
 }
 
+
 .bank {
-    padding: 10px;
+    height: 80px;
     box-sizing: border-box;
+    gap: 6px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -49,6 +74,11 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    transition: transform 0.2s ease;
+}
+
+.bank > div:hover {
+    transform: scale(1.1);
 }
 
 .bankTree {
@@ -76,19 +106,19 @@
 }
 
 .player {
-    padding: 10px;
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
 }
 
 .player>div {
-    height: 80%;
+    height: 70px;
 }
 
 .player>.icon {
-    width: 20%;
+    width: 22%;
     display: flex;
     flex-direction: column;
 }
@@ -154,16 +184,24 @@
     height: 11%;
 }
 
-.countBadge {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    color: #000;
-    background-color: #fff;
+.playerInfoCard {
+    border-radius: 12px; /* 둥근 모서리 */
+    transition: all 0.3s ease; /* 부드러운 애니메이션 */
+    border-left: 6px solid transparent; /* 띠 공간 미리 확보 (밀림 방지) */
+    background-color: transparent; /* 기본은 투명 */
+}
+
+/* 🌟 현재 턴인 플레이어 강조 스타일 (첨부 이미지 효과) */
+.playerInfoCard.active {
+    background-color: #ffffff; /* 흰색 배경 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+    border-left: 6px solid #ff7f50; /* 왼쪽 주황색 포인트 색상 */
+    transform: scale(1.02); /* 살짝 커지는 효과 (선택사항) */
+}
+
+/* 텍스트 색상 보정 */
+.playerInfoCard.active .icon, 
+.playerInfoCard.active span {
+    color: #333; /* 글자색 진하게 */
     font-weight: bold;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.2);
-    user-select: none;
 }

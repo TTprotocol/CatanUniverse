@@ -20,6 +20,7 @@ export default function OwnCards({ players = [] }) {
                     ) : null
                 )}
             </div>
+            <div className="borderStick"></div>
             <div className="ownDevelopmentCard">
                 {me.devCards.map((count, index) =>
                     count > 0 ? (
