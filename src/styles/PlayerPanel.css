@@ -10,11 +10,13 @@
 }
 
 .playerPanel > div {
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.5);
     border-radius: 12px;
     width: 90%;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     flex-shrink: 0;
+    padding: 12px 15px;
+    box-sizing: border-box;
 }
 
 .log {
@@ -24,8 +26,11 @@
     color: #000;
     padding: 15px;
     box-sizing: border-box;
-    overflow-y: auto;
+    overflow-y: scroll;
     margin-bottom: 15px;
+    word-break: break-word;
+    white-space: pre-wrap;
+    line-height: 1.4;
 }
 
 .log::-webkit-scrollbar {
@@ -50,7 +55,6 @@
 
 .bank {
     height: 80px;
-    padding: 12px;
     box-sizing: border-box;
     gap: 6px;
     display: flex;
@@ -102,7 +106,6 @@
 }
 
 .player {
-    padding: 12px 15px;
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
@@ -179,4 +182,26 @@
 
 .myProfile {
     height: 11%;
+}
+
+.playerInfoCard {
+    border-radius: 12px; /* 둥근 모서리 */
+    transition: all 0.3s ease; /* 부드러운 애니메이션 */
+    border-left: 6px solid transparent; /* 띠 공간 미리 확보 (밀림 방지) */
+    background-color: transparent; /* 기본은 투명 */
+}
+
+/* 🌟 현재 턴인 플레이어 강조 스타일 (첨부 이미지 효과) */
+.playerInfoCard.active {
+    background-color: #ffffff; /* 흰색 배경 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+    border-left: 6px solid #ff7f50; /* 왼쪽 주황색 포인트 색상 */
+    transform: scale(1.02); /* 살짝 커지는 효과 (선택사항) */
+}
+
+/* 텍스트 색상 보정 */
+.playerInfoCard.active .icon, 
+.playerInfoCard.active span {
+    color: #333; /* 글자색 진하게 */
+    font-weight: bold;
 }
