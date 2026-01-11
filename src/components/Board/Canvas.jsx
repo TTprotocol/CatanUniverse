@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import useGameStore from "@/features/state/gamestore";
+import useGameStore from "@/features/state/gameStore";
 import { useBuildActions } from "@/features/game/actionHandler";
 import {
 	RESOURCE_TYPE,
@@ -8,7 +8,7 @@ import {
 	EDGE_PIN,
 	TILE_PIN,
 } from "@/utils/constants";
-import mapImage from "../../assets/map/catanUniverse.jpg";
+import mapImage from "@/assets/map/catanUniverse.jpg";
 import settlementImg from "@/assets/playerBlue/blueVillage.png";
 import cityImg from "@/assets/playerBlue/blueCity.png";
 import roadImg from "@/assets/playerBlue/blueRoad.png";
@@ -24,14 +24,14 @@ function GameBoard({
 	const canvasRef = useRef(null);
 	const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
-	const cornerPinMap = Object.fromEntries(CORNER_PIN.map(p => [p.id, p]));
-	const edgePinMap = Object.fromEntries(EDGE_PIN.map(p => [p.id, p]));
+	const cornerPinMap = Object.fromEntries(CORNER_PIN.map((p) => [p.id, p]));
+	const edgePinMap = Object.fromEntries(EDGE_PIN.map((p) => [p.id, p]));
 
 	//현재 플레이어 정보, 보드 상태, 현재 턴 인덱스를 가져옴
 	const { board, currentPlayerIndex, buildSettlement, buildCity } =
 		useGameStore.getState();
 	// const { buildSettlement, upgradeToCity } = useBuildActions();
-	const { players } = useGameStore.getState(state => state.players);
+	const { players } = useGameStore.getState((state) => state.players);
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
@@ -47,7 +47,7 @@ function GameBoard({
 		};
 	}, []);
 
-	const robberTile = useGameStore(state => state.board.robber);
+	const robberTile = useGameStore((state) => state.board.robber);
 
 	return (
 		<div
@@ -85,8 +85,8 @@ function GameBoard({
 			))}
 
 			{/* 건설된 정착지 */}
-			{players.map(player =>
-				player.settlements.map(pinId => {
+			{players.map((player) =>
+				player.settlements.map((pinId) => {
 					const pin = cornerPinMap[pinId];
 					if (!pin) return null;
 
@@ -105,14 +105,14 @@ function GameBoard({
 								zIndex: 2,
 								pointerEvents: "none",
 							}}
-            			/>
+						/>
 					);
 				})
 			)}
 
 			{/* 건설된 도시 */}
-			{players.map(player =>
-				player.cities.map(pinId => {
+			{players.map((player) =>
+				player.cities.map((pinId) => {
 					const pin = cornerPinMap[pinId];
 					if (!pin) return null;
 
@@ -161,8 +161,8 @@ function GameBoard({
 			))}
 
 			{/* 건설된 도로 */}
-			{players.map(player =>
-				player.roads.map(pinId => {
+			{players.map((player) =>
+				player.roads.map((pinId) => {
 					const pin = edgePinMap[pinId];
 					if (!pin) return null;
 
@@ -210,25 +210,26 @@ function GameBoard({
 				/>
 			))}
 
-			{TILE_PIN.map((pin) => (
-				pin.id === robberTile && (
-					<img
-						key="robber"
-						src={robberImg}
-						alt="도둑"
-						style={{
-							position: "absolute",
-							top: pin.y,
-							left: pin.x,
-							transform: "translate(-50%, -50%)",
-							width: "50px",
-							height: "60px",
-							zIndex: 7,
-							pointerEvents: "none",
-						}}
-					/>
-				)
-			))}
+			{TILE_PIN.map(
+				(pin) =>
+					pin.id === robberTile && (
+						<img
+							key="robber"
+							src={robberImg}
+							alt="도둑"
+							style={{
+								position: "absolute",
+								top: pin.y,
+								left: pin.x,
+								transform: "translate(-50%, -50%)",
+								width: "50px",
+								height: "60px",
+								zIndex: 7,
+								pointerEvents: "none",
+							}}
+						/>
+					)
+			)}
 		</div>
 	);
 }
