@@ -1,5 +1,3 @@
-// 게임 보드 및 모든 UI를 포함하는 메인 화면입니다.
-
 import React, { useState, useEffect } from "react";
 import "@/styles/Home.css";
 import GameBoard from "@/components/Board/Canvas";
@@ -7,205 +5,172 @@ import ActionPanel from "@/components/ActionPanel/ActionPanel";
 import PlayerPanel from "@/components/PlayerPanel/PlayerPanel";
 import useGameStore from "@/features/state/gameStore";
 import {
-	DEFAULT_TILES,
-	CORNER_PIN,
-	EDGE_PIN,
-	TILE_PIN,
+    CORNER_PIN,
+    EDGE_PIN,
+    TILE_PIN,
 } from "@/utils/constants";
 
 const Home = () => {
-	// 핀 표시 상태
-	const [visibleCornerPins, setVisibleCornerPins] = useState([]);
-	const [visibleEdgePins, setVisibleEdgePins] = useState([]);
-	const [visibleTilePins, setVisibleTilePins] = useState([]);
-	const [showChangePanel, setShowChangePanel] = useState(false);
+    // === 1. 화면 전환 상태 관리 ===
+    // 'start': 시작화면, 'loading': 로딩화면, 'game': 게임화면
+    const [viewState, setViewState] = useState('start');
+    const [loadingProgress, setLoadingProgress] = useState(0);
 
-	//화면 전환 상태 관리
-	const [viewState, setViewState] = useState('start');
-	const [loadingProcess, setLoadingProgress] = useState(0);
+    // === 2. 기존 게임 핀 상태 관리 ===
+    const [visibleCornerPins, setVisibleCornerPins] = useState([]);
+    const [visibleEdgePins, setVisibleEdgePins] = useState([]);
+    const [visibleTilePins, setVisibleTilePins] = useState([]);
+    const [showChangePanel, setShowChangePanel] = useState(false);
 
-	//시작화면 + 로딩화면
-	useEffect(() => {
-			let timer;
-			if (viewState === 'loading') {
-				timer = setInterval(() => {
-					setLoadingProcess((prev) => {
-						if(prev >= 100) {
-							clearInterval(timer); //loading 100% 되면 게임 화면으로 전환
-							setViewState('game');
-							return 100;
-						}
-						return prev + 2;
-					});
-				}, 30); //0.03초마다 업데이트
-			}
-			return () => clearInterval(timer);
-		}, [viewState]);
+    // Store에서 필요한 함수들 가져오기
+    const {
+        initPlayers,
+        initBoard,
+        getCurPlayer,
+        players,
+    } = useGameStore();
 
-		const handleGameStart = () => {
-			setViewState('loading');
-		};
+    // === 3. 로딩 타이머 로직 ===
+    useEffect(() => {
+        let timer;
+        
+        // viewState가 'loading'일 때만 타이머 실행
+        if (viewState === 'loading') {
+            timer = setInterval(() => {
+                setLoadingProgress((prev) => {
+                    // 100% 도달 시
+                    if (prev >= 100) {
+                        // 여기서 clearInterval을 하지 않아도, 
+                        // setViewState가 바뀌면 cleanup 함수가 실행되어 자동으로 정리됩니다.
+                        setViewState('game'); 
+                        return 100;
+                    }
+                    // 로딩 속도: 2씩 증가 (너무 느리면 답답하므로 속도 조절)
+                    return prev + 2; 
+                });
+            }, 30); // 0.03초마다 실행
+        }
 
-	// 다음에 지을 수 있는 도로 표시하기
-	const checkCurrentUser = async () => {
-		const {
-			board,
-			currentPlayerIndex,
-			buildSettlement,
-			buildCity,
-			getCurPlayer,
-		} = useGameStore.getState();
+        // Cleanup 함수: 컴포넌트가 바뀌거나 사라질 때 타이머 정지
+        return () => {
+            if (timer) clearInterval(timer);
+        };
+    }, [viewState]);
 
-		console.log("currentPlayerIndex : ", currentPlayerIndex);
-		console.log("getCurPlayer : ", getCurPlayer());
+    const handleGameStart = () => {
+        setLoadingProgress(0); // 로딩바 초기화
+        setViewState('loading');
+    };
 
-		
+    // === 4. 게임 로직 (건설 가능 위치 계산) ===
+    const checkCurrentUser = async () => {
+        const tempEdge = [];
+        const curPlayer = getCurPlayer();
 
-		const tempEdge = [];
-		await getCurPlayer().settlements.forEach((item) => {
-			const corner = CORNER_PIN.find((corner) => corner.id === item);
-			if (!corner) return;
+        if (curPlayer) {
+            // 내 마을 주변 엣지 탐색
+            curPlayer.settlements.forEach((item) => {
+                const corner = CORNER_PIN.find((corner) => corner.id === item);
+                if (corner) tempEdge.push(...corner.edge);
+            });
+            // 내 도시 주변 엣지 탐색
+            curPlayer.cities.forEach((item) => {
+                const corner = CORNER_PIN.find((corner) => corner.id === item);
+                if (corner) tempEdge.push(...corner.edge);
+            });
+            
+            // 이미 지어진 도로 제외
+            const roadsSet = new Set(curPlayer.roads);
+            const nextEdge = tempEdge.filter((v) => !roadsSet.has(v));
+            return nextEdge;
+        }
+        return [];
+    };
 
-			tempEdge.push(...corner.edge);
-		});
-		await getCurPlayer().cities.forEach((item) => {
-			const corner = CORNER_PIN.find((corner) => corner.id === item);
-			if (!corner) return;
+    // 버튼 핸들러
+    const handleBuildRoad = async () => {
+        const nextEdge = await checkCurrentUser();
+        setVisibleEdgePins([...nextEdge]); 
+        setVisibleCornerPins([]);
+        setVisibleTilePins([]);
+    };
 
-			tempEdge.push(...corner.edge);
-		});
-		const roadsSet = new Set(getCurPlayer().roads);
-		const nextEdge = tempEdge.filter((v) => !roadsSet.has(v));
-		console.log("nextEdge : ", nextEdge);
+    const handleBuildVillage = () => {
+        setVisibleCornerPins([]); 
+        setVisibleEdgePins([]);
+        setVisibleTilePins([]);
+    };
 
-		return nextEdge;
-	};
+    const handleBuildCity = () => {
+        setVisibleCornerPins([]); 
+        setVisibleEdgePins([]);
+        setVisibleTilePins([]);
+    };
 
-	// 버튼 핸들러
-	const handleBuildRoad = async () => {
-		const nextEdge = await checkCurrentUser();
-		setVisibleEdgePins([...nextEdge]); // 원하는 edge pin ID로 교체 가능
-		setVisibleCornerPins([]);
-		setVisibleTilePins([]);
-	};
+    const handleExchange = () => {
+        setShowChangePanel((prev) => !prev);
+    };
 
-	const handleBuildVillage = () => {
-		setVisibleCornerPins([]); // 원하는 corner pin ID로 교체 가능
-		setVisibleEdgePins([]);
-		setVisibleTilePins([]);
-	};
+    // === 5. 게임 데이터 초기화 ===
+    useEffect(() => {
+        useGameStore.getState().initAll();
+        initPlayers([
+            { id: 1, name: "플레이어1", resources: [1, 2, 4, 2, 1], roads: [2, 8], settlements: [1], cities: [9], devCards: [0, 0, 1, 2, 0], useKnight: 0, points: 0 },
+            { id: 2, name: "플레이어2", resources: [1, 1, 1, 0, 0], roads: [], settlements: [], cities: [], devCards: [0, 0, 0, 0, 0], useKnight: 0, points: 0 },
+            { id: 3, name: "플레이어3", resources: [0, 0, 0, 0, 0], roads: [40], settlements: [], cities: [], devCards: [1, 2, 3, 1, 0], useKnight: 0, points: 0 },
+            { id: 4, name: "플레이어4", resources: [0, 0, 0, 0, 0], roads: [], settlements: [], cities: [], devCards: [0, 0, 0, 0, 0], useKnight: 0, points: 0 },
+        ]);
+        initBoard([], 10);
+    }, []);
 
-	const handleBuildCity = () => {
-		setVisibleCornerPins([]); // 원하는 city용 corner ID
-		setVisibleEdgePins([]);
-		setVisibleTilePins([]);
-	};
+    // === 6. 화면 렌더링 분기 ===
 
-	const handleExchange = () => {
-		setShowChangePanel((prev) => !prev);
-	};
+    // (A) 시작 화면
+    if (viewState === 'start') {
+        return (
+            <div className="intro-container">
+                <h1 className="title">CATAN UNIVERSE</h1>
+                <button className="start-btn" onClick={handleGameStart}>GAME START</button>
+            </div>
+        );
+    }
 
-	// const rollDice = useGameStore((state) => state.rollDice);
-	const initPlayers = useGameStore((state) => state.initPlayers);
-	const initBoard = useGameStore((state) => state.initBoard);
-	const players = useGameStore((state) => state.players);
+    // (B) 로딩 화면
+    if (viewState === 'loading') {
+        return (
+            <div className="intro-container">
+                <h2 className="loading-text">Loading...</h2>
+                <div className="loading-bar-container">
+                    <div className="loading-bar-fill" style={{width: `${loadingProgress}%`}}></div>
+                </div>
+                <p className="loading-percent">{loadingProgress}%</p>
+            </div>
+        );
+    }
 
-	useEffect(() => {
-		useGameStore.getState().initAll();
-		initPlayers([
-			{
-				id: 1, //아이디
-				name: "플레이어1", //이름
-				resources: [1, 2, 4, 2, 1], //자원 카드 현황 ["tree", "brick", "sheep", "wheat", "steel"]
-				roads: [2, 8], //건설한 도로의 위치
-				settlements: [1], //건설한 마을의 위치
-				cities: [9], //도시의 위치
-				devCards: [0, 0, 1, 2, 0], //보유한 개발 카드 목록 ["knight","victoryPoint", "roadBuilding", "yearOfPlenty", "monopoly"]
-				useKnight: 0, // 사용한 기사 카드의 개수
-				points: 0, //현재 승점
-			},
-			{
-				id: 2,
-				name: "플레이어2",
-				resources: [1, 1, 1, 0, 0],
-				roads: [],
-				settlements: [],
-				cities: [],
-				devCards: [0, 0, 0, 0, 0],
-				useKnight: 0,
-				points: 0,
-			},
-			{
-				id: 3,
-				name: "플레이어3",
-				resources: [0, 0, 0, 0, 0],
-				roads: [40],
-				settlements: [],
-				cities: [],
-				devCards: [1, 2, 3, 1, 0],
-				useKnight: 0,
-				points: 0,
-			},
-			{
-				id: 4,
-				name: "플레이어4",
-				resources: [0, 0, 0, 0, 0],
-				roads: [],
-				settlements: [],
-				cities: [],
-				devCards: [0, 0, 0, 0, 0],
-				useKnight: 0,
-				points: 0,
-			},
-		]);
-		initBoard([], 10);
-	}, []);
-
-	//시작화면
-	if(viewState === 'start') {
-		return (
-			<div className="intro-container">
-				<h1 className="title">CATAN UNIVERSE</h1>
-				<button className="start-btn" onClick={handleGameStart}>GAME START</button>
-			</div>
-		);
-	}
-
-	//로딩화면
-	if(viewState === 'loading') {
-		return(
-			<div className="intro-container">
-				<h2 className="loading-text">Loading...</h2>
-				<div className="loading-bar-container">
-					<div className="loading-bar-fill" style={{width: `${loadingProcess}%`}}></div>
-					<p className="loading-percent">{loadingProcess}%</p>
-				</div>
-			</div>
-		);
-	}
-
-	return (
-		<main id="main">
-			<div id="wrap">
-				<section className="board">
-					<GameBoard
-						visibleCorners={visibleCornerPins}
-						visibleEdges={visibleEdgePins}
-						visibleTiles={visibleTilePins}
-					/>
-				</section>
-				<ActionPanel
-					showChangePanel={showChangePanel}
-					handleExchange={handleExchange}
-					handleBuildCity={handleBuildCity}
-					handleBuildRoad={handleBuildRoad}
-					handleBuildVillage={handleBuildVillage}
-					players={players}
-				/>
-			</div>
-			<PlayerPanel players={players} />
-		</main>
-	);
+    // (C) 메인 게임 화면
+    return (
+        <main id="main">
+            <div id="wrap">
+                <section className="board">
+                    <GameBoard
+                        visibleCorners={visibleCornerPins}
+                        visibleEdges={visibleEdgePins}
+                        visibleTiles={visibleTilePins}
+                    />
+                </section>
+                <ActionPanel
+                    showChangePanel={showChangePanel}
+                    handleExchange={handleExchange}
+                    handleBuildCity={handleBuildCity}
+                    handleBuildRoad={handleBuildRoad}
+                    handleBuildVillage={handleBuildVillage}
+                    players={players}
+                />
+            </div>
+            <PlayerPanel players={players} />
+        </main>
+    );
 };
 
 export default Home;
