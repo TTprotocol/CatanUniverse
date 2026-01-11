@@ -65,7 +65,6 @@
 .actions button:hover {
     transform: scale(1.05);
     cursor: pointer;
-    border-color: #1369a8;
     box-shadow: 0 4px 12px rgba(19, 105, 168, 0.3);
 }
 
