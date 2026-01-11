@@ -112,3 +112,83 @@
     height: 100%;
     fill: #1369a8;
 }
+
+.intro-container {
+    width: 100%;
+    height: 100vh;
+    background-color: #156596;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.title {
+    font-size: 3.75rem;
+    font-weight: bold;
+    margin-bottom: 2.5rem;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.start-btn {
+    padding: 1rem 3rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    background-color: #f97316; /* 오렌지색 */
+    border: none;
+    border-bottom: 4px solid #c2410c; /* 버튼 입체감 */
+    border-radius: 0.75rem;
+    cursor: pointer;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.start-btn:hover {
+    background-color: #ea580c;
+    transform: scale(1.05);
+}
+
+.start-btn:active {
+    transform: scale(0.95);
+    border-bottom-width: 0px;
+    margin-top: 4px;
+}
+
+/* --- 로딩 화면 스타일 --- */
+.loading-text {
+    font-size: 1.875rem; /* 30px */
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.loading-bar-container {
+    width: 400px;
+    height: 24px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 9999px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.loading-bar-fill {
+    height: 100%;
+    /* 오렌지 -> 옐로우 그라데이션 */
+    background: linear-gradient(to right, #fb923c, #facc15);
+    transition: width 0.1s ease-out;
+}
+
+.loading-percent {
+    margin-top: 1rem;
+    font-family: monospace;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* 깜빡임 애니메이션 정의 */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}

@@ -20,6 +20,32 @@ const Home = () => {
 	const [visibleTilePins, setVisibleTilePins] = useState([]);
 	const [showChangePanel, setShowChangePanel] = useState(false);
 
+	//화면 전환 상태 관리
+	const [viewState, setViewState] = useState('start');
+	const [loadingProcess, setLoadingProgress] = useState(0);
+
+	//시작화면 + 로딩화면
+	useEffect(() => {
+			let timer;
+			if (viewState === 'loading') {
+				timer = setInterval(() => {
+					setLoadingProcess((prev) => {
+						if(prev >= 100) {
+							clearInterval(timer); //loading 100% 되면 게임 화면으로 전환
+							setViewState('game');
+							return 100;
+						}
+						return prev + 2;
+					});
+				}, 30); //0.03초마다 업데이트
+			}
+			return () => clearInterval(timer);
+		}, [viewState]);
+
+		const handleGameStart = () => {
+			setViewState('loading');
+		};
+
 	// 다음에 지을 수 있는 도로 표시하기
 	const checkCurrentUser = async () => {
 		const {
@@ -32,6 +58,8 @@ const Home = () => {
 
 		console.log("currentPlayerIndex : ", currentPlayerIndex);
 		console.log("getCurPlayer : ", getCurPlayer());
+
+		
 
 		const tempEdge = [];
 		await getCurPlayer().settlements.forEach((item) => {
@@ -132,6 +160,29 @@ const Home = () => {
 		]);
 		initBoard([], 10);
 	}, []);
+
+	//시작화면
+	if(viewState === 'start') {
+		return (
+			<div className="intro-container">
+				<h1 className="title">CATAN UNIVERSE</h1>
+				<button className="start-btn" onClick={handleGameStart}>GAME START</button>
+			</div>
+		);
+	}
+
+	//로딩화면
+	if(viewState === 'loading') {
+		return(
+			<div className="intro-container">
+				<h2 className="loading-text">Loading...</h2>
+				<div className="loading-bar-container">
+					<div className="loading-bar-fill" style={{width: `${loadingProcess}%`}}></div>
+					<p className="loading-percent">{loadingProcess}%</p>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<main id="main">
