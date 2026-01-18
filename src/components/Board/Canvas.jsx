@@ -7,7 +7,7 @@ import {
 	EDGE_PIN,
 	TILE_PIN,
 } from "@/utils/constants";
-import mapImage from "@/assets/map/catanUniverse.jpg";
+import mapImage from "@/assets/map/catanUniverse.png";
 import settlementImg from "@/assets/playerBlue/blueVillage.png";
 import cityImg from "@/assets/playerBlue/blueCity.png";
 import roadImg from "@/assets/playerBlue/blueRoad.png";
