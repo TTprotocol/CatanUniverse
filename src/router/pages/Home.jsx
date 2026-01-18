@@ -160,12 +160,12 @@ const Home = () => {
     // (B) 로딩 화면
     if (viewState === 'loading') {
         return (
-            <div className="intro-container">
-                <h2 className="loading-text">Loading...</h2>
-                <div className="loading-bar-container">
-                    <div className="loading-bar-fill" style={{width: `${loadingProgress}%`}}></div>
+            <div className="loadingContainer">
+                <h2 className="loadingText">Loading...</h2>
+                <div className="loadingBarContainer">
+                    <div className="loadingBarFill" style={{width: `${loadingProgress}%`}}></div>
                 </div>
-                <p className="loading-percent">{loadingProgress}%</p>
+                <p className="loadingPercent">{loadingProgress}%</p>
             </div>
         );
     }
