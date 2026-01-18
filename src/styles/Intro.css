@@ -1,0 +1,169 @@
+/* src/styles/Intro.css */
+
+/* 판타지 느낌의 폰트 가져오기 */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap');
+
+/* 전체 화면 컨테이너 */
+.introContainer {
+    width: 100vw;
+    height: 100vh;
+    /* 하늘색에서 바다색으로 이어지는 그라디언트 배경 */
+    background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 🌊 바다 물결 배경 애니메이션 */
+.ocean {
+    height: 35%; /* 높이를 높여서 섬 밑부분을 자연스럽게 감싸게 함 */
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 6;
+    pointer-events: none; /* 마우스 클릭이 통과되도록 설정 */
+}
+
+.wave {
+    /* 기존 이미지 코드 유지 */
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-49.9-200 0-250 49.9-394.5 49.9v31.8h800v-.2-31.6z' fill='%23ffffff'/%3E%3C/svg%3E");
+    position: absolute;
+    width: 200%; /* 너비를 화면의 2배로 설정 */
+    height: 100%;
+    background-size: 50% 100%;
+    background-repeat: repeat-x;   
+    transform: translate3d(0, 0, 0);
+    filter: blur(20px); 
+    opacity: 0.4;
+    will-change: transform;
+}
+
+/* 첫 번째 안개 (오른쪽에서 왼쪽으로) */
+.wave:nth-of-type(1) {
+    bottom: -30px;
+    animation: wave 10s linear infinite; 
+    opacity: 0.3;
+}
+
+/* 두 번째 안개 (반대 방향 - 왼쪽에서 오른쪽으로) */
+.wave:nth-of-type(2) {
+    bottom: -10px;
+    animation: wave 5s linear infinite; /* ⭐ 이름 변경: waveReverse */
+    opacity: 0.6;
+    filter: blur(25px);
+}
+
+/* 맨 아래쪽을 자연스럽게 가려주는 그라데이션 */
+.ocean::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.5) 0%, transparent 100%);
+    filter: blur(10px);
+}
+
+/* 🏝 중앙 컨텐츠 (타이틀, 섬, 버튼) */
+.contentWrapper {
+    z-index: 10; /* ⭐ 섬보다 위에 올라오게 설정 (매우 중요) */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+/* 📜 게임 타이틀 스타일 */
+.gameTitle {
+    font-family: 'Cinzel', serif;
+    font-size: 80px;
+    font-weight: 900;
+    color: #f7e6c4; /* 낡은 종이 색 */
+    text-shadow: 
+        3px 3px 0 #5d3a1a,
+        -1px -1px 0 #5d3a1a,  
+        1px -1px 0 #5d3a1a,
+        -1px 1px 0 #5d3a1a,
+        1px 1px 0 #5d3a1a,
+        0 10px 20px rgba(0,0,0,0.4);
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+/* 🪵 나무 판자 버튼 스타일 (핵심 포인트!) */
+.woodBtn {
+    position: relative;
+    background-color: #8B4513; /* 기본 갈색 */
+    background-image: linear-gradient(to bottom, #a05a2c, #6d3610); /* 나무 질감 그라디언트 */
+    color: #ffeebb;
+    font-family: 'Cinzel', serif;
+    font-size: 28px;
+    font-weight: bold;
+    padding: 15px 60px;
+    border: 4px solid #4a250b;
+    border-radius: 12px;
+    cursor: pointer;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    
+    /* 입체감을 주는 그림자 설정 */
+    box-shadow: 
+        inset 0 2px 0 rgba(255,255,255,0.2), /* 윗면 반사광 */
+        0 6px 0 #3e1f09, /* 버튼 두께 (옆면) */
+        0 15px 20px rgba(0,0,0,0.4); /* 바닥 그림자 */
+    transition: all 0.1s ease;
+}
+
+/* 버튼 마우스 올렸을 때 */
+.woodBtn:hover {
+    filter: brightness(1.1); /* 약간 밝게 */
+    transform: translateY(-2px); /* 살짝 위로 뜸 */
+    box-shadow: 
+        inset 0 2px 0 rgba(255,255,255,0.2),
+        0 8px 0 #3e1f09,
+        0 20px 25px rgba(0,0,0,0.4);
+}
+
+/* 버튼 클릭했을 때 */
+.woodBtn:active {
+    transform: translateY(6px); /* 꾹 눌리는 효과 */
+    box-shadow: 
+        inset 0 2px 0 rgba(255,255,255,0.2),
+        0 0 0 #3e1f09, /* 두께 사라짐 */
+        0 3px 6px rgba(0,0,0,0.4);
+}
+
+/* 둥둥 떠다니는 섬 애니메이션 */
+.floatingIsland {
+    position: absolute; 
+    top: 50%;           
+    left: 50%;          
+    width: 100%;        
+    max-width: 1200px;  
+    z-index: 5;
+    will-change: transform;         
+    animation: floatCenter 3s ease-in-out infinite;
+}
+
+@keyframes floatCenter {
+    0%, 100% { 
+        transform: translate(-50%, -50%) translateY(0); 
+    }
+    50% { 
+        transform: translate(-50%, -50%) translateY(-12px); 
+    }
+}
+
+@keyframes wave {
+    0% { 
+        transform: translateX(0); 
+    }
+    100% { 
+        transform: translateX(-50%); 
+    }
+}

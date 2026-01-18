@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "@/styles/Home.css";
+import "@/styles/Intro.css";
 import GameBoard from "@/components/Board/Canvas";
 import ActionPanel from "@/components/ActionPanel/ActionPanel";
 import PlayerPanel from "@/components/PlayerPanel/PlayerPanel";
 import useGameStore from "@/features/state/gameStore";
+import islandImg from "../../assets/island_intro.png";
+
 import {
     CORNER_PIN,
     EDGE_PIN,
@@ -128,10 +131,29 @@ const Home = () => {
     // (A) 시작 화면
     if (viewState === 'start') {
         return (
-            <div className="intro-container">
-                <h1 className="title">CATAN UNIVERSE</h1>
-                <button className="start-btn" onClick={handleGameStart}>GAME START</button>
+            <div className="introContainer">
+            
+            {/* 👇 1. 섬 이미지를 contentWrapper 밖으로 꺼냅니다 */}
+            <img 
+                src={islandImg} 
+                alt="Catan Island" 
+                className="floatingIsland" 
+            />
+
+            {/* 👇 2. 글자와 버튼만 남겨둡니다 (이제 섬이 밀어내지 않음) */}
+            <div className="contentWrapper">
+                <h1 className="gameTitle">CATAN UNIVERSE</h1>
+                <button className="woodBtn" onClick={handleGameStart}>
+                    GAME START
+                </button>
             </div>
+
+            {/* 안개/파도 효과 */}
+            <div className="ocean">
+                <div className="wave"></div>
+                <div className="wave"></div>
+            </div>
+        </div>
         );
     }
 
