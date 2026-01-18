@@ -29,13 +29,15 @@ export const pinManagement = create(
 			},
 
 			// 마을/도시 핀 사용 여부 확인
-			getCornerPins: (pinId) => {
+			getCornerPins: (pinId = -1) => {
+				if (pinId === -1) return get().cornerPin;
 				return get().cornerPin.includes(pinId);
 			},
 
 			// 도로 핀 사용 여부 확인
-			getEdgePins: (pinID) => {
-				return get().edgePin.includes(pinID);
+			getEdgePins: (pinId = -1) => {
+				if (pinId === -1) return get().edgePin;
+				return get().edgePin.includes(pinId);
 			},
 
 			// 도둑 핀 위치 확인
@@ -53,8 +55,8 @@ export const pinManagement = create(
 				cornerPin: state.cornerPin,
 				edgePin: state.edgePin,
 			}),
-		}
-	)
+		},
+	),
 );
 
 // 게임 전체 로그 관리
@@ -79,8 +81,8 @@ export const gameLog = create(
 			partialize: (state) => ({
 				log: state.log,
 			}),
-		}
-	)
+		},
+	),
 );
 
 // set : 상태 업데이트할 때 사용
@@ -157,7 +159,7 @@ const useGameStore = create(
 						`${
 							get().players[get().currentPlayerIndex % get().players.length]
 								.name
-						} 님이 주사위를 굴렸습니다: ${dice1} + ${dice2} = ${dice}`
+						} 님이 주사위를 굴렸습니다: ${dice1} + ${dice2} = ${dice}`,
 					);
 			},
 
@@ -175,7 +177,7 @@ const useGameStore = create(
 						} 님이 턴을 넘겼습니다 : ${
 							get().players[get().currentPlayerIndex % get().players.length]
 								.name
-						} -> ${get().players[nextIndex].name}`
+						} -> ${get().players[nextIndex].name}`,
 					);
 
 				set({ currentPlayerIndex: nextIndex, phase: "ROLL", dice: null }); // set()으로 상태 변경
@@ -189,14 +191,14 @@ const useGameStore = create(
 
 				// 마을 : [1, 1, 1, 1, 0], 포인트 += 1
 				if (
-					players[index].resources[0] <= 0 && // 나무
-					players[index].resources[1] <= 0 && // 벽돌
-					players[index].resources[2] <= 0 && // 양
+					players[index].resources[0] <= 0 || // 나무
+					players[index].resources[1] <= 0 || // 벽돌
+					players[index].resources[2] <= 0 || // 양
 					players[index].resources[3] <= 0 // 밀
 				) {
 					// 자원이 부족하거나,
 					return { result: false, message: "자원이 부족합니다." };
-				} else if (!pinManagement.getState().getCornerPins(position)) {
+				} else if (pinManagement.getState().getCornerPins(position)) {
 					// 이미 핀이 사용된 경우
 					return { result: false, message: "해당 핀에 건설할 수 없습니다." };
 				} else {
@@ -214,7 +216,7 @@ const useGameStore = create(
 					gameLog
 						.getState()
 						.addLog(
-							`${players[index].name} 님이 ${position} 위치에 정착지를 건설했습니다.`
+							`${players[index].name} 님이 ${position} 위치에 정착지를 건설했습니다.`,
 						);
 
 					set({ players }); // 상태 업데이트
@@ -243,7 +245,7 @@ const useGameStore = create(
 					// 정착지가 있는지 확인
 					players[index].cities.push(position); // 현재 플레이어의 도시 추가
 					players[index].settlements = players[index].settlements.filter(
-						(settlement) => settlement !== position
+						(settlement) => settlement !== position,
 					);
 					players[index].points += 2; // 점수 1점 추가
 
@@ -255,7 +257,7 @@ const useGameStore = create(
 					gameLog
 						.getState()
 						.addLog(
-							`${players[index].name} 님이 ${position} 위치에 도시를 건설했습니다.`
+							`${players[index].name} 님이 ${position} 위치에 도시를 건설했습니다.`,
 						);
 
 					set({ players }); // 상태 업데이트
@@ -314,8 +316,8 @@ const useGameStore = create(
 				largestArmyOwner: state.largestArmyOwner,
 				winner: state.winner,
 			}),
-		}
-	)
+		},
+	),
 );
 
 export default useGameStore;

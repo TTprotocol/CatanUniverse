@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
 import useGameStore from "@/features/state/gameStore";
-import { useBuildActions } from "@/features/game/actionHandler";
 import {
 	RESOURCE_TYPE,
 	DEFAULT_TILES,
@@ -31,7 +30,9 @@ function GameBoard({
 	const { board, currentPlayerIndex, buildSettlement, buildCity } =
 		useGameStore.getState();
 	// const { buildSettlement, upgradeToCity } = useBuildActions();
-	const { players } = useGameStore.getState((state) => state.players);
+	const players = useGameStore((state) => state.players);
+
+	const robberTile = useGameStore((state) => state.board.robber);
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
@@ -46,8 +47,6 @@ function GameBoard({
 			setCanvasSize({ width: img.width, height: img.height });
 		};
 	}, []);
-
-	const robberTile = useGameStore((state) => state.board.robber);
 
 	return (
 		<div
@@ -107,7 +106,7 @@ function GameBoard({
 							}}
 						/>
 					);
-				})
+				}),
 			)}
 
 			{/* 건설된 도시 */}
@@ -133,7 +132,7 @@ function GameBoard({
 							}}
 						/>
 					);
-				})
+				}),
 			)}
 
 			{EDGE_PIN.map((pin) => (
@@ -183,7 +182,7 @@ function GameBoard({
 							}}
 						/>
 					);
-				})
+				}),
 			)}
 
 			{TILE_PIN.map((pin) => (
@@ -228,7 +227,7 @@ function GameBoard({
 								pointerEvents: "none",
 							}}
 						/>
-					)
+					),
 			)}
 		</div>
 	);
