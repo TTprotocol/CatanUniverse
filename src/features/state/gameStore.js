@@ -25,8 +25,10 @@ export const pinManagement = create(
 
 			// 도로 핀 관리
 			setEdgePin: (pinId) => {
-				if (state.edgePin.includes(pinId)) return;
-				set((state) => ({ edgePin: [...state.edgePin, pinId] }));
+				set((state) => {
+					if (state.edgePin.includes(pinId)) return {};
+					return { edgePin: [...state.edgePin, pinId] };
+				});
 			},
 
 			// 도둑 핀 관리
@@ -52,7 +54,7 @@ export const pinManagement = create(
 			},
 
 			// 핀 초기화
-			reset: () => set({ cornerPin: [], edgePin: [] }),
+			reset: () => set({ cornerPin: [], edgePin: [], robber: 7 }),
 		}),
 		{
 			name: "pin_management",
@@ -60,6 +62,7 @@ export const pinManagement = create(
 			partialize: (state) => ({
 				cornerPin: state.cornerPin,
 				edgePin: state.edgePin,
+				robber: state.robber,
 			}),
 		},
 	),
@@ -129,8 +132,9 @@ const useGameStore = create(
 			dice2: null, // 두 번째 주사위 숫자
 			dice: null, // 두 주사위 합
 			phase: "ROLL", // ROLL, BUILD, TRADE 등
-			points: 0, // 현재 플레이어의 승점
-			resources: [0, 0, 0, 0, 0], // 현재 플레이어의 자원 [나무, 벽돌, 양, 밀, 철]
+			// points: 0, // 현재 플레이어의 승점
+			// resources: [0, 0, 0, 0, 0], // 현재 플레이어의 자원 [나무, 벽돌, 양, 밀, 철]
+			// devCards: [0, 0, 0, 0, 0], // 현재 플레이어의 발전카드 [기사, 승점카드, 도로건설, 자원발견, 독점]
 			longestRoadOwner: null, // 최장 교역로 보유자 (플레이어 ID)
 			largestArmyOwner: null, // 최강 기사단 보유자 (플레이어 ID)
 			winner: null, // 승자가 결정되면 플레이어 ID 저장
@@ -153,34 +157,29 @@ const useGameStore = create(
 				distributeResourcesByDice();
 
 				// 🎲 로그 저장
+				// ✅ FIX: 불필요한 % 연산 제거
+				const currentPlayer = get().players[get().currentPlayerIndex];
 				gameLog
 					.getState()
 					.addLog(
-						`${
-							get().players[get().currentPlayerIndex % get().players.length]
-								.name
-						} 님이 주사위를 굴렸습니다: ${dice1} + ${dice2} = ${dice}`,
+						`${currentPlayer.name} 님이 주사위를 굴렸습니다: ${dice1} + ${dice2} = ${dice}`,
 					);
 			},
 
 			// ✅ 다음 플레이어로 턴을 넘김
 			endTurn: () => {
-				const nextIndex = (get().currentPlayerIndex + 1) % get().players.length; // get()으로 현재 상태를 가져와 nextIndex를 계산
+				const currentIndex = get().currentPlayerIndex;
+				const nextIndex = (currentIndex + 1) % get().players.length;
+				const players = get().players;
 
-				// 로그 저장
+				// ✅ FIX: 불필요한 % 연산 제거 및 코드 간소화
 				gameLog
 					.getState()
 					.addLog(
-						`${
-							get().players[get().currentPlayerIndex % get().players.length]
-								.name
-						} 님이 턴을 넘겼습니다 : ${
-							get().players[get().currentPlayerIndex % get().players.length]
-								.name
-						} -> ${get().players[nextIndex].name}`,
+						`${players[currentIndex].name} 님이 턴을 넘겼습니다 : ${players[currentIndex].name} -> ${players[nextIndex].name}`,
 					);
 
-				set({ currentPlayerIndex: nextIndex, phase: "ROLL", dice: null }); // set()으로 상태 변경
+				set({ currentPlayerIndex: nextIndex, phase: "ROLL", dice: null });
 			},
 
 			// 정착지를 건설할 때 사용하는 함수
@@ -204,7 +203,8 @@ const useGameStore = create(
 				} else {
 					players[index].settlements.push(position); // 현재 플레이어의 정착지(마을) 추가
 					players[index].points += 1; // 점수 1점 추가
-					pinManagement.getState().addCornerPin(position); // 핀 사용 처리
+					// ✅ FIX: addCornerPin -> setCornerPin으로 수정
+					pinManagement.getState().setCornerPin(position); // 핀 사용 처리
 
 					// 자원 차감
 					players[index].resources[0] -= 1; // 나무
@@ -225,7 +225,7 @@ const useGameStore = create(
 				}
 			},
 
-			// 정착지를 건설할 때 사용하는 함수
+			// 도시를 건설할 때 사용하는 함수
 			// get()으로 현재 상태 확인, set()으로 업데이트
 			buildCity: (position) => {
 				const index = get().currentPlayerIndex; // 현재 플레이어의 인덱스
@@ -247,11 +247,12 @@ const useGameStore = create(
 					players[index].settlements = players[index].settlements.filter(
 						(settlement) => settlement !== position,
 					);
-					players[index].points += 2; // 점수 1점 추가
+					players[index].points += 2; // 점수 2점 추가
 
 					// 자원 차감
-					players[index].resources[3] -= 2; // 양
-					players[index].resources[4] -= 3; // 밀
+					// ✅ FIX: 주석 수정 (양 -> 밀, 밀 -> 철)
+					players[index].resources[3] -= 2; // 밀
+					players[index].resources[4] -= 3; // 철
 
 					// 로그 저장
 					gameLog
@@ -293,9 +294,6 @@ const useGameStore = create(
 					dice2: null,
 					dice: null,
 					phase: "ROLL",
-					resources: [0, 0, 0, 0, 0],
-					longestRoadOwner: null,
-					largestArmyOwner: null,
 					winner: null,
 					points: 0,
 				}),
@@ -310,8 +308,6 @@ const useGameStore = create(
 				board: state.board,
 				dice: state.dice,
 				phase: state.phase,
-				points: state.points,
-				resources: state.resources,
 				longestRoadOwner: state.longestRoadOwner,
 				largestArmyOwner: state.largestArmyOwner,
 				winner: state.winner,
@@ -418,11 +414,12 @@ export default useGameStore;
  * 5. pinManagement 사용 예시
  *
  *    예시)
- *    const { addCornerPin, getCornerPins } = pinManagement.getState();
+ *    // ✅ FIX: addCornerPin -> setCornerPin으로 수정
+ *    const { setCornerPin, getCornerPins } = pinManagement.getState();
  *
  *    // 코너 핀 사용
  *    if (!getCornerPins("corner-12")) {
- *      addCornerPin("corner-12");
+ *      setCornerPin("corner-12");
  *    }
  *
  *
@@ -435,42 +432,3 @@ export default useGameStore;
  *    // ...
  *    resetLog(); // 로그 전체 초기화
  */
-
-// // 게임 보드 및 모든 UI를 포함하는 메인 화면입니다.
-
-// import React from "react";
-// import "../../styles/Home.css";
-// import GameBoard from "./Canvas";
-// import useGameStore from "../../features/state/gameStore";
-
-// const Home = () => {
-// 	const rollDice = useGameStore((state) => state.rollDice);
-// 	const initPlayers = useGameStore((state) => state.initPlayers);
-// 	const initBoard = useGameStore((state) => state.initBoard);
-
-// 	const click = () => {
-// 		initPlayers([
-// 			{
-// 				id: 1, // 아이디
-// 				name: "플레이어1", // 이름
-// 				resources: {}, // 자원 카드 현황
-// 				roads: [], // 건설한 도로의 위치
-// 				settlements: [], // 건설한 정착지(마을)의 위치
-// 				cities: [], // 도시의 위치
-// 				devCards: [], // 보유한 개발 카드 목록
-// 				points: 0, // 현재 승점
-// 			},
-// 		]);
-
-// 		initBoard([]);
-// 		rollDice();
-// 	};
-
-// 	return (
-// 		<>
-// 			<button onClick={click}>테스트</button>
-// 		</>
-// 	);
-// };
-
-// export default Home;
