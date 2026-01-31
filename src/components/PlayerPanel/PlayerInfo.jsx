@@ -27,9 +27,6 @@ export default function PlayerInfo({
             <div className="countSourceCard">
                 {resourceCount > 0 && <div className="countBadge">{resourceCount}</div>}
             </div>
-            <div className="countProgCard">
-                {developmentCount > 0 && <div className="countBadge">{developmentCount}</div>}
-            </div>
             <div className="countKnight">
                 {knightCount > 0 && <div className="countBadge">{knightCount}</div>}
             </div>
