@@ -16,12 +16,18 @@ export const pinManagement = create(
 			robber: 7, // 기본 타일 핀 번호 : 7
 
 			// 마을/도시 핀 관리
-			setCornerPin: (pinId) =>
-				set((state) => ({ cornerPin: [...state.cornerPin, pinId] })),
+			setCornerPin: (pinId) => {
+				set((state) => {
+					if (state.cornerPin.includes(pinId)) return {};
+					return { cornerPin: [...state.cornerPin, pinId] };
+				});
+			},
 
 			// 도로 핀 관리
-			setEdgePin: (pinId) =>
-				set((state) => ({ edgePin: [...state.edgePin, pinId] })),
+			setEdgePin: (pinId) => {
+				if (state.edgePin.includes(pinId)) return;
+				set((state) => ({ edgePin: [...state.edgePin, pinId] }));
+			},
 
 			// 도둑 핀 관리
 			setRobber: (pinId) => {
@@ -129,12 +135,6 @@ const useGameStore = create(
 			largestArmyOwner: null, // 최강 기사단 보유자 (플레이어 ID)
 			winner: null, // 승자가 결정되면 플레이어 ID 저장
 
-			// 현재 턴을 진행중인 플레이어를 반환
-			getCurPlayer: () => {
-				const { players, currentPlayerIndex } = get();
-				return players[currentPlayerIndex];
-			},
-
 			// 실제 게임 유저만 반환
 			getCurPlayer: (userId = 0) => {
 				const { players } = get();
@@ -233,7 +233,7 @@ const useGameStore = create(
 
 				if (
 					// 도시 : [0, 0, 0, 2, 3], 포인트 += 2
-					players[index].resources[3] < 2 && // 밀
+					players[index].resources[3] < 2 || // 밀
 					players[index].resources[4] < 3 // 철
 				) {
 					// 자원이 부족한 경우
