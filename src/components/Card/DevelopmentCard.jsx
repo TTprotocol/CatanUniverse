@@ -5,7 +5,7 @@ import roadBuildImg from "@/assets/progCard/progressiveCard-roadBuilding.png";
 import victoryImg from "@/assets/progCard/progressiveCard-score.png";
 import yearOfPlentyImg from "@/assets/progCard/progressiveCard-yearOfPlenty.png";
 
-function DevelopmentCard({ type, count }) {
+function DevelopmentCard({ type, count, size }) {
   const cardInfo = {
     knight: { name: "기사", image: knightImg },
     victoryPoint: { name: "승점", image: victoryImg },
@@ -14,7 +14,14 @@ function DevelopmentCard({ type, count }) {
     monopoly: { name: "독점", image: monopolyImg },
   };
 
+  const sizeConfig = {
+    small: {width:40, height:50},
+    medium: {width:55, height:80},
+  };
+
+
   const resource = cardInfo[type];
+  const CardSize = sizeConfig[size] || sizeConfig.medium;
 
   if (!resource) return null;
 
@@ -23,8 +30,8 @@ function DevelopmentCard({ type, count }) {
       <img
         src={resource.image}
         alt={resource.name}
-        width="40"
-        height="50"
+        width={CardSize.width}
+        height={CardSize.height}
         style={{ display: "block" }}
       />
       {count >= 0 && (

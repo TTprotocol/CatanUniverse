@@ -64,7 +64,7 @@ export default function TradeCardSection({
             <div className="cardDisplay">
                 <div className="cardsWrapper">
                     {uniqueResources.map((res) => (
-                        <ResourceCard key={res} type={res} count={resourceCounts[res]} />
+                        <ResourceCard key={res} type={res} count={resourceCounts[res]} size="small" />
                     ))}
                 </div>
                 <button className="resetButton" onClick={() => handleReset(type)}>

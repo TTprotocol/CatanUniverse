@@ -1,9 +1,8 @@
 .changeCardPanel {
     position: absolute;
-    top: -380px;
+    top: -310px;
     left: 11px;
     display: flex;
-    z-index: 10;
 }
 
 .tradeCard {
@@ -87,6 +86,7 @@
 .cardsWrapper {
     display: flex;
     flex-wrap: wrap;
+    gap: 8px;
     flex: 1;
 }
 
@@ -106,14 +106,21 @@
     justify-content: center;
 }
 
-
-.resourceCard img {
-    width: 55px;
-    height: 80px;
-    transition: transform 0.2s ease;
+.resourceCard--small img {
+    width: 40px;
+    height: 50px;
 }
 
-.resourceCard:hover img {
+.resourceCard--small:hover img {
+    transform: translateY(-3px);
+}
+
+.resourceCard--medium img {
+    width: 55px;
+    height: 80px;
+}
+
+.resourceCard--medium:hover img {
     transform: translateY(-5px);
 }
 
