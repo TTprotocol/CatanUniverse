@@ -12,7 +12,7 @@
 .playerPanel > div {
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 12px;
-    width: 90%;
+    width: 70%;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     flex-shrink: 0;
     padding: 12px 15px;
@@ -20,7 +20,7 @@
 }
 
 .log {
-    height: 360px;
+    height: 260px;
     text-align: left;
     font-size: 16px;
     color: #000;
@@ -195,4 +195,12 @@
 .playerInfoCard.active span {
     color: #333; /* 글자색 진하게 */
     font-weight: bold;
+}
+
+/* 승리포인트 몇점인지 보여주는 곳 */
+.victoryPoints {
+    width: 80px;
+    height: 80px;
+    font: 900 16px / 80px '';
+    text-align: center;
 }

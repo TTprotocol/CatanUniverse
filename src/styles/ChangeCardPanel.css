@@ -1,8 +1,9 @@
 .changeCardPanel {
     position: absolute;
-    top: -310px;
+    top: -380px;
     left: 11px;
     display: flex;
+    z-index: 10;
 }
 
 .tradeCard {
@@ -86,7 +87,6 @@
 .cardsWrapper {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
     flex: 1;
 }
 
