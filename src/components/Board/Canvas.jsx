@@ -8,12 +8,33 @@ import {
 	TILE_PIN,
 } from "@/utils/constants";
 import mapImage from "@/assets/map/catanUniverse.png";
-import settlementImg from "@/assets/playerBlue/blueVillage.png";
-import cityImg from "@/assets/playerBlue/blueCity.png";
-import roadImg from "@/assets/playerBlue/blueRoad.png";
 import robberImg from "@/assets/theif1.png";
 
+// 플레이어별 이미지 import
+import blueVillage from "@/assets/playerBlue/blueVillage.png";
+import blueCity from "@/assets/playerBlue/blueCity.png";
+import blueRoad from "@/assets/playerBlue/blueRoad.png";
+
+import whiteVillage from "@/assets/playerWhite/whiteVillage.png";
+import whiteCity from "@/assets/playerWhite/whiteCity.png";
+import whiteRoad from "@/assets/playerWhite/whiteRoad.png";
+
+import orangeVillage from "@/assets/playerOrange/orangeVillage.png";
+import orangeCity from "@/assets/playerOrange/orangeCity.png";
+import orangeRoad from "@/assets/playerOrange/orangeRoad.png";
+
+import pinkVillage from "@/assets/playerPink/pinkVillage.png";
+import pinkCity from "@/assets/playerPink/pinkCity.png";
+import pinkRoad from "@/assets/playerPink/pinkRoad.png";
+
 // console.log("CORNER_PIN : ", CORNER_PIN);
+
+const playerImages = {
+	1: { village: blueVillage, city: blueCity, road: blueRoad },
+	2: { village: pinkVillage, city: pinkCity, road: pinkRoad },
+	3: { village: orangeVillage, city: orangeCity, road: orangeRoad },
+	4: { village: whiteVillage, city: whiteCity, road: whiteRoad },
+};
 
 function GameBoard({
 	visibleCorners = [],
@@ -92,7 +113,7 @@ function GameBoard({
 					return (
 						<img
 							key={`settlement-${player.id}-${pinId}`}
-							src={settlementImg}
+							src={playerImages[player.id]?.village || blueVillage}
 							alt="정착지"
 							style={{
 								position: "absolute",
@@ -118,7 +139,7 @@ function GameBoard({
 					return (
 						<img
 							key={`city-${player.id}-${pinId}`}
-							src={cityImg}
+							src={playerImages[player.id]?.city || blueCity}
 							alt="도시"
 							style={{
 								position: "absolute",
@@ -168,7 +189,7 @@ function GameBoard({
 					return (
 						<img
 							key={`road-${player.id}-${pinId}`}
-							src={roadImg}
+							src={playerImages[player.id]?.road || blueRoad}
 							alt="도로"
 							style={{
 								position: "absolute",
