@@ -4,6 +4,7 @@ import "@/styles/Intro.css";
 import GameBoard from "@/components/Board/Canvas";
 import ActionPanel from "@/components/ActionPanel/ActionPanel";
 import PlayerPanel from "@/components/PlayerPanel/PlayerPanel";
+import VictoryScreen from './VictoryScreen';
 import useGameStore, { pinManagement } from "@/features/state/gameStore";
 import {
 	DEFAULT_TILES,
@@ -26,7 +27,7 @@ const Home = () => {
 	const [showChangePanel, setShowChangePanel] = useState(false);
 
 	// Store에서 필요한 함수들 가져오기
-	const { initPlayers, initBoard, getCurPlayer, players } = useGameStore();
+	const { initPlayers, initBoard, getCurPlayer, players, phase } = useGameStore();
 	const {
 		setCornerPin,
 		setEdgePin,
@@ -62,6 +63,11 @@ const Home = () => {
 			if (timer) clearInterval(timer);
 		};
 	}, [viewState]);
+
+	//로딩이 끝나고 게임 상태가 종료되었을 때 승리화면 보여주기
+	if(phase === 'GAME_OVER') {
+		return <VictoryScreen/>
+	}
 
 	const handleGameStart = () => {
 		setLoadingProgress(0); // 로딩바 초기화

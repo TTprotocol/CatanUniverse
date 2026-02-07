@@ -203,6 +203,18 @@ const useGameStore = create(
 				} else {
 					players[index].settlements.push(position); // 현재 플레이어의 정착지(마을) 추가
 					players[index].points += 1; // 점수 1점 추가
+
+					//15점 이상이 되었을 때 게임 종료
+					if (players[index].points >= 15) {
+                        set({ 
+                            winner: players[index].name, // 승리자 이름 저장
+                            phase: "GAME_OVER"           // 게임 상태를 종료로 변경
+                        });
+                        
+                        // (선택사항) 게임이 끝났음을 로그에도 남깁니다.
+                        gameLog.getState().addLog(`🎉 ${players[index].name} 님이 승리하셨습니다!`);
+                    }
+
 					// ✅ FIX: addCornerPin -> setCornerPin으로 수정
 					pinManagement.getState().setCornerPin(position); // 핀 사용 처리
 
@@ -222,6 +234,8 @@ const useGameStore = create(
 					set({ players }); // 상태 업데이트
 
 					return { result: true, message: "건설되었습니다." };
+
+
 				}
 			},
 
@@ -248,6 +262,17 @@ const useGameStore = create(
 						(settlement) => settlement !== position,
 					);
 					players[index].points += 2; // 점수 2점 추가
+
+					//15점 이상이 되었을 때 게임 종료
+					if (players[index].points >= 15) {
+                        set({ 
+                            winner: players[index].name, // 승리자 이름 저장
+                            phase: "GAME_OVER"           // 게임 상태를 종료로 변경
+                        });
+                        
+                        // (선택사항) 게임이 끝났음을 로그에도 남깁니다.
+                        gameLog.getState().addLog(`🎉 ${players[index].name} 님이 승리하셨습니다!`);
+                    }
 
 					// 자원 차감
 					// ✅ FIX: 주석 수정 (양 -> 밀, 밀 -> 철)

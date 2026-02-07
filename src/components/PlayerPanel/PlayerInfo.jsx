@@ -8,6 +8,7 @@ export default function PlayerInfo({
     roads=[], 
     useKnight,
     isCurrent,
+    points = 0,
 }) {
 
     // 배열인지 확인, 아니면 빈 배열로 처리
@@ -33,6 +34,13 @@ export default function PlayerInfo({
             <div className="countBridge">
                 {bridgeCount > 0 && <div className="countBadge">{bridgeCount}</div>}
             </div>
+            {isMe && (
+                <div className="victoryPoints">
+                    <span className="vp-number">{points}</span>
+                    <span className="vp-label">P</span>
+                </div>
+            )}
+            
         </div>
     );
 }
