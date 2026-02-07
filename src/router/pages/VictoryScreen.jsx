@@ -1,5 +1,3 @@
-// src/components/VictoryScreen.jsx
-
 import React from 'react';
 import Confetti from 'react-confetti';
 import useGameStore from '../../features/state/gameStore'; // 경로는 프로젝트 구조에 맞게 확인해주세요
@@ -33,7 +31,6 @@ const VictoryScreen = () => {
                     🎉 {winner} 님이 승리하셨습니다! 축하합니다! 🎉
                 </h2>
                 
-                {/* 👇 추가된 재시작 버튼 */}
                 <button 
                     className="woodBtn" 
                     onClick={handleRestart}
