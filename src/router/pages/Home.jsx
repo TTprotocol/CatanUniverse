@@ -64,11 +64,6 @@ const Home = () => {
 		};
 	}, [viewState]);
 
-	//로딩이 끝나고 게임 상태가 종료되었을 때 승리화면 보여주기
-	if(phase === 'GAME_OVER') {
-		return <VictoryScreen/>
-	}
-
 	const handleGameStart = () => {
 		setLoadingProgress(0); // 로딩바 초기화
 		setViewState("loading");
@@ -289,6 +284,26 @@ const Home = () => {
 	// (C) 메인 게임 화면
 	return (
 		<main id="main">
+			<button
+                onClick={() => {
+                    // 강제로 상태를 종료로 바꾸고, 승리자 이름을 넣습니다.
+                    useGameStore.setState({ phase: "ENDED", winner: "테스터" });
+                }}
+                style={{
+                    position: "absolute",
+                    top: "20px",
+                    left: "20px",
+                    zIndex: 99999,
+                    padding: "10px 20px",
+                    backgroundColor: "red",
+                    color: "white",
+                    fontWeight: "bold",
+                    borderRadius: "8px",
+                    cursor: "pointer"
+                }}
+            >
+                🏆 승리 화면 테스트
+            </button>
 			<div id="wrap">
 				<section className="board">
 					<GameBoard
@@ -307,6 +322,8 @@ const Home = () => {
 				/>
 			</div>
 			<PlayerPanel players={players} />
+
+			{(phase === 'ENDED' ||  phase === "GAME_OVER") && <VictoryScreen/>}
 		</main>
 	);
 };

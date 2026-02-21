@@ -3,6 +3,14 @@
 /* 판타지 느낌의 폰트 가져오기 */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap');
 
+body {
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+}
+
 /* 전체 화면 컨테이너 */
 .introContainer {
     width: 100vw;
@@ -102,16 +110,15 @@
     background-color: #8B4513; /* 기본 갈색 */
     background-image: linear-gradient(to bottom, #a05a2c, #6d3610); /* 나무 질감 그라디언트 */
     color: #ffeebb;
-    font-family: 'Cinzel', serif;
+    font-family: 'KakaoSmallSans';
+    font-style: normal;
     font-size: 28px;
-    font-weight: bold;
+    font-weight: bold; 
     padding: 15px 60px;
     border: 4px solid #4a250b;
     border-radius: 12px;
     cursor: pointer;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-    
-    /* 입체감을 주는 그림자 설정 */
     box-shadow: 
         inset 0 2px 0 rgba(255,255,255,0.2), /* 윗면 반사광 */
         0 6px 0 #3e1f09, /* 버튼 두께 (옆면) */
@@ -222,4 +229,57 @@
     font-weight: bold;
     margin-top: 10px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* ⬛ 반투명 검은색 배경 (오버레이) */
+#victory-background.victory-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* 🏆 중앙 팝업창 디자인 */
+.victory-popup {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+    border: 4px solid #b8860b;
+    border-radius: 20px;
+    padding: 50px 80px;
+    text-align: center;
+    color: #333;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.5); /* 입체감 그림자 */
+    z-index: 10001;
+    position: relative; 
+    animation: popUp 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+}
+
+.victory-title {
+    font-family: 'KakaoSmallSans';
+    font-size: 70px;
+    font-weight: 900;
+    margin: 0 0 20px 0;
+    color: #b8860b; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.winner-text strong {
+    color: #b8860b !important; 
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes popUp {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
 }
