@@ -11,7 +11,6 @@ import {
 	useCheckSettlement,
 	useCheckCity,
 } from "@/features/game/actionHandler";
-import { CORNER_PIN } from "@/utils/constants";
 import islandImg from "../../assets/island_intro.png";
 
 const Home = () => {
