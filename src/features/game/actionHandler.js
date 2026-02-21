@@ -4,6 +4,25 @@
  * - adjacentTiles 명칭으로 통일
  */
 
+import useGameStore, { pinManagement } from "@/features/state/gameStore";
+import {
+	DEFAULT_TILES,
+	CORNER_PIN,
+	EDGE_PIN,
+	TILE_PIN,
+} from "@/utils/constants";
+
+// Store에서 필요한 함수들 가져오기
+const { initPlayers, initBoard, getCurPlayer, players, phase } = useGameStore();
+const {
+	setCornerPin,
+	setEdgePin,
+	setRobber,
+	getCornerPins,
+	getEdgePins,
+	getRobber,
+} = pinManagement();
+
 // 0) 공용 유틸
 
 // 플레이어가 보유한 전체 자원 카드 개수
@@ -13,7 +32,7 @@ const countResources = (player) =>
 // 플레이어로부터 자원 카드 n장을 무작위로 버리게 함
 const discardResourcesRandomly = (player, n) => {
 	const pool = Object.entries(player.resources || {}).flatMap(([r, q]) =>
-		Array(q || 0).fill(r)
+		Array(q || 0).fill(r),
 	);
 	// 셔플
 	for (let i = pool.length - 1; i > 0; i--) {
@@ -29,7 +48,7 @@ const discardResourcesRandomly = (player, n) => {
 //플레이어가 랜덤하게 카드를 한 장 가져오기
 const robOneResource = (victim, thief) => {
 	const pool = Object.entries(victim.resources || {}).flatMap(([r, q]) =>
-		Array(q || 0).fill(r)
+		Array(q || 0).fill(r),
 	);
 
 	if (pool.length === 0)
@@ -42,14 +61,109 @@ const robOneResource = (victim, thief) => {
 	return { updatedFrom: v2, updatedTo: t2, stolen };
 };
 
+/**
+ * 1) 건설 탐색
+ *   - 건설 가능한 도로 핀 탐색
+ *   - 건설 가능한 마을/도시 핀 탐색
+ */
+
+// 1-1. (건설 가능한 도로 위치 계산)
+export const useCheckRoad = async () => {
+	const curPlayer = getCurPlayer();
+
+	if (curPlayer) {
+		// 1. 내 마을/도시 주변 엣지 탐색
+		const tempEdge = [...curPlayer.settlements, ...curPlayer.cities]
+			.map((item) => CORNER_PIN.find((corner) => corner.id === item))
+			.filter(Boolean)
+			.flatMap((corner) => corner.edge);
+
+		// 2. 이미 지어진 플레이어의 도로 제외
+		const playersRoads = new Set(curPlayer.roads);
+		const buildRoads = new Set(getEdgePins());
+		const nextEdge = tempEdge.filter(
+			(v) => !playersRoads.has(v) && !buildRoads.has(v),
+		);
+		return nextEdge;
+	}
+	return [];
+};
+
+// 1-2. (건설 가능한 마을 위치 계산)
+export const useCheckSettlement = async () => {
+	const tempSettlement = [];
+	const curPlayer = getCurPlayer();
+
+	if (curPlayer) {
+		// 1. 내 도로 주변 코너 탐색
+		curPlayer.roads.forEach((item) => {
+			const edge = EDGE_PIN.find((edge) => edge.id === item);
+			if (edge) tempSettlement.push(...edge.corner);
+		});
+
+		// 2. 이미 지어진 플레이어의 마을/도시 제외
+		const playersSettlement = new Set(curPlayer.settlements);
+		const playersCity = new Set(curPlayer.cities);
+		const buildCorner = new Set(getCornerPins());
+
+		// 3. 해당 코너 주위의 마을/도시가 있으면 제외
+		const nearCorner = new Set(
+			[...curPlayer.settlements, ...curPlayer.cities]
+				.map((item) => CORNER_PIN.find((corner) => corner.id === item))
+				.filter(Boolean)
+				.flatMap((corner) => corner.nextCorner),
+		);
+
+		// 위 제약사항들 모두 적용
+		const nextSettlement = tempSettlement.filter(
+			(v) =>
+				!playersSettlement.has(v) &&
+				!playersCity.has(v) &&
+				!buildCorner.has(v) &&
+				!nearCorner.has(v),
+		);
+
+		return nextSettlement;
+	}
+	return [];
+};
+
+// 1-3. (건설 가능한 도시 위치 계산)
+export const useCheckCity = async () => {
+	const curPlayer = getCurPlayer();
+
+	if (curPlayer) {
+		// 내 마을 탐색 위치만 반환
+		return curPlayer.settlements;
+	}
+	return [];
+};
+
 /*
- * 1) 플레이어 건설
+ * 2) 플레이어 건설/행동
+ *   - 도로 건설(useBuildRoads)
  *   - 정착지 건설(buildSettlement)
  *   - 도시 업그레이드(upgradeToCity)
  * props
  *   - players: 플레이어 배열
  *   - setPlayers: players 상태 갱신 함수
  */
+
+export const useBuildRoads = async () => {
+	// 도로 비용: 나무1, 벽돌1
+};
+
+export const useBuildSettlement = async () => {
+	// 정착지 비용: 나무1, 벽돌1, 밀1, 양1
+};
+
+export const useBuildCity = async () => {
+	// 도시 비용: 밀2, 철3
+};
+
+export const useGetDevelopment = async () => {
+	// 발전카드 비용: 양1, 밀1, 철1
+};
 
 export const useBuildActions = ({ players, setPlayers }) => {
 	//정착지(마을) 건설
@@ -68,7 +182,7 @@ export const useBuildActions = ({ players, setPlayers }) => {
 
 		// 비용 보유 확인
 		const ok = Object.entries(cost).every(
-			([type, amt]) => (player.resources[type] || 0) >= amt
+			([type, amt]) => (player.resources[type] || 0) >= amt,
 		);
 
 		if (!ok) throw new Error("자원이 부족합니다.");
@@ -83,7 +197,7 @@ export const useBuildActions = ({ players, setPlayers }) => {
 				Object.entries(player.resources).map(([type, val]) => [
 					type,
 					val - (cost[type] || 0),
-				])
+				]),
 			),
 			buildings: [...player.buildings, newBuilding],
 		};
@@ -101,12 +215,12 @@ export const useBuildActions = ({ players, setPlayers }) => {
 
 		// 해당 위치에 '정착지'가 있어야 함
 		const idx = player.buildings.findIndex(
-			(b) => b.location === location && b.type === "settlement"
+			(b) => b.location === location && b.type === "settlement",
 		);
 		if (idx === -1) throw new Error("정착지가 없습니다.");
 
 		const ok = Object.entries(cost).every(
-			([type, amt]) => (player.resources[type] || 0) >= amt
+			([type, amt]) => (player.resources[type] || 0) >= amt,
 		);
 		if (!ok) throw new Error("자원이 부족합니다.");
 
@@ -121,7 +235,7 @@ export const useBuildActions = ({ players, setPlayers }) => {
 				Object.entries(player.resources).map(([type, val]) => [
 					type,
 					val - (cost[type] || 0),
-				])
+				]),
 			),
 			buildings: updatedBuildings,
 		};
@@ -133,7 +247,7 @@ export const useBuildActions = ({ players, setPlayers }) => {
 };
 
 /*
- * 2) 도둑 관련 로직(주사위 합 7일 때)
+ * 3) 도둑 관련 로직(주사위 합 7일 때)
  *   - 자원 8장 이상 보유자: 절반 버리기
  *   - 도둑 이동
  *   - 도둑 인접 플레이어에게서 자원 1장 강탈
@@ -173,8 +287,8 @@ export const rollDiceSevenHandler = ({
 		(p) =>
 			p.id !== currentPlayer.id &&
 			(p.buildings || []).some((b) =>
-				(b.adjacentTiles || []).includes(newTileId)
-			)
+				(b.adjacentTiles || []).includes(newTileId),
+			),
 	);
 
 	if (victims.length === 0) return; // 강탈 대상 없음
@@ -185,7 +299,7 @@ export const rollDiceSevenHandler = ({
 		victims[0];
 	const { updatedFrom, updatedTo } = robOneResource(
 		victimChosen,
-		currentPlayer
+		currentPlayer,
 	);
 
 	// 피해자/가해자만 교체해서 players 갱신
@@ -199,7 +313,7 @@ export const rollDiceSevenHandler = ({
 };
 
 /*
- * 2-1) 자원 분배 (도둑 차단 포함)
+ * 3-1) 자원 분배 (도둑 차단 포함)
  *   - dice: 이번 턴 주사위 합
  *   - tiles: 보드 타일 배열 [{id, number, resource}, ...]
  *   - robberTileId: 도둑이 있는 타일 id
@@ -245,13 +359,13 @@ export const distributeResourcesByDicePure = ({
 };
 
 /*
- * 3) 자원 교환
+ * 4) 자원 교환
  *   3-1) 플레이어 간 교환
  *   3-2) 은행/항구 교환
  */
 
 /**
- * 3-1. 플레이어 간 자원 교환
+ * 4-1. 플레이어 간 자원 교환
  * @param {Player} fromPlayer  - 자원을 내는 플레이어
  * @param {Player} toPlayer    - 자원을 받는 플레이어
  * @param {Object} offer       - fromPlayer가 내놓는 자원 {자원:수량}
@@ -293,8 +407,8 @@ export const tradeBetweenPlayers = (fromPlayer, toPlayer, offer, request) => {
 };
 
 /**
- * 3-2. 은행/항구 교환
- * @param {Player} player
+ * 4-2. 은행/항구 교환
+ * @param {Players} player
  * @param {string} giveType    - 내놓을 자원
  * @param {string} receiveType - 받을 자원
  * @returns {Player}           - 갱신된 플레이어
@@ -310,7 +424,7 @@ export const tradeWithBank = (player, giveType, receiveType) => {
 
 	if ((player.resources[giveType] || 0) < rate) {
 		throw new Error(
-			`${giveType} 자원이 ${rate}개 이상 있어야 교환이 가능합니다.`
+			`${giveType} 자원이 ${rate}개 이상 있어야 교환이 가능합니다.`,
 		);
 	}
 
