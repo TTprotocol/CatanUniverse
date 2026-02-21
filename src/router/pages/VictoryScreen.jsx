@@ -33,7 +33,7 @@ const VictoryScreen = () => {
                 <h1 className="victory-title" style={{ margin: "0 0 20px 0", fontSize: "70px" }}>
                     VICTORY!
                 </h1>
-                <h2 className="winner-text" style={{ fontSize: "28px", marginBottom: "40px", color: "#b8860b" }}>
+                <h2 className="winner-text" style={{ fontSize: "28px", marginBottom: "40px", color: "#8B4513" }}>
                     🎉 <strong style={{ color: "#ffba00" }}>{winner || "테스터"}</strong> 님이 승리하셨습니다! 🎉
                 </h2>
                 
