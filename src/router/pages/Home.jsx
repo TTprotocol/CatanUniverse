@@ -5,12 +5,13 @@ import GameBoard from "@/components/Board/Canvas";
 import ActionPanel from "@/components/ActionPanel/ActionPanel";
 import PlayerPanel from "@/components/PlayerPanel/PlayerPanel";
 import VictoryScreen from "./VictoryScreen";
-import useGameStore from "@/features/state/gameStore";
+import useGameStore, { pinManagement } from "@/features/state/gameStore";
 import {
 	useCheckRoad,
 	useCheckSettlement,
 	useCheckCity,
 } from "@/features/game/actionHandler";
+import { CORNER_PIN } from "@/utils/constants";
 import islandImg from "../../assets/island_intro.png";
 
 const Home = () => {
@@ -26,7 +27,8 @@ const Home = () => {
 	const [showChangePanel, setShowChangePanel] = useState(false);
 
 	// Store에서 필요한 함수들 가져오기
-	const { phase } = useGameStore();
+	const { players, initPlayers, initBoard, phase } = useGameStore();
+	const { setCornerPin, setEdgePin, setRobber } = pinManagement();
 
 	// === 3. 로딩 타이머 로직 ===
 	useEffect(() => {

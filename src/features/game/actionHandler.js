@@ -13,15 +13,8 @@ import {
 } from "@/utils/constants";
 
 // Store에서 필요한 함수들 가져오기
-const { initPlayers, initBoard, getCurPlayer, players, phase } = useGameStore();
-const {
-	setCornerPin,
-	setEdgePin,
-	setRobber,
-	getCornerPins,
-	getEdgePins,
-	getRobber,
-} = pinManagement();
+const getGameState = () => useGameStore.getState(); // 의도: 컴포넌트 바깥에서는 훅 호출 대신 getState로 접근
+const getPinState = () => pinManagement.getState(); // 의도: 컴포넌트 바깥에서는 훅 호출 대신 getState로 접근
 
 // 0) 공용 유틸
 
@@ -69,7 +62,7 @@ const robOneResource = (victim, thief) => {
 
 // 1-1. (건설 가능한 도로 위치 계산)
 export const useCheckRoad = async () => {
-	const curPlayer = getCurPlayer();
+	const curPlayer = getGameState().getCurPlayer(); // 의도: 실행 시점의 최신 store state 사용
 
 	if (curPlayer) {
 		// 1. 내 마을/도시 주변 엣지 탐색
@@ -80,7 +73,7 @@ export const useCheckRoad = async () => {
 
 		// 2. 이미 지어진 플레이어의 도로 제외
 		const playersRoads = new Set(curPlayer.roads);
-		const buildRoads = new Set(getEdgePins());
+		const buildRoads = new Set(getPinState().getEdgePins()); // 의도: pin store도 훅 호출 없이 getState로 조회
 		const nextEdge = tempEdge.filter(
 			(v) => !playersRoads.has(v) && !buildRoads.has(v),
 		);
@@ -92,7 +85,7 @@ export const useCheckRoad = async () => {
 // 1-2. (건설 가능한 마을 위치 계산)
 export const useCheckSettlement = async () => {
 	const tempSettlement = [];
-	const curPlayer = getCurPlayer();
+	const curPlayer = getGameState().getCurPlayer(); // 의도: 실행 시점의 최신 store state 사용
 
 	if (curPlayer) {
 		// 1. 내 도로 주변 코너 탐색
@@ -104,7 +97,7 @@ export const useCheckSettlement = async () => {
 		// 2. 이미 지어진 플레이어의 마을/도시 제외
 		const playersSettlement = new Set(curPlayer.settlements);
 		const playersCity = new Set(curPlayer.cities);
-		const buildCorner = new Set(getCornerPins());
+		const buildCorner = new Set(getPinState().getCornerPins()); // 의도: pin store도 훅 호출 없이 getState로 조회
 
 		// 3. 해당 코너 주위의 마을/도시가 있으면 제외
 		const nearCorner = new Set(
@@ -130,7 +123,7 @@ export const useCheckSettlement = async () => {
 
 // 1-3. (건설 가능한 도시 위치 계산)
 export const useCheckCity = async () => {
-	const curPlayer = getCurPlayer();
+	const curPlayer = getGameState().getCurPlayer(); // 의도: 실행 시점의 최신 store state 사용
 
 	if (curPlayer) {
 		// 내 마을 탐색 위치만 반환
