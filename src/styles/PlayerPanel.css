@@ -47,9 +47,8 @@
     margin-bottom: 15px;
 }
 
-.otherPlayers>div {
-    width: 100%;
-    height: 20%;
+.otherPlayers > div.player {
+    height: 25%;
 }
 
 #bankLogo {
@@ -118,9 +117,10 @@
 }
 
 .player>.icon {
-    width: 20%;
+    width: 30%;
     display: flex;
     flex-direction: column;
+    margin-top: 15px;
 }
 
 .size-4 {
@@ -151,6 +151,7 @@
     background-position: center;
     background-repeat: no-repeat;
     position: relative;
+    margin-right: 10px;
 }
 
 .player .countKnight {
@@ -160,6 +161,7 @@
     background-position: center;
     background-repeat: no-repeat;
     position: relative;
+    margin-right: 10px;
 }
 
 .player .countBridge {
@@ -169,6 +171,7 @@
     background-size: 60%;
     background-repeat: no-repeat;
     position: relative;
+    margin-right: 10px;
 }
 
 .myProfile {

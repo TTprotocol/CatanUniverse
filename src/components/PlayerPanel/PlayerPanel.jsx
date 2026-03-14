@@ -55,7 +55,7 @@ export default function PlayerPanel({ players }) {
 
             <PlayerInfo
                 isMe={true}
-                playerClass="" 
+                playerClass="Me"
                 resources={players[0]?.resources || 0}
                 devCards={players[0]?.devCards || 0}
                 roads={players[0]?.roads || 0}
