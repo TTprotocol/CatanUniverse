@@ -55,10 +55,10 @@ export default function PlayerPanel({ players }) {
 
             <PlayerInfo
                 isMe={true}
-                playerClass="Me"
-                resources={players[0]?.resources || 0}
-                devCards={players[0]?.devCards || 0}
-                roads={players[0]?.roads || 0}
+                playerClass=""
+                resources={players[0]?.resources || []}
+                devCards={players[0]?.devCards || []}
+                roads={players[0]?.roads || []}
                 useKnight={players[0]?.useKnight || 0}
                 isCurrent={currentPlayerIndex === 0}
             />
