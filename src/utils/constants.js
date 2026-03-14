@@ -201,7 +201,7 @@ export const DEFAULT_TILES = [
 export const CORNER_PIN = [
 	{
 		id: 1,
-		x: 340,
+		x: 338,
 		y: 135,
 		label: "",
 		tile: [1],
@@ -211,7 +211,7 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 2,
-		x: 455,
+		x: 457,
 		y: 135,
 		label: "",
 		tile: [2],
@@ -221,7 +221,7 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 3,
-		x: 575,
+		x: 573,
 		y: 135,
 		label: "",
 		tile: [3],
@@ -232,7 +232,7 @@ export const CORNER_PIN = [
 	{
 		id: 4,
 		x: 280,
-		y: 165,
+		y: 166,
 		label: "",
 		tile: [1],
 		edge: [1, 7],
@@ -241,8 +241,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 5,
-		x: 398,
-		y: 165,
+		x: 397,
+		y: 166,
 		label: "",
 		tile: [1, 2],
 		edge: [2, 3, 8],
@@ -252,7 +252,7 @@ export const CORNER_PIN = [
 	{
 		id: 6,
 		x: 515,
-		y: 165,
+		y: 166,
 		label: "",
 		tile: [2, 3],
 		edge: [4, 5, 9],
@@ -261,8 +261,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 7,
-		x: 625,
-		y: 165,
+		x: 628,
+		y: 166,
 		label: "",
 		tile: [3],
 		edge: [6, 10],
@@ -272,7 +272,7 @@ export const CORNER_PIN = [
 	{
 		id: 8,
 		x: 280,
-		y: 230,
+		y: 233,
 		label: "",
 		tile: [1],
 		edge: [7, 11, 12],
@@ -281,8 +281,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 9,
-		x: 398,
-		y: 230,
+		x: 397,
+		y: 233,
 		label: "",
 		tile: [1, 2, 5],
 		edge: [8, 13, 14],
@@ -292,7 +292,7 @@ export const CORNER_PIN = [
 	{
 		id: 10,
 		x: 515,
-		y: 230,
+		y: 233,
 		label: "",
 		tile: [2, 3, 6],
 		edge: [9, 15, 16],
@@ -301,8 +301,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 11,
-		x: 625,
-		y: 230,
+		x: 628,
+		y: 233,
 		label: "",
 		tile: [3],
 		edge: [10, 17, 18],
@@ -311,8 +311,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 12,
-		x: 228,
-		y: 260,
+		x: 225,
+		y: 265,
 		label: "",
 		tile: [4],
 		edge: [11, 19],
@@ -321,8 +321,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 13,
-		x: 340,
-		y: 260,
+		x: 338,
+		y: 265,
 		label: "",
 		tile: [1, 4, 5],
 		edge: [12, 13, 20],
@@ -331,8 +331,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 14,
-		x: 455,
-		y: 260,
+		x: 457,
+		y: 265,
 		label: "",
 		tile: [2, 5, 6],
 		edge: [14, 15, 21],
@@ -341,8 +341,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 15,
-		x: 575,
-		y: 260,
+		x: 573,
+		y: 265,
 		label: "",
 		tile: [3, 6, 9],
 		edge: [16, 17, 22],
@@ -352,7 +352,7 @@ export const CORNER_PIN = [
 	{
 		id: 16,
 		x: 685,
-		y: 260,
+		y: 265,
 		label: "",
 		tile: [9],
 		edge: [18, 23],
@@ -361,8 +361,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 17,
-		x: 228,
-		y: 335,
+		x: 225,
+		y: 333,
 		label: "",
 		tile: [4],
 		edge: [19, 24, 25],
@@ -371,8 +371,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 18,
-		x: 340,
-		y: 335,
+		x: 338,
+		y: 333,
 		label: "",
 		tile: [4, 5, 12],
 		edge: [20, 26, 27],
@@ -381,8 +381,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 19,
-		x: 455,
-		y: 335,
+		x: 457,
+		y: 333,
 		label: "",
 		tile: [5, 6, 10],
 		edge: [21, 28, 29],
@@ -391,8 +391,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 20,
-		x: 575,
-		y: 335,
+		x: 573,
+		y: 333,
 		label: "",
 		tile: [6, 7, 11],
 		edge: [22, 30, 31],
@@ -402,7 +402,7 @@ export const CORNER_PIN = [
 	{
 		id: 21,
 		x: 685,
-		y: 335,
+		y: 333,
 		label: "",
 		tile: [9],
 		edge: [23, 32, 33],
@@ -412,7 +412,7 @@ export const CORNER_PIN = [
 	{
 		id: 22,
 		x: 170,
-		y: 360,
+		y: 365,
 		label: "",
 		tile: [8],
 		edge: [24, 34],
@@ -422,7 +422,7 @@ export const CORNER_PIN = [
 	{
 		id: 23,
 		x: 280,
-		y: 360,
+		y: 365,
 		label: "",
 		tile: [4, 8, 12],
 		edge: [25, 26, 35],
@@ -431,8 +431,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 24,
-		x: 398,
-		y: 360,
+		x: 397,
+		y: 365,
 		label: "",
 		tile: [5, 9, 10],
 		edge: [27, 28, 36],
@@ -441,8 +441,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 25,
-		x: 515,
-		y: 360,
+		x: 513,
+		y: 365,
 		label: "",
 		tile: [6, 10, 11],
 		edge: [29, 30, 37],
@@ -451,8 +451,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 26,
-		x: 625,
-		y: 360,
+		x: 628,
+		y: 365,
 		label: "",
 		tile: [7, 11, 12],
 		edge: [31, 32, 38],
@@ -462,7 +462,7 @@ export const CORNER_PIN = [
 	{
 		id: 27,
 		x: 740,
-		y: 360,
+		y: 365,
 		label: "",
 		tile: [12],
 		edge: [33, 39],
@@ -472,7 +472,7 @@ export const CORNER_PIN = [
 	{
 		id: 28,
 		x: 170,
-		y: 430,
+		y: 433,
 		label: "",
 		tile: [8],
 		edge: [34, 40],
@@ -482,7 +482,7 @@ export const CORNER_PIN = [
 	{
 		id: 29,
 		x: 280,
-		y: 430,
+		y: 433,
 		label: "",
 		tile: [8, 9, 13],
 		edge: [35, 41, 42],
@@ -491,8 +491,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 30,
-		x: 398,
-		y: 430,
+		x: 397,
+		y: 433,
 		label: "",
 		tile: [9, 10, 14],
 		edge: [36, 43, 44],
@@ -501,8 +501,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 31,
-		x: 515,
-		y: 430,
+		x: 513,
+		y: 433,
 		label: "",
 		tile: [10, 11, 15],
 		edge: [37, 45, 46],
@@ -511,8 +511,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 32,
-		x: 625,
-		y: 430,
+		x: 628,
+		y: 433,
 		label: "",
 		tile: [11, 12, 16],
 		edge: [38, 47, 48],
@@ -522,7 +522,7 @@ export const CORNER_PIN = [
 	{
 		id: 33,
 		x: 740,
-		y: 430,
+		y: 433,
 		label: "",
 		tile: [12],
 		edge: [39, 49],
@@ -531,8 +531,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 34,
-		x: 228,
-		y: 460,
+		x: 225,
+		y: 463,
 		label: "",
 		tile: [13],
 		edge: [40, 41, 50],
@@ -541,8 +541,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 35,
-		x: 340,
-		y: 460,
+		x: 338,
+		y: 463,
 		label: "",
 		tile: [9, 13, 14],
 		edge: [42, 43, 51],
@@ -551,8 +551,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 36,
-		x: 455,
-		y: 460,
+		x: 457,
+		y: 463,
 		label: "",
 		tile: [10, 14, 15],
 		edge: [44, 45, 52],
@@ -561,8 +561,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 37,
-		x: 575,
-		y: 460,
+		x: 573,
+		y: 463,
 		label: "",
 		tile: [11, 15, 16],
 		edge: [46, 47, 53],
@@ -572,7 +572,7 @@ export const CORNER_PIN = [
 	{
 		id: 38,
 		x: 685,
-		y: 460,
+		y: 463,
 		label: "",
 		tile: [16],
 		edge: [48, 49, 54],
@@ -581,8 +581,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 39,
-		x: 228,
-		y: 525,
+		x: 225,
+		y: 533,
 		label: "",
 		tile: [13],
 		edge: [50, 55],
@@ -591,8 +591,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 40,
-		x: 340,
-		y: 525,
+		x: 338,
+		y: 533,
 		label: "",
 		tile: [13, 14, 17],
 		edge: [51, 56, 57],
@@ -601,8 +601,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 41,
-		x: 455,
-		y: 525,
+		x: 457,
+		y: 533,
 		label: "",
 		tile: [14, 15, 18],
 		edge: [52, 58, 59],
@@ -611,8 +611,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 42,
-		x: 575,
-		y: 525,
+		x: 573,
+		y: 533,
 		label: "",
 		tile: [15, 16, 19],
 		edge: [53, 60, 61],
@@ -622,7 +622,7 @@ export const CORNER_PIN = [
 	{
 		id: 43,
 		x: 685,
-		y: 525,
+		y: 533,
 		label: "",
 		tile: [16],
 		edge: [54, 62],
@@ -632,7 +632,7 @@ export const CORNER_PIN = [
 	{
 		id: 44,
 		x: 280,
-		y: 560,
+		y: 563,
 		label: "",
 		tile: [17],
 		edge: [55, 56, 63],
@@ -641,8 +641,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 45,
-		x: 398,
-		y: 560,
+		x: 397,
+		y: 563,
 		label: "",
 		tile: [14, 17, 18],
 		edge: [57, 58, 64],
@@ -651,8 +651,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 46,
-		x: 515,
-		y: 560,
+		x: 513,
+		y: 563,
 		label: "",
 		tile: [15, 18, 19],
 		edge: [59, 60, 65],
@@ -661,8 +661,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 47,
-		x: 625,
-		y: 560,
+		x: 628,
+		y: 563,
 		label: "",
 		tile: [19],
 		edge: [61, 62, 66],
@@ -672,7 +672,7 @@ export const CORNER_PIN = [
 	{
 		id: 48,
 		x: 280,
-		y: 625,
+		y: 630,
 		label: "",
 		tile: [17],
 		edge: [63, 67],
@@ -681,8 +681,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 49,
-		x: 398,
-		y: 625,
+		x: 397,
+		y: 630,
 		label: "",
 		tile: [17, 18],
 		edge: [64, 68, 69],
@@ -691,8 +691,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 50,
-		x: 515,
-		y: 625,
+		x: 513,
+		y: 630,
 		label: "",
 		tile: [18, 19],
 		edge: [65, 70, 71],
@@ -701,8 +701,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 51,
-		x: 625,
-		y: 625,
+		x: 628,
+		y: 630,
 		label: "",
 		tile: [19],
 		edge: [66, 72],
@@ -711,8 +711,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 52,
-		x: 340,
-		y: 660,
+		x: 338,
+		y: 663,
 		label: "",
 		tile: [17],
 		edge: [67, 68],
@@ -721,8 +721,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 53,
-		x: 455,
-		y: 660,
+		x: 457,
+		y: 663,
 		label: "",
 		tile: [18],
 		edge: [69, 70],
@@ -731,8 +731,8 @@ export const CORNER_PIN = [
 	},
 	{
 		id: 54,
-		x: 575,
-		y: 660,
+		x: 573,
+		y: 663,
 		label: "",
 		tile: [19],
 		edge: [71, 72],
@@ -744,20 +744,100 @@ export const CORNER_PIN = [
 
 // 도로를 건설하는 핀 (모서리)
 export const EDGE_PIN = [
-	{ id: 1, x: 310, y: 150, label: "", tile: [1], corner: [1, 4], angle: 60 },
-	{ id: 2, x: 370, y: 150, label: "", tile: [1], corner: [1, 5], angle: 120 },
-	{ id: 3, x: 425, y: 150, label: "", tile: [2], corner: [2, 5], angle: 60 },
-	{ id: 4, x: 485, y: 150, label: "", tile: [2], corner: [2, 6], angle: 120 },
-	{ id: 5, x: 545, y: 150, label: "", tile: [3], corner: [3, 6], angle: 60 },
-	{ id: 6, x: 600, y: 150, label: "", tile: [3], corner: [3, 7], angle: 120 },
-	{ id: 7, x: 280, y: 195, label: "", tile: [1], corner: [4, 8], angle: 0 },
-	{ id: 8, x: 398, y: 195, label: "", tile: [1, 2], corner: [5, 9], angle: 0 },
-	{ id: 9, x: 515, y: 195, label: "", tile: [2, 3], corner: [6, 10], angle: 0 },
-	{ id: 10, x: 625, y: 195, label: "", tile: [3], corner: [7, 11], angle: 0 },
+	{ 
+		id: 1, 
+		x: 312,
+		y: 150,
+		label: "", 
+		tile: [1], 
+		corner: [1, 4], 
+		angle: 60 
+	},
+	{ 
+		id: 2,
+		x: 368, 
+		y: 150, 
+		label: "", 
+		tile: [1], 
+		corner: [1, 5], 
+		angle: 120 
+	},
+	{ 
+		id: 3,
+		x: 425,
+		y: 150,
+		label: "", 
+		tile: [2], 
+		corner: [2, 5], 
+		angle: 60 
+	},
+	{ 
+		id: 4, 
+		x: 485,
+		y: 150, 
+		label: "", 
+		tile: [2], 
+		corner: [2, 6], 
+		angle: 120 
+	},
+	{ 
+		id: 5, 
+		x: 544, 
+		y: 150, 
+		label: "", 
+		tile: [3], 
+		corner: [3, 6], 
+		angle: 60 
+	},
+	{ 
+		id: 6, 
+		x: 603, 
+		y: 150, 
+		label: "", 
+		tile: [3], 
+		corner: [3, 7], 
+		angle: 120 
+	},
+	{ 
+		id: 7, 
+		x: 285,
+		y: 197,
+		label: "", 
+		tile: [1], 
+		corner: [4, 8], 
+		angle: 0 
+	},
+	{ 
+		id: 8, 
+		x: 398,
+		y: 197, 
+		label: "", 
+		tile: [1, 2], 
+		corner: [5, 9], 
+		angle: 0 
+	},
+	{ 
+		id: 9, 
+		x: 515, 
+		y: 197, 
+		label: "", 
+		tile: [2, 3], 
+		corner: [6, 10], 
+		angle: 0 
+	},
+	{ 
+		id: 10, 
+		x: 628, 
+		y: 197, 
+		label: "", 
+		tile: [3], 
+		corner: [7, 11], 
+		angle: 0 
+	},
 	{
 		id: 11,
-		x: 254,
-		y: 245,
+		x: 250,
+		y: 248,
 		label: "",
 		tile: [1, 4],
 		corner: [8, 12],
@@ -765,8 +845,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 12,
-		x: 310,
-		y: 245,
+		x: 312,
+		y: 248,
 		label: "",
 		tile: [1, 4],
 		corner: [8, 13],
@@ -774,8 +854,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 13,
-		x: 370,
-		y: 245,
+		x: 368,
+		y: 248,
 		label: "",
 		tile: [2, 5],
 		corner: [9, 13],
@@ -784,7 +864,7 @@ export const EDGE_PIN = [
 	{
 		id: 14,
 		x: 425,
-		y: 245,
+		y: 248,
 		label: "",
 		tile: [2, 6],
 		corner: [9, 14],
@@ -793,7 +873,7 @@ export const EDGE_PIN = [
 	{
 		id: 15,
 		x: 485,
-		y: 245,
+		y: 248,
 		label: "",
 		tile: [3, 6],
 		corner: [10, 14],
@@ -801,28 +881,44 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 16,
-		x: 545,
-		y: 245,
+		x: 544,
+		y: 248,
 		label: "",
 		tile: [3, 6],
 		corner: [10, 15],
 		angle: 120,
 	},
-	{ id: 17, x: 600, y: 245, label: "", tile: [7], corner: [11, 15], angle: 60 },
+	{
+		id: 17,
+		x: 603,
+		y: 248,
+		label: "",
+		tile: [7],
+		corner: [11, 15],
+		angle: 60,
+	},
 	{
 		id: 18,
-		x: 655,
-		y: 245,
+		x: 660,
+		y: 248,
 		label: "",
 		tile: [7],
 		corner: [11, 16],
 		angle: 120,
 	},
-	{ id: 19, x: 228, y: 295, label: "", tile: [4], corner: [12, 17], angle: 0 },
+	{
+		id: 19,
+		x: 225,
+		y: 297,
+		label: "",
+		tile: [4],
+		corner: [12, 17],
+		angle: 0
+	},
 	{
 		id: 20,
-		x: 340,
-		y: 295,
+		x: 336,
+		y: 297,
 		label: "",
 		tile: [4, 5],
 		corner: [13, 18],
@@ -831,7 +927,7 @@ export const EDGE_PIN = [
 	{
 		id: 21,
 		x: 455,
-		y: 295,
+		y: 297,
 		label: "",
 		tile: [5, 6],
 		corner: [14, 19],
@@ -839,18 +935,18 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 22,
-		x: 575,
-		y: 295,
+		x: 573,
+		y: 297,
 		label: "",
 		tile: [6, 7],
 		corner: [15, 20],
 		angle: 0,
 	},
-	{ id: 23, x: 685, y: 295, label: "", tile: [7], corner: [16, 21], angle: 0 },
+	{ id: 23, x: 688, y: 297, label: "", tile: [7], corner: [16, 21], angle: 0 },
 	{
 		id: 24,
-		x: 198,
-		y: 345,
+		x: 190,
+		y: 350,
 		label: "",
 		tile: [4, 8],
 		corner: [17, 22],
@@ -858,8 +954,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 25,
-		x: 254,
-		y: 345,
+		x: 250,
+		y: 350,
 		label: "",
 		tile: [4, 8],
 		corner: [17, 23],
@@ -868,7 +964,7 @@ export const EDGE_PIN = [
 	{
 		id: 26,
 		x: 310,
-		y: 345,
+		y: 350,
 		label: "",
 		tile: [5, 9],
 		corner: [18, 23],
@@ -876,8 +972,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 27,
-		x: 370,
-		y: 345,
+		x: 365,
+		y: 350,
 		label: "",
 		tile: [5, 9],
 		corner: [18, 24],
@@ -886,7 +982,7 @@ export const EDGE_PIN = [
 	{
 		id: 28,
 		x: 425,
-		y: 345,
+		y: 350,
 		label: "",
 		tile: [6, 10],
 		corner: [19, 24],
@@ -895,7 +991,7 @@ export const EDGE_PIN = [
 	{
 		id: 29,
 		x: 485,
-		y: 345,
+		y: 350,
 		label: "",
 		tile: [6, 10],
 		corner: [19, 25],
@@ -903,8 +999,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 30,
-		x: 545,
-		y: 345,
+		x: 544,
+		y: 350,
 		label: "",
 		tile: [6, 11],
 		corner: [20, 25],
@@ -913,7 +1009,7 @@ export const EDGE_PIN = [
 	{
 		id: 31,
 		x: 600,
-		y: 345,
+		y: 350,
 		label: "",
 		tile: [7, 11],
 		corner: [20, 26],
@@ -921,8 +1017,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 32,
-		x: 655,
-		y: 345,
+		x: 660,
+		y: 350,
 		label: "",
 		tile: [7, 12],
 		corner: [21, 26],
@@ -930,18 +1026,18 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 33,
-		x: 715,
-		y: 345,
+		x: 713,
+		y: 350,
 		label: "",
 		tile: [12],
 		corner: [21, 27],
 		angle: 120,
 	},
-	{ id: 34, x: 170, y: 395, label: "", tile: [8], corner: [22, 28], angle: 0 },
+	{ id: 34, x: 165, y: 400, label: "", tile: [8], corner: [22, 28], angle: 0 },
 	{
 		id: 35,
 		x: 280,
-		y: 395,
+		y: 400,
 		label: "",
 		tile: [8, 9],
 		corner: [23, 29],
@@ -949,8 +1045,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 36,
-		x: 398,
-		y: 395,
+		x: 396,
+		y: 400,
 		label: "",
 		tile: [9, 10],
 		corner: [24, 30],
@@ -958,8 +1054,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 37,
-		x: 515,
-		y: 395,
+		x: 512,
+		y: 400,
 		label: "",
 		tile: [10, 11],
 		corner: [25, 31],
@@ -967,18 +1063,18 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 38,
-		x: 625,
-		y: 395,
+		x: 628,
+		y: 400,
 		label: "",
 		tile: [11, 12],
 		corner: [26, 32],
 		angle: 0,
 	},
-	{ id: 39, x: 740, y: 395, label: "", tile: [12], corner: [27, 33], angle: 0 },
+	{ id: 39, x: 743, y: 400, label: "", tile: [12], corner: [27, 33], angle: 0 },
 	{
 		id: 40,
-		x: 198,
-		y: 445,
+		x: 190,
+		y: 450,
 		label: "",
 		tile: [8, 13],
 		corner: [28, 34],
@@ -987,7 +1083,7 @@ export const EDGE_PIN = [
 	{
 		id: 41,
 		x: 254,
-		y: 445,
+		y: 450,
 		label: "",
 		tile: [8, 13],
 		corner: [29, 34],
@@ -995,8 +1091,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 42,
-		x: 310,
-		y: 445,
+		x: 308,
+		y: 450,
 		label: "",
 		tile: [9, 13],
 		corner: [29, 35],
@@ -1004,8 +1100,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 43,
-		x: 370,
-		y: 445,
+		x: 368,
+		y: 450,
 		label: "",
 		tile: [9, 14],
 		corner: [30, 35],
@@ -1013,8 +1109,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 44,
-		x: 425,
-		y: 445,
+		x: 423,
+		y: 450,
 		label: "",
 		tile: [10, 14],
 		corner: [30, 36],
@@ -1022,8 +1118,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 45,
-		x: 485,
-		y: 445,
+		x: 484,
+		y: 450,
 		label: "",
 		tile: [10, 15],
 		corner: [31, 36],
@@ -1031,8 +1127,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 46,
-		x: 545,
-		y: 445,
+		x: 540,
+		y: 450,
 		label: "",
 		tile: [11, 15],
 		corner: [31, 37],
@@ -1040,8 +1136,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 47,
-		x: 600,
-		y: 445,
+		x: 603,
+		y: 450,
 		label: "",
 		tile: [11, 16],
 		corner: [32, 37],
@@ -1049,8 +1145,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 48,
-		x: 655,
-		y: 445,
+		x: 658,
+		y: 450,
 		label: "",
 		tile: [12, 16],
 		corner: [32, 38],
@@ -1059,17 +1155,17 @@ export const EDGE_PIN = [
 	{
 		id: 49,
 		x: 715,
-		y: 445,
+		y: 450,
 		label: "",
 		tile: [16],
 		corner: [33, 38],
 		angle: 60,
 	},
-	{ id: 50, x: 228, y: 494, label: "", tile: [13], corner: [34, 39], angle: 0 },
+	{ id: 50, x: 225, y: 497, label: "", tile: [13], corner: [34, 39], angle: 0 },
 	{
 		id: 51,
 		x: 340,
-		y: 494,
+		y: 497,
 		label: "",
 		tile: [13, 14],
 		corner: [35, 40],
@@ -1077,8 +1173,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 52,
-		x: 455,
-		y: 494,
+		x: 457,
+		y: 497,
 		label: "",
 		tile: [14, 15],
 		corner: [36, 41],
@@ -1086,18 +1182,18 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 53,
-		x: 575,
-		y: 494,
+		x: 572,
+		y: 497,
 		label: "",
 		tile: [15, 16],
 		corner: [37, 42],
 		angle: 0,
 	},
-	{ id: 54, x: 685, y: 494, label: "", tile: [16], corner: [38, 43], angle: 0 },
+	{ id: 54, x: 688, y: 497, label: "", tile: [16], corner: [38, 43], angle: 0 },
 	{
 		id: 55,
-		x: 254,
-		y: 545,
+		x: 253,
+		y: 547,
 		label: "",
 		tile: [13, 17],
 		corner: [39, 44],
@@ -1106,7 +1202,7 @@ export const EDGE_PIN = [
 	{
 		id: 56,
 		x: 310,
-		y: 545,
+		y: 548,
 		label: "",
 		tile: [17, 13],
 		corner: [40, 44],
@@ -1114,8 +1210,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 57,
-		x: 370,
-		y: 545,
+		x: 368,
+		y: 548,
 		label: "",
 		tile: [17, 14],
 		corner: [40, 45],
@@ -1124,7 +1220,7 @@ export const EDGE_PIN = [
 	{
 		id: 58,
 		x: 425,
-		y: 545,
+		y: 548,
 		label: "",
 		tile: [18, 14],
 		corner: [41, 45],
@@ -1133,7 +1229,7 @@ export const EDGE_PIN = [
 	{
 		id: 59,
 		x: 485,
-		y: 545,
+		y: 548,
 		label: "",
 		tile: [18, 15],
 		corner: [41, 46],
@@ -1141,8 +1237,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 60,
-		x: 545,
-		y: 545,
+		x: 544,
+		y: 548,
 		label: "",
 		tile: [19, 15],
 		corner: [42, 46],
@@ -1150,8 +1246,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 61,
-		x: 600,
-		y: 545,
+		x: 603,
+		y: 548,
 		label: "",
 		tile: [19, 16],
 		corner: [42, 47],
@@ -1159,18 +1255,18 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 62,
-		x: 655,
-		y: 545,
+		x: 660,
+		y: 548,
 		label: "",
 		tile: [19, 16],
 		corner: [43, 47],
 		angle: 60,
 	},
-	{ id: 63, x: 280, y: 593, label: "", tile: [17], corner: [44, 48], angle: 0 },
+	{ id: 63, x: 280, y: 600, label: "", tile: [17], corner: [44, 48], angle: 0 },
 	{
 		id: 64,
 		x: 398,
-		y: 593,
+		y: 600,
 		label: "",
 		tile: [17, 18],
 		corner: [45, 49],
@@ -1179,17 +1275,17 @@ export const EDGE_PIN = [
 	{
 		id: 65,
 		x: 515,
-		y: 593,
+		y: 600,
 		label: "",
 		tile: [18, 19],
 		corner: [46, 50],
 		angle: 0,
 	},
-	{ id: 66, x: 625, y: 593, label: "", tile: [19], corner: [47, 51], angle: 0 },
+	{ id: 66, x: 628, y: 600, label: "", tile: [19], corner: [47, 51], angle: 0 },
 	{
 		id: 67,
-		x: 310,
-		y: 645,
+		x: 307,
+		y: 650,
 		label: "",
 		tile: [17],
 		corner: [48, 52],
@@ -1197,8 +1293,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 68,
-		x: 370,
-		y: 645,
+		x: 368,
+		y: 650,
 		label: "",
 		tile: [17, 18],
 		corner: [49, 52],
@@ -1207,7 +1303,7 @@ export const EDGE_PIN = [
 	{
 		id: 69,
 		x: 425,
-		y: 645,
+		y: 650,
 		label: "",
 		tile: [18],
 		corner: [49, 53],
@@ -1216,7 +1312,7 @@ export const EDGE_PIN = [
 	{
 		id: 70,
 		x: 485,
-		y: 645,
+		y: 650,
 		label: "",
 		tile: [18, 19],
 		corner: [50, 53],
@@ -1224,8 +1320,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 71,
-		x: 545,
-		y: 645,
+		x: 542,
+		y: 650,
 		label: "",
 		tile: [19],
 		corner: [50, 54],
@@ -1233,8 +1329,8 @@ export const EDGE_PIN = [
 	},
 	{
 		id: 72,
-		x: 600,
-		y: 645,
+		x: 602,
+		y: 650,
 		label: "",
 		tile: [19],
 		corner: [51, 54],
@@ -1255,7 +1351,7 @@ export const TILE_PIN = [
 	}, // 10번 타일
 	{
 		id: 2,
-		x: 455,
+		x: 456,
 		y: 200,
 		label: "",
 		corner: [2, 5, 6, 9, 10, 14],
@@ -1263,7 +1359,7 @@ export const TILE_PIN = [
 	}, // 2번 타일
 	{
 		id: 3,
-		x: 575,
+		x: 573,
 		y: 200,
 		label: "",
 		corner: [3, 6, 7, 10, 11, 15],
@@ -1271,7 +1367,7 @@ export const TILE_PIN = [
 	}, // 9번 타일
 	{
 		id: 4,
-		x: 280,
+		x: 278,
 		y: 300,
 		label: "",
 		corner: [12, 13, 17, 18, 23],
@@ -1279,7 +1375,7 @@ export const TILE_PIN = [
 	}, // 12번 타일
 	{
 		id: 5,
-		x: 398,
+		x: 395,
 		y: 300,
 		label: "",
 		corner: [9, 13, 14, 18, 19, 24],
@@ -1287,7 +1383,7 @@ export const TILE_PIN = [
 	}, // 6번 타일
 	{
 		id: 6,
-		x: 515,
+		x: 513,
 		y: 300,
 		label: "",
 		corner: [10, 14, 15, 19, 20, 25],
@@ -1295,7 +1391,7 @@ export const TILE_PIN = [
 	}, // 4번 타일
 	{
 		id: 7,
-		x: 625,
+		x: 630,
 		y: 300,
 		label: "",
 		corner: [20, 21, 26],
@@ -1303,7 +1399,7 @@ export const TILE_PIN = [
 	}, // 10번 타일
 	{
 		id: 8,
-		x: 228,
+		x: 220,
 		y: 400,
 		label: "",
 		corner: [22, 23, 28, 29, 34, 35],
@@ -1311,7 +1407,7 @@ export const TILE_PIN = [
 	}, // 9번 타일
 	{
 		id: 9,
-		x: 340,
+		x: 337,
 		y: 400,
 		label: "",
 		corner: [24, 29, 30, 35, 36, 19],
@@ -1327,7 +1423,7 @@ export const TILE_PIN = [
 	}, // 7번 타일 (사막)
 	{
 		id: 11,
-		x: 575,
+		x: 570,
 		y: 400,
 		label: "",
 		corner: [25, 26, 31, 32, 37, 38],
@@ -1335,7 +1431,7 @@ export const TILE_PIN = [
 	}, // 3번 타일
 	{
 		id: 12,
-		x: 685,
+		x: 686,
 		y: 400,
 		label: "",
 		corner: [21, 26, 27, 32, 33],
@@ -1359,7 +1455,7 @@ export const TILE_PIN = [
 	}, // 3번 타일
 	{
 		id: 15,
-		x: 515,
+		x: 514,
 		y: 500,
 		label: "",
 		corner: [31, 36, 37, 41, 42, 46],
@@ -1367,7 +1463,7 @@ export const TILE_PIN = [
 	}, // 4번 타일
 	{
 		id: 16,
-		x: 625,
+		x: 630,
 		y: 500,
 		label: "",
 		corner: [32, 37, 38, 42, 43, 47],
@@ -1375,7 +1471,7 @@ export const TILE_PIN = [
 	}, // 5번 타일
 	{
 		id: 17,
-		x: 340,
+		x: 337,
 		y: 600,
 		label: "",
 		corner: [40, 44, 45, 48, 49, 52],
@@ -1391,7 +1487,7 @@ export const TILE_PIN = [
 	}, // 6번 타일
 	{
 		id: 19,
-		x: 575,
+		x: 572,
 		y: 600,
 		label: "",
 		corner: [42, 46, 47, 50, 51, 54],
