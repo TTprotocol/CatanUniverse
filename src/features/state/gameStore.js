@@ -292,6 +292,79 @@ const useGameStore = create(
 				}
 			},
 
+			// 플레이어 간 교환
+			tradeBetweenPlayers: (fromId, toId, offer, request) => {
+				// offer/request 형식: { tree: 1, wheat: 2 } 등
+				const RES = ["tree", "brick", "sheep", "wheat", "steel"];
+				const { players } = get();
+
+				const from = players.find((p) => p.id === fromId);
+				const to   = players.find((p) => p.id === toId);
+				if (!from || !to) return false;
+
+				// 보유 검증
+				for (const [type, amt] of Object.entries(offer || {})) {
+					const idx = RES.indexOf(type);
+					if ((from.resources[idx] || 0) < amt) return false;
+				}
+				for (const [type, amt] of Object.entries(request || {})) {
+					const idx = RES.indexOf(type);
+					if ((to.resources[idx] || 0) < amt) return false;
+				}
+
+				// 적용
+				const newFrom = [...from.resources];
+				const newTo   = [...to.resources];
+
+				for (const [type, amt] of Object.entries(offer || {})) {
+					const idx = RES.indexOf(type);
+					newFrom[idx] -= amt;
+					newTo[idx]    = (newTo[idx] || 0) + amt;
+				}
+				for (const [type, amt] of Object.entries(request || {})) {
+					const idx = RES.indexOf(type);
+					newTo[idx]   -= amt;
+					newFrom[idx]  = (newFrom[idx] || 0) + amt;
+				}
+
+				const updatedPlayers = players.map((p) => {
+					if (p.id === fromId) return { ...p, resources: newFrom };
+					if (p.id === toId)   return { ...p, resources: newTo };
+					return p;
+				});
+
+				set({ players: updatedPlayers });
+				return true;
+			},
+
+			// 은행/항구 교환
+			tradeWithBank: (playerId, giveType, receiveType) => {
+				const RES = ["tree", "brick", "sheep", "wheat", "steel"];
+				const giveIdx = RES.indexOf(giveType);
+				const receiveIdx = RES.indexOf(receiveType);
+				if (giveIdx === -1 || receiveIdx === -1) return;
+
+				const { players } = get();
+				const updatedPlayers = players.map((p) => {
+					if (p.id !== playerId) return p;
+
+					let rate = 4;
+					if (p.ports?.includes(giveType)) rate = 2;
+					else if (p.ports?.includes("any")) rate = 3;
+
+					if ((p.resources[giveIdx] || 0) < rate) {
+						console.warn(`${giveType} 자원이 ${rate}개 미만입니다.`);
+						return p;
+					}
+
+					const newResources = [...p.resources];
+					newResources[giveIdx] -= rate;
+					newResources[receiveIdx] = (newResources[receiveIdx] || 0) + 1;
+					return { ...p, resources: newResources };
+				});
+				set({ players: updatedPlayers });
+			},
+
 			// 게임 시작용 초기화 함수
 			initPlayers: (playerList) => set({ players: playerList }), // 플레이어 설정
 			initBoard: (tiles, robberPos) => {
