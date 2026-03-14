@@ -38,9 +38,6 @@ export default function PlayerInfo({
             <div className="countBridge">
                 {bridgeCount > 0 && <div className="countBadge">{bridgeCount}</div>}
             </div>
-            <div className="countDevCard">
-                {developmentCount > 0 && <div className="countBadge">{developmentCount}</div>}
-            </div>
             {isMe && (
                 <div className="victoryPoints">
                     <span className="vp-number">{points}</span>
