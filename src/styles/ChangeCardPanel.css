@@ -197,3 +197,46 @@
     height: 90px;
     flex-shrink: 0;
 }
+
+.actions {
+    display:flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.action-group {
+    display: flex;
+    gap: 8px;
+}
+
+.action-btn {
+    background-color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-btn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(100%);
+    background-color: #f0f0f0;
+}
+
+.action-btn.highlight {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.action-btn.endTurn {
+    color: white;
+}
+
+.action-btn.endTurn svg {
+    fill: #ff5252;
+    width: 28px;
+    height: 28px;
+}
