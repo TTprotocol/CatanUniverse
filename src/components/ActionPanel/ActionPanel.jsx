@@ -2,7 +2,8 @@ import React from "react";
 import "../../styles/ChangeCardPanel.css";
 import ChangeCardPanel from "../ChangeCardPanel/ChangeCardPanel";
 import ActionButton from "./ActionButton";
-import OwnCards from "./OwnCards"
+import OwnCards from "./OwnCards";
+import rollDiceImg from "../../assets/dice/rollDice.png";
 
 export default function ActionPanel({
     showChangePanel,
@@ -10,6 +11,8 @@ export default function ActionPanel({
     handleBuildRoad,
     handleBuildVillage,
     handleBuildCity,
+    handleRollDice,
+    handleEndTurn,
     players,
 }) {
     return (
@@ -21,6 +24,9 @@ export default function ActionPanel({
             )}
 
             <div className="actions">
+                    <ActionButton className="rollDice" onClick={handleRollDice}>
+                        <img src={rollDiceImg} alt="주사위" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                    </ActionButton>
                 <div className="action-group">
                     <ActionButton className="changeCards" onClick={handleExchange}>
                     {/* 교환 아이콘 */}
@@ -32,8 +38,6 @@ export default function ActionPanel({
                     <ActionButton className="development">
                         <div></div>
                     </ActionButton>
-                </div>
-                <div className="action-group">
                     <ActionButton className="buildRoad" onClick={handleBuildRoad}>
                         <div></div>
                     </ActionButton>
@@ -43,7 +47,7 @@ export default function ActionPanel({
                     <ActionButton className="buildCity" onClick={handleBuildCity}>
                         <div></div>
                     </ActionButton>
-                    <ActionButton className="endTurn">
+                    <ActionButton className="endTurn" onClick={handleEndTurn}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
                             <path fillRule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clipRule="evenodd" />
                         </svg>

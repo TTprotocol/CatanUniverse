@@ -18,7 +18,8 @@
 //  - building.adjacentTiles[]                    : 건물과 인접한 타일 id 배열
 // ======================================================================
 
-import useGameStore from "../state/gameStore";
+import useGameStore, { pinManagement } from "../state/gameStore";
+import { CORNER_PIN, EDGE_PIN } from "@/utils/constants";
 
 /* ----------------------------------------------------------------------
  * 0) 상수/유틸
@@ -32,25 +33,19 @@ const NUM_WEIGHT = { 2:1, 3:2, 4:3, 5:4, 6:5, 8:5, 9:4, 10:3, 11:2, 12:1 };
 //표준 비용(카탄 기본 규칙)
 
 const COSTS = {
-  road:   { 나무: 1, 벽돌: 1 },
-  settle: { 나무: 1, 벽돌: 1, 밀: 1, 양: 1 },
-  city:   { 밀: 2, 철: 3 },
-  dev:    { 밀: 1, 양: 1, 철: 1 },
+  road:   [1, 1, 0, 0, 0],
+  settle: [1, 1, 1, 1, 0],
+  city:   [0, 0, 0, 2, 3],
+  dev:    [0, 0, 1, 1, 1],
 };
 
 // 주어진 자원(res)으로 해당 비용(cost) 즉시 지불 가능 여부
-const hasCost = (res = {}, cost = {}) =>
-  Object.entries(cost).every(([k, v]) => (res[k] || 0) >= v);
+const hasCost = (res = [], cost = []) =>
+  cost.every((need, i) => (res[i] || 0) >= need);
 
 // 비용 대비 부족한 자원 유형/수량 계산 (예: {밀:1, 벽돌:1})
-const missingFor = (res = {}, cost = {}) => {
-  const need = {};
-  for (const [k, v] of Object.entries(cost)) {
-    const lack = v - (res[k] || 0);
-    if (lack > 0) need[k] = lack;
-  }
-  return need;
-};
+const missingFor = (res = [], cost = []) =>
+  cost.map((need, i) => Math.max(0, need - (res[i] || 0)));
 
 // 플레이어 보유 전체 카드 수(강탈 대상 우선순위 판단에 사용)
 const totalCards = (res = {}) => Object.values(res).reduce((sum, n) => sum + (n || 0), 0);
@@ -61,14 +56,41 @@ const totalCards = (res = {}) => Object.values(res).reduce((sum, n) => sum + (n 
 
 //AI가 건설 가능한 정착지 후보 목록 반환
 //- 거리 규칙(두 칸 거리), 점유 여부, 도로 연결성 등은 유틸 내부에서 검증
+// - 거리 규칙(두 칸 거리): nextCorner 기반으로 인접 코너 제외
+// - 점유 여부: pinManagement.getCornerPins()로 확인
+// - 도로 연결성: 내 도로(EDGE_PIN.corner)에서 이어지는 코너만 선택
 function getSettlementSpots(state, aiPlayer) {
-  return state.board?.ai?.getSettlementSpots?.(aiPlayer) || [];
+    const usedCorners = new Set(pinManagement.getState().getCornerPins());
+    const candidates = new Set();
+    aiPlayer.roads.forEach(roadId => {
+        const edge = EDGE_PIN.find(e => e.id === roadId);
+        edge?.corner?.forEach(cId => candidates.add(cId));
+    });
+    const blocked = new Set();
+    state.players.forEach(p => {
+        [...p.settlements, ...p.cities].forEach(bId => {
+            blocked.add(bId);
+            CORNER_PIN.find(c => c.id === bId)?.nextCorner?.forEach(nc => blocked.add(nc));
+        });
+    });
+    return [...candidates].filter(cId => !usedCorners.has(cId) && !blocked.has(cId));
 }
 
 //AI가 건설 가능한 도로 후보 목록 반환
 //- 내 기존 네트워크에서 확장 가능한 미점유 간선 등
 function getRoadEdges(state, aiPlayer) {
-  return state.board?.ai?.getRoadEdges?.(aiPlayer) || [];
+    const usedEdges = new Set(pinManagement.getState().getEdgePins());
+    const candidates = new Set();
+    [...aiPlayer.settlements, ...aiPlayer.cities].forEach(sId => {
+        CORNER_PIN.find(c => c.id === sId)?.edge?.forEach(eId => candidates.add(eId));
+    });
+    aiPlayer.roads.forEach(roadId => {
+        const edge = EDGE_PIN.find(e => e.id === roadId);
+        edge?.corner?.forEach(cId => {
+            CORNER_PIN.find(c => c.id === cId)?.edge?.forEach(eId => candidates.add(eId));
+        });
+    });
+    return [...candidates].filter(eId => !usedEdges.has(eId));
 }
 
 /* ----------------------------------------------------------------------
