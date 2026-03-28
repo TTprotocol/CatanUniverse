@@ -108,7 +108,7 @@ const Home = () => {
 		initPlayers([
 			{
 				id: 1,
-				name: "플레이어1",
+				name: "나",
 				resources: [1, 2, 4, 2, 1],
 				roads: [2, 8, 13, 14, 15, 16, 17, 18, 20, 21],
 				settlements: [1, 10, 11],
@@ -119,7 +119,7 @@ const Home = () => {
 			},
 			{
 				id: 2,
-				name: "플레이어2",
+				name: "player1",
 				resources: [1, 1, 1, 0, 0],
 				roads: [],
 				settlements: [],
@@ -130,7 +130,7 @@ const Home = () => {
 			},
 			{
 				id: 3,
-				name: "플레이어3",
+				name: "player2",
 				resources: [0, 0, 0, 0, 0],
 				roads: [40],
 				settlements: [],
@@ -141,7 +141,7 @@ const Home = () => {
 			},
 			{
 				id: 4,
-				name: "플레이어4",
+				name: "player3",
 				resources: [0, 0, 0, 0, 0],
 				roads: [],
 				settlements: [],
