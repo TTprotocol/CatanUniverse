@@ -1,0 +1,58 @@
+.diceOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+.diceOverlay.fadeOut {
+    opacity: 0;
+}
+
+.diceWrap {
+    display: flex;
+    gap: 32px;
+    margin-top: 28px;
+}
+
+.diceImg {
+    width: 120px;
+    height: 120px;
+    border-radius: 16px;
+    opacity: 0;
+    transform: translateY(-200px) rotate(-20deg);
+    transition: none;
+}
+
+.diceImg.drop {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+    transition: transform 0.5s cubic-bezier(.36, .07, .19, .97), opacity 0.1s;
+}
+
+.diceImg.drop2 {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+    transition: transform 0.5s cubic-bezier(.36, .07, .19, .97) 0.15s, opacity 0.1s 0.15s;
+}
+
+.diceResult {
+    color: white;
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.diceResult.show {
+    opacity: 1;
+}

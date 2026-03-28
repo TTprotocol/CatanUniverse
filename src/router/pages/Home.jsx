@@ -13,6 +13,7 @@ import {
 } from "@/features/game/actionHandler";
 import islandImg from "../../assets/island_intro.png";
 import { aiTurn } from "@/features/ai/aiDecisionMaker";
+import DiceRoller from "../../components/Dice/DiceRoller";
 
 const Home = () => {
 	// === 1. 화면 전환 상태 관리 ===
@@ -236,6 +237,7 @@ const Home = () => {
 						visibleTiles={visibleTilePins}
 					/>
 				</section>
+				<DiceRoller />
 				<ActionPanel
 					showChangePanel={showChangePanel}
 					handleExchange={handleExchange}
