@@ -1,7 +1,7 @@
 .changeCardPanel {
     position: absolute;
     top: -310px;
-    left: 11px;
+    left: 0;
     display: flex;
 }
 

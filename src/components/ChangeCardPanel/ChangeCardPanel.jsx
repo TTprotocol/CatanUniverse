@@ -100,7 +100,7 @@ export default function ChangeCardPanel() {
 
         const giveTypes = [...new Set(selectedGive)];
         if (giveTypes.length !== 1) { alert("내놓을 자원은 같은 종류만 선택하세요."); return; }
-        if (selectedReceive.length !== 1) { alert("받을 자원을 1종류 선택하세요."); return; }
+        //if (selectedReceive.length !== 1) { alert("받을 자원을 1종류 선택하세요."); return; }
         if (giveTypes[0] === selectedReceive[0]) { alert("같은 자원끼리는 교환할 수 없습니다."); return; }
 
         // 내가 give 자원을 실제로 보유하는지 확인
