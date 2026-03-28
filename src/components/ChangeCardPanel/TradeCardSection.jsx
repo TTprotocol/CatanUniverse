@@ -1,12 +1,14 @@
 import React from "react";
 import ResourceCard from "../Card/ResourceCard";
 import useGameStore from "../../features/state/gameStore";
+import "../../styles/ChangeCardPanel.css";
 
 export default function TradeCardSection({
   type, // "receive" or "give"
   uniqueResources,
   resourceCounts,
   handleClick,
+  handleRemove,
   handleReset,
 }) {
 
@@ -44,9 +46,7 @@ export default function TradeCardSection({
                         const myCount = myResources[idx];
                         const currentCount = resourceCounts[res] || 0;
 
-                        const disabled =
-                        type === 'give' &&
-                        (myCount <= 0 || !canClick(res, currentCount));
+                        const disabled = type === 'give' && (myCount <= 0 || !canClick(res, currentCount));
                         
                         return (
                             <button
@@ -64,7 +64,16 @@ export default function TradeCardSection({
             <div className="cardDisplay">
                 <div className="cardsWrapper">
                     {uniqueResources.map((res) => (
-                        <ResourceCard key={res} type={res} count={resourceCounts[res]} size="small" />
+                        <div key={res} style={{position: 'relative', display: 'inline-block', margin: '0 4px'}}>
+                            <ResourceCard type={res} count={resourceCounts[res]} size="small" />
+                            <button
+                                onClick={() => handleRemove(res, type)}
+                                className="removeBtn"
+                            >
+                                X
+                            </button>
+                        </div>
+                        
                     ))}
                 </div>
                 <button className="resetButton" onClick={() => handleReset(type)}>

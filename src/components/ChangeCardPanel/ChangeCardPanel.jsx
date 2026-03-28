@@ -33,9 +33,12 @@ export default function ChangeCardPanel() {
 
     // ── 자원 선택 핸들러 ──
     const handleClick = (resourceType, context) => {
-         if (phase !== "SELECT" && phase !== "BANK") return;
-        if (context === "receive") setSelectedReceive([resourceType]);
-        else setSelectedGive((prev) => [...prev, resourceType]);
+        if (phase !== "SELECT" && phase !== "BANK") return;
+        if (context === "receive") {
+            setSelectedReceive((prev) => [...prev, resourceType]);
+        } else {
+            setSelectedGive((prev) => [...prev, resourceType]);
+        }
     };
 
     const handleReset = (context) => {
@@ -51,6 +54,29 @@ export default function ChangeCardPanel() {
         setPhase("ACCEPTED");
     };
 
+    const handleRemove = (resourceType, type) => {
+        if(type === 'receive') {
+            setSelectedReceive(prev => {
+                const index = prev.lastIndexOf(resourceType); 
+                if(index > -1) {
+                    const newArr = [...prev];
+                    newArr.splice(index, 1);
+                    return newArr;
+                }
+                return prev;;
+            })
+        } else {
+            setSelectedGive(prev => {
+                const index = prev.lastIndexOf(resourceType);
+                if(index > -1) {
+                    const newArr = [...prev];
+                    newArr.splice(index, 1);
+                    return newArr;
+                }
+                return prev;
+            });
+        }
+    }
     // ── 초기화 ──
     const reset = () => {
         setSelectedGive([]);
@@ -142,6 +168,7 @@ export default function ChangeCardPanel() {
                         uniqueResources={[...new Set(selectedReceive)]}
                         resourceCounts={receiveCounts}
                         handleClick={handleClick}
+                        handleRemove={handleRemove}
                         handleReset={handleReset}
                     />
                     <TradeCardSection
@@ -149,6 +176,7 @@ export default function ChangeCardPanel() {
                         uniqueResources={[...new Set(selectedGive)]}
                         resourceCounts={giveCounts}
                         handleClick={handleClick}
+                        handleRemove={handleRemove}
                         handleReset={handleReset}
                     />
 
