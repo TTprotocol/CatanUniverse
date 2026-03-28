@@ -365,6 +365,57 @@ const useGameStore = create(
 				set({ players: updatedPlayers });
 			},
 
+			// ✅ AI 전용 건설 액션 (playerIndex 기반)
+			buildSettlementAI: (playerIndex, position) => {
+				const players = get().players.map(p => ({ ...p, resources: [...p.resources] }));
+				const p = players[playerIndex];
+				if (!p) return false;
+				if (p.resources[0] < 1 || p.resources[1] < 1 ||
+					p.resources[2] < 1 || p.resources[3] < 1) return false;
+
+				p.resources[0] -= 1; p.resources[1] -= 1;
+				p.resources[2] -= 1; p.resources[3] -= 1;
+				p.settlements = [...p.settlements, position];
+				p.points += 1;
+
+				pinManagement.getState().setCornerPin(position);
+				gameLog.getState().addLog(`${p.name}이(가) ${position}번 위치에 정착지를 건설했습니다.`);
+				set({ players });
+				return true;
+			},
+
+			buildCityAI: (playerIndex, position) => {
+				const players = get().players.map(p => ({ ...p, resources: [...p.resources] }));
+				const p = players[playerIndex];
+				if (!p) return false;
+				if (p.resources[3] < 2 || p.resources[4] < 3) return false;
+				if (!p.settlements.includes(position)) return false;
+
+				p.resources[3] -= 2; p.resources[4] -= 3;
+				p.settlements = p.settlements.filter(s => s !== position);
+				p.cities = [...p.cities, position];
+				p.points += 2;
+
+				gameLog.getState().addLog(`${p.name}이(가) ${position}번 위치에 도시를 건설했습니다.`);
+				set({ players });
+				return true;
+			},
+
+			buildRoadAI: (playerIndex, edgeId) => {
+				const players = get().players.map(p => ({ ...p, resources: [...p.resources] }));
+				const p = players[playerIndex];
+				if (!p) return false;
+				if (p.resources[0] < 1 || p.resources[1] < 1) return false;
+
+				p.resources[0] -= 1; p.resources[1] -= 1;
+				p.roads = [...p.roads, edgeId];
+
+				pinManagement.getState().setEdgePin(edgeId);
+				gameLog.getState().addLog(`${p.name}이(가) ${edgeId}번 위치에 도로를 건설했습니다.`);
+				set({ players });
+				return true;
+			},
+
 			// 게임 시작용 초기화 함수
 			initPlayers: (playerList) => set({ players: playerList }), // 플레이어 설정
 			initBoard: (tiles, robberPos) => {

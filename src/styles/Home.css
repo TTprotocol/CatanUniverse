@@ -38,16 +38,15 @@
     height: 114px;
     display: flex;
     justify-content: space-around;
-    align-items: flex-end;
+    align-items: flex-start;
     position: relative;
 }
 
 .actions {
-    width: 350px;
     height: 90px;
     border-radius: 10px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: flex-end;
     gap: 10px;
 }

@@ -12,6 +12,7 @@ import {
 	useCheckCity,
 } from "@/features/game/actionHandler";
 import islandImg from "../../assets/island_intro.png";
+import { aiTurn } from "@/features/ai/aiDecisionMaker";
 
 const Home = () => {
 	// === 1. 화면 전환 상태 관리 ===
@@ -26,7 +27,7 @@ const Home = () => {
 	const [showChangePanel, setShowChangePanel] = useState(false);
 
 	// Store에서 필요한 함수들 가져오기
-	const { players, initPlayers, initBoard, phase } = useGameStore();
+	const { players, initPlayers, initBoard, phase, currentPlayerIndex } = useGameStore();
 	const { setCornerPin, setEdgePin, setRobber } = pinManagement();
 
 	// === 3. 로딩 타이머 로직 ===
@@ -102,13 +103,24 @@ const Home = () => {
 		setShowChangePanel((prev) => !prev);
 	};
 
+	//주사위 굴리기
+	const rollDice = useGameStore((state) => state.rollDice);
+
+	const handleRollDice = () => {
+		rollDice();
+	};
+
+	const handleEndTurn = () => {
+		useGameStore.getState().endTurn();
+	};
+
 	// === 5. 게임 데이터 초기화 ===
 	useEffect(() => {
 		useGameStore.getState().initAll();
 		initPlayers([
 			{
 				id: 1,
-				name: "나",
+				name: "me",
 				resources: [1, 2, 4, 2, 1],
 				roads: [2, 8, 13, 14, 15, 16, 17, 18, 20, 21],
 				settlements: [1, 10, 11],
@@ -157,6 +169,19 @@ const Home = () => {
 			setEdgePin(item),
 		);
 	}, []);
+
+	// AI 턴 트리거
+	useEffect(() => {
+		if (!players || players.length === 0) return;
+		if (phase === "GAME_OVER") return;
+		if (currentPlayerIndex === 0) return; // 내 턴이면 건너뜀
+
+		const timer = setTimeout(() => {
+			aiTurn(currentPlayerIndex);
+		}, 800);
+
+		return () => clearTimeout(timer);
+	}, [currentPlayerIndex]); // currentPlayerIndex 변경 시만 실행
 
 	// === 6. 화면 렌더링 분기 ===
 
@@ -217,6 +242,8 @@ const Home = () => {
 					handleBuildCity={handleBuildCity}
 					handleBuildRoad={handleBuildRoad}
 					handleBuildVillage={handleBuildVillage}
+					handleRollDice={handleRollDice}
+					handleEndTurn={handleEndTurn}
 					players={players}
 				/>
 			</div>

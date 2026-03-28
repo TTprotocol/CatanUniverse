@@ -14,7 +14,7 @@ export default function OwnCards({ players = [] }) {
     return (
         <div className="ownCards">
             <div className="ownResourceCard">
-                {me.resources.map((count, index) =>
+                {(Array.isArray(me.resources) ? me.resources : []).map((count, index) =>
                     count > 0 ? (
                         <ResourceCard key={RESOURCE_TYPES[index]} type={RESOURCE_TYPES[index]} count={count} />
                     ) : null
@@ -22,7 +22,7 @@ export default function OwnCards({ players = [] }) {
             </div>
             <div className="borderStick"></div>
             <div className="ownDevelopmentCard">
-                {me.devCards.map((count, index) =>
+                {(Array.isArray(me.devCards) ? me.devCards : []).map((count, index) =>
                     count > 0 ? (
                         <DevelopmentCard key={DEV_CARD_TYPES[index]} type={DEV_CARD_TYPES[index]} count={count} />
                     ) : null

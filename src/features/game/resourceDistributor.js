@@ -47,7 +47,7 @@ const distributeResourcesByDice = () => {
 	// 2. 각 플레이어별 자원 계산
 	const updatedPlayers = players.map((player) => {
 		//기존 자원 상태 복사
-		const newResources = { ...player.resources };
+		const newResources = [...player.resources];
 
 		//플레이어가 보유한 건물(정착지, 도시)를 순회
 		// 1. 정착지 순회
