@@ -15,6 +15,7 @@ import {
 import islandImg from "../../assets/island_intro.png";
 import { aiTurn } from "@/features/ai/aiDecisionMaker";
 import DiceRoller from "../../components/Dice/DiceRoller";
+import Toast from "../../components/Dice/Toast";
 
 const Home = () => {
 	// === 1. 화면 전환 상태 관리 ===
@@ -29,7 +30,8 @@ const Home = () => {
 	const [showChangePanel, setShowChangePanel] = useState(false);
 
 	// Store에서 필요한 함수들 가져오기
-	const { players, initPlayers, initBoard, phase, currentPlayerIndex } = useGameStore();
+	const { players, initPlayers, initBoard, phase, currentPlayerIndex } =
+		useGameStore();
 	const { setCornerPin, setEdgePin, setRobber } = pinManagement();
 
 	// === 3. 로딩 타이머 로직 ===
@@ -107,8 +109,13 @@ const Home = () => {
 
 	//주사위 굴리기
 	const rollDice = useGameStore((state) => state.rollDice);
+	const [toastMsg, setToastMsg] = useState("");
 
 	const handleRollDice = () => {
+		if (phase !== "ROLL") {
+			setToastMsg("이미 이번 턴에 주사위를 굴렸습니다!");
+			return;
+		}
 		rollDice();
 	};
 
@@ -123,7 +130,7 @@ const Home = () => {
 			{
 				id: 1,
 				name: "me",
-				resources: [1, 2, 4, 2, 1],
+				resources: [10, 20, 40, 20, 10],
 				roads: [2, 8, 13, 14, 15, 16, 17, 18, 20, 21],
 				settlements: [1, 10, 11],
 				cities: [9],
@@ -237,9 +244,13 @@ const Home = () => {
 						visibleCorners={visibleCornerPins}
 						visibleEdges={visibleEdgePins}
 						visibleTiles={visibleTilePins}
+						setVisibleEdges={setVisibleEdgePins}
+						setVisibleCorners={setVisibleCornerPins}
+						setVisibleTilePins={setVisibleCornerPins}
 					/>
 				</section>
 				<DiceRoller />
+				<Toast message={toastMsg} onClose={() => setToastMsg("")} />
 				<ActionPanel
 					showChangePanel={showChangePanel}
 					handleExchange={handleExchange}
