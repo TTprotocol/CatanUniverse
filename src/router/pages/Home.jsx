@@ -5,6 +5,7 @@ import GameBoard from "@/components/Board/Canvas";
 import ActionPanel from "@/components/ActionPanel/ActionPanel";
 import PlayerPanel from "@/components/PlayerPanel/PlayerPanel";
 import VictoryScreen from "./VictoryScreen";
+import AiTurnManager from "../../features/ai/AiTurnManager";
 import useGameStore, { pinManagement } from "@/features/state/gameStore";
 import {
 	useCheckRoad,
@@ -192,6 +193,7 @@ const Home = () => {
 			<div className="introContainer">
 				{/* 👇 1. 섬 이미지를 contentWrapper 밖으로 꺼냅니다 */}
 				<img src={islandImg} alt="Catan Island" className="floatingIsland" />
+				<AiTurnManager/>
 
 				{/* 👇 2. 글자와 버튼만 남겨둡니다 (이제 섬이 밀어내지 않음) */}
 				<div className="contentWrapper">
