@@ -13,7 +13,7 @@ export const pinManagement = create(
 		(set, get) => ({
 			cornerPin: [],
 			edgePin: [],
-			robber: 7, // 기본 타일 핀 번호 : 7
+			robber: 10, // 기본 타일 핀 번호 : 10
 
 			// 마을/도시 핀 관리
 			setCornerPin: (pinId) => {
@@ -182,6 +182,59 @@ const useGameStore = create(
 				set({ currentPlayerIndex: nextIndex, phase: "ROLL", dice: null });
 			},
 
+			moveRobber: (position) => {
+				const index = get().currentPlayerIndex; // 현재 플레이어의 인덱스
+				const players = [...get().players]; // 기존 플레이어 배열 복사
+
+				pinManagement.getState().setRobber(position);
+
+				// 로그 저장
+				gameLog
+					.getState()
+					.addLog(
+						`${players[index].name} 님이 ${position}으로 도둑을 이동시켰습니다.`,
+					);
+
+				set({ players }); // 상태 업데이트
+
+				return { result: true, message: "이동되었습니다." };
+			},
+
+			buildRoads: (position) => {
+				const index = get().currentPlayerIndex; // 현재 플레이어의 인덱스
+				const players = [...get().players]; // 기존 플레이어 배열 복사
+
+				if (
+					players[index].resources[0] <= 0 || // 나무
+					players[index].resources[1] <= 0 // 벽돌
+				) {
+					// 자원이 부족하거나,
+					return { result: false, message: "자원이 부족합니다." };
+				} else if (pinManagement.getState().getEdgePins(position)) {
+					// 이미 핀이 사용된 경우
+					return { result: false, message: "해당 핀에 건설할 수 없습니다." };
+				} else {
+					players[index].roads.push(position); // 현재 플레이어의 정착지(마을) 추가
+
+					pinManagement.getState().setEdgePin(position); // 핀 사용 처리
+
+					// 자원 차감
+					players[index].resources[0] -= 1; // 나무
+					players[index].resources[1] -= 1; // 벽돌
+
+					// 로그 저장
+					gameLog
+						.getState()
+						.addLog(
+							`${players[index].name} 님이 ${position} 위치에 도로를 건설했습니다.`,
+						);
+
+					set({ players }); // 상태 업데이트
+
+					return { result: true, message: "건설되었습니다." };
+				}
+			},
+
 			// 정착지를 건설할 때 사용하는 함수
 			// get()으로 현재 상태 확인, set()으로 업데이트
 			buildSettlement: (position) => {
@@ -206,14 +259,16 @@ const useGameStore = create(
 
 					//15점 이상이 되었을 때 게임 종료
 					if (players[index].points >= 15) {
-                        set({ 
-                            winner: players[index].name, // 승리자 이름 저장
-                            phase: "GAME_OVER"           // 게임 상태를 종료로 변경
-                        });
-                        
-                        // (선택사항) 게임이 끝났음을 로그에도 남깁니다.
-                        gameLog.getState().addLog(`🎉 ${players[index].name} 님이 승리하셨습니다!`);
-                    }
+						set({
+							winner: players[index].name, // 승리자 이름 저장
+							phase: "GAME_OVER", // 게임 상태를 종료로 변경
+						});
+
+						// (선택사항) 게임이 끝났음을 로그에도 남깁니다.
+						gameLog
+							.getState()
+							.addLog(`🎉 ${players[index].name} 님이 승리하셨습니다!`);
+					}
 
 					// ✅ FIX: addCornerPin -> setCornerPin으로 수정
 					pinManagement.getState().setCornerPin(position); // 핀 사용 처리
@@ -234,8 +289,6 @@ const useGameStore = create(
 					set({ players }); // 상태 업데이트
 
 					return { result: true, message: "건설되었습니다." };
-
-
 				}
 			},
 
@@ -265,14 +318,16 @@ const useGameStore = create(
 
 					//15점 이상이 되었을 때 게임 종료
 					if (players[index].points >= 15) {
-                        set({ 
-                            winner: players[index].name, // 승리자 이름 저장
-                            phase: "GAME_OVER"           // 게임 상태를 종료로 변경
-                        });
-                        
-                        // (선택사항) 게임이 끝났음을 로그에도 남깁니다.
-                        gameLog.getState().addLog(`🎉 ${players[index].name} 님이 승리하셨습니다!`);
-                    }
+						set({
+							winner: players[index].name, // 승리자 이름 저장
+							phase: "GAME_OVER", // 게임 상태를 종료로 변경
+						});
+
+						// (선택사항) 게임이 끝났음을 로그에도 남깁니다.
+						gameLog
+							.getState()
+							.addLog(`🎉 ${players[index].name} 님이 승리하셨습니다!`);
+					}
 
 					// 자원 차감
 					// ✅ FIX: 주석 수정 (양 -> 밀, 밀 -> 철)
@@ -299,7 +354,7 @@ const useGameStore = create(
 				const { players } = get();
 
 				const from = players.find((p) => p.id === fromId);
-				const to   = players.find((p) => p.id === toId);
+				const to = players.find((p) => p.id === toId);
 				if (!from || !to) return false;
 
 				// 보유 검증
@@ -314,22 +369,22 @@ const useGameStore = create(
 
 				// 적용
 				const newFrom = [...from.resources];
-				const newTo   = [...to.resources];
+				const newTo = [...to.resources];
 
 				for (const [type, amt] of Object.entries(offer || {})) {
 					const idx = RES.indexOf(type);
 					newFrom[idx] -= amt;
-					newTo[idx]    = (newTo[idx] || 0) + amt;
+					newTo[idx] = (newTo[idx] || 0) + amt;
 				}
 				for (const [type, amt] of Object.entries(request || {})) {
 					const idx = RES.indexOf(type);
-					newTo[idx]   -= amt;
-					newFrom[idx]  = (newFrom[idx] || 0) + amt;
+					newTo[idx] -= amt;
+					newFrom[idx] = (newFrom[idx] || 0) + amt;
 				}
 
 				const updatedPlayers = players.map((p) => {
 					if (p.id === fromId) return { ...p, resources: newFrom };
-					if (p.id === toId)   return { ...p, resources: newTo };
+					if (p.id === toId) return { ...p, resources: newTo };
 					return p;
 				});
 
@@ -367,51 +422,77 @@ const useGameStore = create(
 
 			// ✅ AI 전용 건설 액션 (playerIndex 기반)
 			buildSettlementAI: (playerIndex, position) => {
-				const players = get().players.map(p => ({ ...p, resources: [...p.resources] }));
+				const players = get().players.map((p) => ({
+					...p,
+					resources: [...p.resources],
+				}));
 				const p = players[playerIndex];
 				if (!p) return false;
-				if (p.resources[0] < 1 || p.resources[1] < 1 ||
-					p.resources[2] < 1 || p.resources[3] < 1) return false;
+				if (
+					p.resources[0] < 1 ||
+					p.resources[1] < 1 ||
+					p.resources[2] < 1 ||
+					p.resources[3] < 1
+				)
+					return false;
 
-				p.resources[0] -= 1; p.resources[1] -= 1;
-				p.resources[2] -= 1; p.resources[3] -= 1;
+				p.resources[0] -= 1;
+				p.resources[1] -= 1;
+				p.resources[2] -= 1;
+				p.resources[3] -= 1;
 				p.settlements = [...p.settlements, position];
 				p.points += 1;
 
 				pinManagement.getState().setCornerPin(position);
-				gameLog.getState().addLog(`${p.name}이(가) ${position}번 위치에 정착지를 건설했습니다.`);
+				gameLog
+					.getState()
+					.addLog(
+						`${p.name}이(가) ${position}번 위치에 정착지를 건설했습니다.`,
+					);
 				set({ players });
 				return true;
 			},
 
 			buildCityAI: (playerIndex, position) => {
-				const players = get().players.map(p => ({ ...p, resources: [...p.resources] }));
+				const players = get().players.map((p) => ({
+					...p,
+					resources: [...p.resources],
+				}));
 				const p = players[playerIndex];
 				if (!p) return false;
 				if (p.resources[3] < 2 || p.resources[4] < 3) return false;
 				if (!p.settlements.includes(position)) return false;
 
-				p.resources[3] -= 2; p.resources[4] -= 3;
-				p.settlements = p.settlements.filter(s => s !== position);
+				p.resources[3] -= 2;
+				p.resources[4] -= 3;
+				p.settlements = p.settlements.filter((s) => s !== position);
 				p.cities = [...p.cities, position];
 				p.points += 2;
 
-				gameLog.getState().addLog(`${p.name}이(가) ${position}번 위치에 도시를 건설했습니다.`);
+				gameLog
+					.getState()
+					.addLog(`${p.name}이(가) ${position}번 위치에 도시를 건설했습니다.`);
 				set({ players });
 				return true;
 			},
 
 			buildRoadAI: (playerIndex, edgeId) => {
-				const players = get().players.map(p => ({ ...p, resources: [...p.resources] }));
+				const players = get().players.map((p) => ({
+					...p,
+					resources: [...p.resources],
+				}));
 				const p = players[playerIndex];
 				if (!p) return false;
 				if (p.resources[0] < 1 || p.resources[1] < 1) return false;
 
-				p.resources[0] -= 1; p.resources[1] -= 1;
+				p.resources[0] -= 1;
+				p.resources[1] -= 1;
 				p.roads = [...p.roads, edgeId];
 
 				pinManagement.getState().setEdgePin(edgeId);
-				gameLog.getState().addLog(`${p.name}이(가) ${edgeId}번 위치에 도로를 건설했습니다.`);
+				gameLog
+					.getState()
+					.addLog(`${p.name}이(가) ${edgeId}번 위치에 도로를 건설했습니다.`);
 				set({ players });
 				return true;
 			},

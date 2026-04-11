@@ -62,24 +62,41 @@ const robOneResource = (victim, thief) => {
 
 // 1-1. (건설 가능한 도로 위치 계산)
 export const useCheckRoad = async () => {
-	const curPlayer = getGameState().getCurPlayer(); // 의도: 실행 시점의 최신 store state 사용
+	const curPlayer = getGameState().getCurPlayer(); // 실행 시점의 최신 store state 사용
 
-	if (curPlayer) {
-		// 1. 내 마을/도시 주변 엣지 탐색
-		const tempEdge = [...curPlayer.settlements, ...curPlayer.cities]
-			.map((item) => CORNER_PIN.find((corner) => corner.id === item))
-			.filter(Boolean)
-			.flatMap((corner) => corner.edge);
+	if (!curPlayer) return [];
 
-		// 2. 이미 지어진 플레이어의 도로 제외
-		const playersRoads = new Set(curPlayer.roads);
-		const buildRoads = new Set(getPinState().getEdgePins()); // 의도: pin store도 훅 호출 없이 getState로 조회
-		const nextEdge = tempEdge.filter(
-			(v) => !playersRoads.has(v) && !buildRoads.has(v),
-		);
-		return nextEdge;
-	}
-	return [];
+	// 1. 내 마을/도시 주변 엣지 탐색
+	const tempEdge = [...curPlayer.settlements, ...curPlayer.cities]
+		.map((item) => CORNER_PIN.find((corner) => corner.id === item))
+		.filter(Boolean)
+		.flatMap((corner) => corner.edge);
+
+	// 2. 내가 이미 가진 도로의 양 끝 corner 찾기
+	const tempCorner = curPlayer.roads
+		.map((roadId) => EDGE_PIN.find((edge) => edge.id === roadId))
+		.filter(Boolean)
+		.flatMap((edge) => edge.corner);
+
+	// 3. 그 corner들에 연결된 edge 추가
+	const roadEdge = tempCorner
+		.map((cornerId) => CORNER_PIN.find((corner) => corner.id === cornerId))
+		.filter(Boolean)
+		.flatMap((corner) => corner.edge);
+
+	// 4. 정착지/도시 주변 edge + 내 도로와 연결된 edge 합치기
+	const totalEdge = [...tempEdge, ...roadEdge];
+
+	// 5. 이미 지어진 도로 제외
+	const playersRoads = new Set(curPlayer.roads);
+	const buildRoads = new Set(getPinState().getEdgePins());
+
+	// 6. 중복 제거 + 이미 있는 도로 제거
+	const nextEdge = [...new Set(totalEdge)].filter(
+		(v) => !playersRoads.has(v) && !buildRoads.has(v),
+	);
+
+	return nextEdge;
 };
 
 // 1-2. (건설 가능한 마을 위치 계산)
@@ -87,49 +104,60 @@ export const useCheckSettlement = async () => {
 	const tempSettlement = [];
 	const curPlayer = getGameState().getCurPlayer(); // 의도: 실행 시점의 최신 store state 사용
 
-	if (curPlayer) {
-		// 1. 내 도로 주변 코너 탐색
-		curPlayer.roads.forEach((item) => {
-			const edge = EDGE_PIN.find((edge) => edge.id === item);
-			if (edge) tempSettlement.push(...edge.corner);
-		});
+	if (!curPlayer) return [];
 
-		// 2. 이미 지어진 플레이어의 마을/도시 제외
-		const playersSettlement = new Set(curPlayer.settlements);
-		const playersCity = new Set(curPlayer.cities);
-		const buildCorner = new Set(getPinState().getCornerPins()); // 의도: pin store도 훅 호출 없이 getState로 조회
+	// 1. 내 도로 주변 코너 탐색
+	curPlayer.roads.forEach((item) => {
+		const edge = EDGE_PIN.find((edge) => edge.id === item);
+		if (edge) tempSettlement.push(...edge.corner);
+	});
 
-		// 3. 해당 코너 주위의 마을/도시가 있으면 제외
-		const nearCorner = new Set(
-			[...curPlayer.settlements, ...curPlayer.cities]
-				.map((item) => CORNER_PIN.find((corner) => corner.id === item))
-				.filter(Boolean)
-				.flatMap((corner) => corner.nextCorner),
-		);
+	// 2. 이미 지어진 플레이어의 마을/도시 제외
+	const playersSettlement = new Set(curPlayer.settlements);
+	const playersCity = new Set(curPlayer.cities);
+	const buildCorner = new Set(getPinState().getCornerPins()); // 의도: pin store도 훅 호출 없이 getState로 조회
 
-		// 위 제약사항들 모두 적용
-		const nextSettlement = tempSettlement.filter(
-			(v) =>
-				!playersSettlement.has(v) &&
-				!playersCity.has(v) &&
-				!buildCorner.has(v) &&
-				!nearCorner.has(v),
-		);
+	// 3. 해당 코너 주위의 마을/도시가 있으면 제외
+	const nearCorner = new Set(
+		[...curPlayer.settlements, ...curPlayer.cities]
+			.map((item) => CORNER_PIN.find((corner) => corner.id === item))
+			.filter(Boolean)
+			.flatMap((corner) => corner.nextCorner),
+	);
 
-		return nextSettlement;
-	}
-	return [];
+	// 위 제약사항들 모두 적용
+	const nextSettlement = tempSettlement.filter(
+		(v) =>
+			!playersSettlement.has(v) &&
+			!playersCity.has(v) &&
+			!buildCorner.has(v) &&
+			!nearCorner.has(v),
+	);
+
+	return nextSettlement;
 };
 
 // 1-3. (건설 가능한 도시 위치 계산)
 export const useCheckCity = async () => {
 	const curPlayer = getGameState().getCurPlayer(); // 의도: 실행 시점의 최신 store state 사용
 
-	if (curPlayer) {
-		// 내 마을 탐색 위치만 반환
-		return curPlayer.settlements;
-	}
-	return [];
+	if (!curPlayer) return [];
+
+	// 내 마을 탐색 위치만 반환
+	return curPlayer.settlements;
+};
+
+// 1-4. (도둑 위치 옮기기)
+export const moveRobber = async () => {
+	// 현재 도둑 위치
+	const nowRobber = getPinState().getRobber();
+
+	// 현재 도둑의 위치를 제외한 나머지 모든 핀
+	const nextRobber = TILE_PIN.filter((pin) => pin.id !== nowRobber);
+
+	console.log("nextRobber : ", nextRobber);
+
+	return nextRobber;
 };
 
 /*

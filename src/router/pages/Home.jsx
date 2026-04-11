@@ -28,7 +28,8 @@ const Home = () => {
 	const [showChangePanel, setShowChangePanel] = useState(false);
 
 	// Store에서 필요한 함수들 가져오기
-	const { players, initPlayers, initBoard, phase, currentPlayerIndex } = useGameStore();
+	const { players, initPlayers, initBoard, phase, currentPlayerIndex } =
+		useGameStore();
 	const { setCornerPin, setEdgePin, setRobber } = pinManagement();
 
 	// === 3. 로딩 타이머 로직 ===
@@ -122,7 +123,7 @@ const Home = () => {
 			{
 				id: 1,
 				name: "me",
-				resources: [1, 2, 4, 2, 1],
+				resources: [10, 20, 40, 20, 10],
 				roads: [2, 8, 13, 14, 15, 16, 17, 18, 20, 21],
 				settlements: [1, 10, 11],
 				cities: [9],
@@ -235,6 +236,9 @@ const Home = () => {
 						visibleCorners={visibleCornerPins}
 						visibleEdges={visibleEdgePins}
 						visibleTiles={visibleTilePins}
+						setVisibleEdges={setVisibleEdgePins}
+						setVisibleCorners={setVisibleCornerPins}
+						setVisibleTilePins={setVisibleCornerPins}
 					/>
 				</section>
 				<DiceRoller />
