@@ -147,10 +147,15 @@ const useGameStore = create(
 
 			// ✅ 주사위를 굴리는 함수
 			rollDice: () => {
+				if (get().phase !== "ROLL") {
+					gameLog.getState().addLog("이미 이번 턴에 주사위를 굴렸습니다.");
+					return;
+				}
+
 				const dice1 = Math.floor(Math.random() * 6 + 1);
 				const dice2 = Math.floor(Math.random() * 6 + 1);
 				const dice = dice1 + dice2;
-				set({ dice1, dice2, dice }); // set({ dice1, dice2, dice }): dice 상태를 새 값으로 업데이트
+				set({ dice1, dice2, dice, phase: dice === 7 ? "ROBBER" : "ACTION" }); // set({ dice1, dice2, dice }): dice 상태를 새 값으로 업데이트 + phase 변경
 
 				console.log(`dice1 : ${dice1}, dice2: ${dice2}, dice: ${dice}`);
 				// 주사위 숫자에 따라 자원 분배 로직을 이후에 연결

@@ -14,6 +14,7 @@ import {
 import islandImg from "../../assets/island_intro.png";
 import { aiTurn } from "@/features/ai/aiDecisionMaker";
 import DiceRoller from "../../components/Dice/DiceRoller";
+import Toast from "../../components/Dice/Toast";
 
 const Home = () => {
 	// === 1. 화면 전환 상태 관리 ===
@@ -106,8 +107,13 @@ const Home = () => {
 
 	//주사위 굴리기
 	const rollDice = useGameStore((state) => state.rollDice);
+	const [toastMsg, setToastMsg] = useState("");
 
 	const handleRollDice = () => {
+		if (phase !== "ROLL") {
+			setToastMsg("이미 이번 턴에 주사위를 굴렸습니다!");
+			return;
+		}
 		rollDice();
 	};
 
@@ -238,6 +244,7 @@ const Home = () => {
 					/>
 				</section>
 				<DiceRoller />
+				<Toast message={toastMsg} onClose={() => setToastMsg("")} />
 				<ActionPanel
 					showChangePanel={showChangePanel}
 					handleExchange={handleExchange}
