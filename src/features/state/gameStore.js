@@ -138,6 +138,11 @@ const useGameStore = create(
 			longestRoadOwner: null, // 최장 교역로 보유자 (플레이어 ID)
 			largestArmyOwner: null, // 최강 기사단 보유자 (플레이어 ID)
 			winner: null, // 승자가 결정되면 플레이어 ID 저장
+			aiSignal: 0,
+			actionsThisTurn: {
+				built: false,
+				robbed: false,
+			},
 
 			// 실제 게임 유저만 반환
 			getCurPlayer: (userId = 0) => {
@@ -184,7 +189,12 @@ const useGameStore = create(
 						`${players[currentIndex].name} 님이 턴을 넘겼습니다 : ${players[currentIndex].name} -> ${players[nextIndex].name}`,
 					);
 
-				set({ currentPlayerIndex: nextIndex, phase: "ROLL", dice: null });
+				set({ 
+					currentPlayerIndex: nextIndex, 
+					phase: "ROLL", 
+					dice: null,
+					actionsThisTurn: { built: false, robbed: false }, 
+				});
 			},
 
 			moveRobber: (position) => {
@@ -200,7 +210,7 @@ const useGameStore = create(
 						`${players[index].name} 님이 ${position}으로 도둑을 이동시켰습니다.`,
 					);
 
-				set({ players }); // 상태 업데이트
+				set({ players, phase: "ACTION" }); // 상태 업데이트
 
 				return { result: true, message: "이동되었습니다." };
 			},
@@ -454,7 +464,7 @@ const useGameStore = create(
 					.addLog(
 						`${p.name}이(가) ${position}번 위치에 정착지를 건설했습니다.`,
 					);
-				set({ players });
+				set({ players, actionsThisTurn: { ...get().actionsThisTurn, built: true } });
 				return true;
 			},
 
@@ -477,7 +487,7 @@ const useGameStore = create(
 				gameLog
 					.getState()
 					.addLog(`${p.name}이(가) ${position}번 위치에 도시를 건설했습니다.`);
-				set({ players });
+				set({ players, actionsThisTurn: { ...get().actionsThisTurn, built: true } });
 				return true;
 			},
 
@@ -498,7 +508,7 @@ const useGameStore = create(
 				gameLog
 					.getState()
 					.addLog(`${p.name}이(가) ${edgeId}번 위치에 도로를 건설했습니다.`);
-				set({ players });
+				set({ players, actionsThisTurn: { ...get().actionsThisTurn, built: true } });
 				return true;
 			},
 
@@ -515,6 +525,8 @@ const useGameStore = create(
 					},
 				});
 			}, // 보드 설정
+
+			triggerAiStep: () => set((s) => ({aiSignal: s.aiSignal +1})),
 
 			// 게임 상태 초기화 함수
 			initAll: () =>

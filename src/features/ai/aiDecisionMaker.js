@@ -208,30 +208,59 @@ function tryBankTrades(state, aiPlayer, targetCost) {
  * -------------------------------------------------------------------- */
 function enumerateActions(state, aiPlayer) {
   const actions = [];
+  const { actionsThisTurn } = state;
 
-  //도시 업그레이드: 내 정착지 목록에서만 선택
-  (aiPlayer.buildings || [])
-    .filter((b) => b.type === "settlement")
-    .forEach((b) =>
-      actions.push({ type: "UPGRADE_CITY", location: b.location })
-    );
+   if (!actionsThisTurn?.built) {
 
-  //정착지: 보드 유틸에서 후보 받아오기
-  const spots = getSettlementSpots(state, aiPlayer);
-  spots.forEach((spot) =>
-    actions.push({
-      type: "BUILD_SETTLEMENT",
-      location: spot.location,
-      spot, // { location, adjacentTiles[] } 형태를 기대
-    })
-  );
+        // 도로 — 내 네트워크에서 이어지는 미점유 위치만
+        if (hasCost(aiPlayer.resources, COSTS.road)) {
+            const roadSpots = getRoadEdges(state, me);
+            roadSpots.forEach(edgeId => {
+                actions.push({ type: "BUILD_ROAD", edge: edgeId });
+            });
+        }
 
-  //도로: 보드 유틸에서 후보 받아오기
-  const edges = getRoadEdges(state, aiPlayer);
-  edges.forEach((edge) => actions.push({ type: "BUILD_ROAD", edge })); // edge: { a, b }
+        // 마을 — 거리 규칙 + 도로 연결 + 미점유 검증된 위치만
+        if (hasCost(aiPlayer.resources, COSTS.settle)) {
+            const settlementSpots = getSettlementSpots(state, me);
+            settlementSpots.forEach(cornerId => {
+                actions.push({ type: "BUILD_SETTLEMENT", location: cornerId });
+            });
+        }
+
+        // 도시 — 내 마을 위치에서만
+        if (hasCost(aiPlayer.resources, COSTS.city)) {
+            me.settlements.forEach(cornerId => {
+                actions.push({ type: "BUILD_CITY", location: cornerId });
+            });
+        }
+    }
+
+  // //도시 업그레이드: 내 정착지 목록에서만 선택
+  // (aiPlayer.buildings || [])
+  //   .filter((b) => b.type === "settlement")
+  //   .forEach((b) =>
+  //     actions.push({ type: "UPGRADE_CITY", location: b.location })
+  //   );
+
+  // //정착지: 보드 유틸에서 후보 받아오기
+  // const spots = getSettlementSpots(state, aiPlayer);
+  // spots.forEach((spot) =>
+  //   actions.push({
+  //     type: "BUILD_SETTLEMENT",
+  //     location: spot.location,
+  //     spot, // { location, adjacentTiles[] } 형태를 기대
+  //   })
+  // );
+
+  // //도로: 보드 유틸에서 후보 받아오기
+  // const edges = getRoadEdges(state, aiPlayer);
+  // edges.forEach((edge) => actions.push({ type: "BUILD_ROAD", edge })); // edge: { a, b }
 
   //개발 카드 구매
-  actions.push({ type: "BUY_DEV_CARD" });
+  if (hasCost(aiPlayer.resources, COSTS.dev)) {
+        actions.push({ type: "BUY_DEV_CARD" });
+    }
 
   //종료(최후의 보루)
   actions.push({ type: "END_TURN" });
@@ -388,41 +417,29 @@ export function aiTurn(maxSteps = 4, minScore = 10) {
   // 2) 도둑 단계
   if (S.phase === "ROBBER") {
     aiRobberPhase();
+    useGameStore.getState().triggerAiStep?.(); // 다음 단계 트리거
     return;
   }
 
   // 3) 액션 단계
   if (S.phase === "ACTION") {
-    let steps = 0;
+    const state = useGameStore.getState();
+    const me = state.players[state.currentPlayerIndex];
 
-    while (steps < maxSteps) {
-      // 매 수행 시 최신 상태 스냅샷 취득(이전 액션으로 변경됐을 수 있음)
-      const state = useGameStore.getState();
-      const me    = state.players[state.currentPlayerIndex];
+    const ranked = enumerateActions(state, me)
+      .map((a) => ({ a, score: scoreAction(state, me, a) }))
+      .sort((x, y) => y.score - x.score);
 
-      // 후보 생성 → 스코어링 → 최고점 선택
-      const ranked = enumerateActions(state, me)
-        .map((a) => ({ a, score: scoreAction(state, me, a) }))
-        .sort((x, y) => y.score - x.score);
+    const best = ranked[0];
 
-      const best = ranked[0];
-
-      // 의미 있는 액션이 없거나, 종료 선택이면 턴 종료
-      if (!best || best.score < minScore || best.a.type === "END_TURN") {
-        S.endTurn?.();
-        return;
-      }
-
-      // 최고점 액션 실행
-      executeAction(state, me, best.a);
-      steps += 1;
-
-      // 실행 결과로 phase 변화/승리 발생 시 루프 종료(다음 프레임에서 이어감)
-      const now = useGameStore.getState();
-      if (now.phase !== "ACTION" || now.winner) return;
+    // 의미 있는 액션이 없거나 END_TURN이면 종료
+    if (!best || best.score < minScore || best.a.type === "END_TURN") {
+      useGameStore.getState().endTurn?.();
+      return;
     }
 
-    // 안전장치: 스텝 한도 도달 시 턴 종료
-    S.endTurn?.();
+    // ✅ 액션 하나 실행 후 다음 스텝 트리거
+    executeAction(state, me, best.a);
+    useGameStore.getState().triggerAiStep?.();
   }
 }

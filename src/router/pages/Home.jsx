@@ -30,7 +30,7 @@ const Home = () => {
 	const [showChangePanel, setShowChangePanel] = useState(false);
 
 	// Store에서 필요한 함수들 가져오기
-	const { players, initPlayers, initBoard, phase, currentPlayerIndex } =
+	const { players, initPlayers, initBoard, phase, currentPlayerIndex, aiSignal } =
 		useGameStore();
 	const { setCornerPin, setEdgePin, setRobber } = pinManagement();
 
@@ -185,12 +185,15 @@ const Home = () => {
 		if (phase === "GAME_OVER") return;
 		if (currentPlayerIndex === 0) return; // 내 턴이면 건너뜀
 
+		// phase별 딜레이: 주사위는 빠르게, 액션은 느리게
+    	const delay = phase === "ROLL" ? 800 : 1500;
+
 		const timer = setTimeout(() => {
 			aiTurn(currentPlayerIndex);
 		}, 800);
 
 		return () => clearTimeout(timer);
-	}, [currentPlayerIndex]); // currentPlayerIndex 변경 시만 실행
+	}, [currentPlayerIndex, phase, aiSignal]); // currentPlayerIndex 변경 시만 실행
 
 	// === 6. 화면 렌더링 분기 ===
 
