@@ -161,7 +161,7 @@ export default function ChangeCardPanel() {
         <div className="changeCardPanel">
             <div>
                 <div className="tradeCard">
-
+                    
                     {/* ── SELECT / OFFERING / ACCEPTED / BANK 공통: 자원 선택 UI ── */}
                     <TradeCardSection
                         type="receive"
@@ -179,53 +179,61 @@ export default function ChangeCardPanel() {
                         handleRemove={handleRemove}
                         handleReset={handleReset}
                     />
-
-                    {/* ── phase별 안내 메시지 ── */}
-                    {phase === "OFFERING" && (
-                        <div style={styles.msg}>⏳ 제안 중...</div>
-                    )}
-                    {phase === "CHOOSE" && (
-                        <div style={{ padding: "8px 10px", display: "flex", alignItems: "flex-start", justifyContent: "center", gap: "10px" }}>
-                            <div style={{ fontSize: "12px", fontWeight: "bold", whiteSpace: "nowrap" }}>
-                                🤝 교환할 플레이어를 선택하세요
-                            </div>
-                            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-                                {acceptedPlayers.map((p) => (
-                                    <button
-                                        key={p.id}
-                                        onClick={() => handleChoose(p)}
-                                        style={styles.chooseBtn}
-                                    >
-                                        {p.name}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                    {phase === "ACCEPTED" && (
-                        <div style={{...styles.msg, color: "#2a7a2a"}}>
-                            ✅ {acceptedPlayer?.name}이(가) 수락했습니다!
-                        </div>
-                    )}
-                    {phase === "BANK" && (
-                        <div style={{...styles.msg, color: "#b05a00"}}>
-                            ❌ 모두 거절했습니다. 은행과 교환하세요.
-                        </div>
-                    )}
-
-                    {/* ── 플레이어별 결과 ── */}
-                    {(phase === "ACCEPTED" || phase === "BANK") && offerResults.length > 0 && (
-                        <div style={styles.results}>
-                            {offerResults.map((r) => (
-                                <span key={r.id} style={r.accepted ? styles.accept : styles.reject}>
-                                    {r.name}: {r.accepted ? "✅" : "❌"}
-                                </span>
-                            ))}
-                        </div>
-                    )}
                 </div>
             </div>
+        <div className="tradeStatusArea" style={{
+            position: 'absolute',
+            bottom: '100%',
+            left: 0,
+            zIndex: 10,
+            borderRadius: '8px',
+            width: '100%',
+            marginBottom: '10px',
+        }}>
+        {/* ── phase별 안내 메시지 ── */}
+        {phase === "OFFERING" && (
+            <div style={styles.msg}>⏳ 제안 중...</div>
+        )}
+        {phase === "CHOOSE" && (
+            <div style={{ padding: "15px", backgroundColor: '#f8f9fa', borderRadius: '8px'}}>
+                <div style={{ fontSize: "12px", fontWeight: "bold", color: '#333', whiteSpace: "nowrap", marginBottom: '12px'}}>
+                    🤝 교환할 플레이어를 선택하세요
+                </div>
+                <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                    {acceptedPlayers.map((p) => (
+                        <button
+                            key={p.id}
+                            onClick={() => handleChoose(p)}
+                            style={styles.chooseBtn}
+                        >
+                            {p.name}
+                        </button>
+                    ))}
+                </div>
+            </div>
+        )}
+        {phase === "ACCEPTED" && (
+            <div style={{...styles.msg, color: "#2a7a2a", backgroundColor: '#f8f9fa'}}>
+                ✅ {acceptedPlayer?.name}이(가) 수락했습니다!
+            </div>
+        )}
+        {phase === "BANK" && (
+            <div style={{...styles.msg, color: "#b05a00", backgroundColor: '#f8f9fa'}}>
+                ❌ 모두 거절했습니다. 은행과 교환하세요.
+            </div>
+        )}
 
+        {/* ── 플레이어별 결과 ── */}
+        {(phase === "ACCEPTED" || phase === "BANK") && offerResults.length > 0 && (
+            <div style={styles.results}>
+                {offerResults.map((r) => (
+                    <span key={r.id} style={r.accepted ? styles.accept : styles.reject}>
+                        {r.name}: {r.accepted ? "✅" : "❌"}
+                    </span>
+                ))}
+            </div>
+        )}
+        </div>
             {/* ── 버튼 영역 ── */}
             {(phase === "SELECT" || phase === "BANK") && (
                 <button className="changeCardSubmit" onClick={handleOffer} title="플레이어에게 재제안">
@@ -256,15 +264,22 @@ export default function ChangeCardPanel() {
 const styles = {
     msg: {
         fontSize: "12px",
-        padding: "4px 10px",
+        padding: "10px 20px",
         fontWeight: "bold",
-        marginTop: "5px",
+        backgroundColor: 'white',
+        textAlign: 'center',
+        borderTopLeftRadius: '8px',
+        borderTopRightRadius: '8px',
     },
     results: {
         display: "flex",
-        gap: "8px",
-        padding: "4px 10px",
+        gap: "15px",
+        padding: "10px 15px",
         fontSize: "11px",
+        backgroundColor : 'white',
+        justifyContent: 'center',
+        borderBottomLeftRadius: '8px',
+        borderBottomRightRadius: '8px',
     },
     accept: { color: "#2a7a2a" },
     reject: { color: "#999" },
