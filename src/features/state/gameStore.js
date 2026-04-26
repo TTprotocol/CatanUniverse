@@ -34,6 +34,9 @@ export const pinManagement = create(
 			// 도둑 핀 관리
 			setRobber: (pinId) => {
 				set(() => ({ robber: pinId }));
+				useGameStore.setState((state) => ({
+					board: {...state.board, robber: pinId}
+				}));
 			},
 
 			// 마을/도시 핀 사용 여부 확인
@@ -169,11 +172,15 @@ const useGameStore = create(
 				// 🎲 로그 저장
 				// ✅ FIX: 불필요한 % 연산 제거
 				const currentPlayer = get().players[get().currentPlayerIndex];
-				gameLog
-					.getState()
-					.addLog(
-						`${currentPlayer.name} 님이 주사위를 굴렸습니다: ${dice1} + ${dice2} = ${dice}`,
-					);
+				gameLog.getState().addLog(
+					`${currentPlayer.name} 님이 주사위를 굴렸습니다: ${dice1} + ${dice2} = ${dice}`,
+				);
+
+				if (dice === 7) {
+					set({ phase: "ROBBER" });
+				} else {
+					distributeResourcesByDice();
+				}
 			},
 
 			// ✅ 다음 플레이어로 턴을 넘김

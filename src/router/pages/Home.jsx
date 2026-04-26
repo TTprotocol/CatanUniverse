@@ -12,6 +12,7 @@ import {
 	useCheckSettlement,
 	useCheckCity,
 } from "@/features/game/actionHandler";
+import { TILE_PIN } from "@/utils/constants";
 import islandImg from "../../assets/island_intro.png";
 import { aiTurn } from "@/features/ai/aiDecisionMaker";
 import DiceRoller from "../../components/Dice/DiceRoller";
@@ -33,6 +34,8 @@ const Home = () => {
 	const { players, initPlayers, initBoard, phase, currentPlayerIndex, aiSignal } =
 		useGameStore();
 	const { setCornerPin, setEdgePin, setRobber } = pinManagement();
+
+	const isMyTurn = currentPlayerIndex === 0;
 
 	// === 3. 로딩 타이머 로직 ===
 	useEffect(() => {
@@ -102,6 +105,21 @@ const Home = () => {
 		}
 	};
 
+	//robber 타일 핀 표시
+	useEffect(() => {
+		if (phase === "ROBBER" && isMyTurn) {
+			const currentRobber = useGameStore.getState().board.robber;
+			const tileIds = TILE_PIN
+				.map((p) => p.id)
+				.filter((id) => id !== currentRobber); //현재 위치 제외
+			setVisibleTilePins(tileIds);
+			setVisibleCornerPins([]);
+			setVisibleEdgePins([]);
+		} else {
+			setVisibleTilePins([]);
+		}
+	}, [phase]);
+
 	// 교환 핸들러
 	const handleExchange = () => {
 		setShowChangePanel((prev) => !prev);
@@ -126,6 +144,8 @@ const Home = () => {
 	// === 5. 게임 데이터 초기화 ===
 	useEffect(() => {
 		useGameStore.getState().initAll();
+		pinManagement.getState().reset();
+
 		initPlayers([
 			{
 				id: 1,
@@ -173,10 +193,12 @@ const Home = () => {
 			},
 		]);
 		initBoard([], 10);
-		[1, 9, 10, 11].forEach((item) => setCornerPin(item));
-		[2, 4, 8, 13, 14, 15, 16, 17, 18, 20, 21].forEach((item) =>
-			setEdgePin(item),
-		);
+		const { players } = useGameStore.getState();
+		players.forEach((player) => {
+			player.settlements.forEach((id) => setCornerPin(id));
+			player.cities.forEach((id) => setCornerPin(id));
+			player.roads.forEach((id) => setEdgePin(id));
+		});
 	}, []);
 
 	// AI 턴 트리거
@@ -250,6 +272,10 @@ const Home = () => {
 						setVisibleEdges={setVisibleEdgePins}
 						setVisibleCorners={setVisibleCornerPins}
 						setVisibleTilePins={setVisibleCornerPins}
+						onTileClick={(tileId) => {
+							setRobber(tileId);
+							setVisibleTilePins([]);
+						}}
 					/>
 				</section>
 				<DiceRoller />
@@ -263,6 +289,7 @@ const Home = () => {
 					handleRollDice={handleRollDice}
 					handleEndTurn={handleEndTurn}
 					players={players}
+					isMyTurn={isMyTurn}
 				/>
 			</div>
 			<PlayerPanel players={players} />

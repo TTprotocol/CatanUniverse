@@ -40,6 +40,7 @@ function GameBoard({
 	visibleCorners = [],
 	visibleEdges = [],
 	visibleTiles = [],
+	onTileClick = () => {},
 	setVisibleCorners = () => {}, // 수정 의도: 부모의 코너 핀 상태 setter를 받아 건설 직후 핀 표시를 해제합니다.
 	setVisibleEdges = () => {}, // 수정 의도: 부모의 엣지 핀 상태 setter를 받아 도로 건설 직후 핀 표시를 해제합니다.
 	setVisibleTiles = () => {},
@@ -71,7 +72,7 @@ function GameBoard({
 		getRobber,
 	} = pinManagement.getState();
 
-	const robberTile = useGameStore((state) => state.board.robber);
+	const robberTile = pinManagement((state) => state.robber);
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
@@ -273,6 +274,25 @@ function GameBoard({
 
 						if (moveRobber?.result) setVisibleTiles([]); // 건설이 성공한 경우에만 visibleEdge를 비워 핀을 숨김
 					}}
+				/>
+			))}
+
+			{TILE_PIN.map((pin) => (
+				<button
+					key={`tile-${pin.id}`}
+					style={{
+						position: "absolute",
+						top: pin.y,
+						left: pin.x,
+						transform: "translate(-50%, -50%)",
+						width: "30px",
+						height: "30px",
+						background: "transparent",
+						border: "none",
+						zIndex: 5,
+						display: visibleTiles.includes(pin.id) ? "block" : "none",
+					}}
+					onClick={() => onTileClick(pin.id)}
 				/>
 			))}
 
