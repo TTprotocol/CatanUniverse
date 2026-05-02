@@ -250,18 +250,26 @@ const Home = () => {
 	if (viewState === "setting") {
 		return (
 			<div className="loadingContainer">
-				<div>
-					<p>당신의 이름을 입력하세요</p>
+				<div className="name-input-wrap">
+					<p className="name-input-title">당신의 이름을 입력하세요</p>
 				</div>
-				<form onSubmit={handlePlayerName}>
+				<form className="name-input-form" onSubmit={handlePlayerName}>
 					{" "}
 					{/* 확인 버튼으로 제출했을 때만 userName이 저장되도록 연결합니다. */}
 					<input
 						type="text"
 						onChange={(e) => setDraftUserName(e.target.value)} // 입력 중에는 임시 상태만 변경해 userName 의존 useEffect 실행을 막습니다.
 						value={draftUserName} // input에는 확정 이름이 아니라 입력 중인 값을 표시합니다.
+						placeholder="예 : 카탄고수"
+						autoFocus
+						maxLength={6}
+						className="name-input-field"
 					/>
-					<button type="submit">확인</button>{" "}
+					<button 
+						type="submit"
+						className={`name-submit-btn ${draftUserName.trim() ? "active" : ""}`}
+                        disabled={!draftUserName.trim()}
+					>확인</button>{" "}
 					{/* 클릭 시 form submit으로 handlePlayerName이 실행됩니다. */}
 				</form>
 			</div>
