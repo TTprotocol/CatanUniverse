@@ -192,7 +192,7 @@ export default function ChangeCardPanel() {
         }}>
         {/* ── phase별 안내 메시지 ── */}
         {phase === "OFFERING" && (
-            <div style={styles.msg}>⏳ 제안 중.........</div>
+            <div style={styles.msg}>⏳ 제안 중....</div>
         )}
         {phase === "CHOOSE" && (
             <div style={{ padding: "15px", backgroundColor: '#f8f9fa', borderRadius: '8px'}}>
