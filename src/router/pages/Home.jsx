@@ -5,7 +5,6 @@ import GameBoard from "@/components/Board/Canvas";
 import ActionPanel from "@/components/ActionPanel/ActionPanel";
 import PlayerPanel from "@/components/PlayerPanel/PlayerPanel";
 import VictoryScreen from "./VictoryScreen";
-import AiTurnManager from "../../features/ai/AiTurnManager";
 import useGameStore, { pinManagement } from "@/features/state/gameStore";
 import {
 	useCheckRoad,
@@ -15,12 +14,13 @@ import {
 import islandImg from "../../assets/island_intro.png";
 import { aiTurn } from "@/features/ai/aiDecisionMaker";
 import DiceRoller from "../../components/Dice/DiceRoller";
-import Toast from "../../components/Dice/Toast";
 
 const Home = () => {
 	// === 1. 화면 전환 상태 관리 ===
-	// 'start': 시작화면, 'loading': 로딩화면, 'game': 게임화면
+	// 'start': 시작화면, 'setting': 이름 설정 화면, 'loading': 로딩화면, 'game': 게임화면
 	const [viewState, setViewState] = useState("start");
+	const [userName, setUserName] = useState(""); // 확인 버튼을 눌렀을 때 확정된 사용자 이름을 저장합니다.
+	const [draftUserName, setDraftUserName] = useState(""); // input 입력 중인 임시 사용자 이름을 저장합니다.
 	const [loadingProgress, setLoadingProgress] = useState(0);
 
 	// === 2. 기존 게임 핀 상태 관리 ===
@@ -30,7 +30,7 @@ const Home = () => {
 	const [showChangePanel, setShowChangePanel] = useState(false);
 
 	// Store에서 필요한 함수들 가져오기
-	const { players, initPlayers, initBoard, phase, currentPlayerIndex, aiSignal } =
+	const { players, initPlayers, initBoard, phase, currentPlayerIndex } =
 		useGameStore();
 	const { setCornerPin, setEdgePin, setRobber } = pinManagement();
 
@@ -53,6 +53,7 @@ const Home = () => {
 					return prev + 2;
 				});
 			}, 30); // 0.03초마다 실행
+		} else if (viewState === "setting") {
 		}
 
 		// Cleanup 함수: 컴포넌트가 바뀌거나 사라질 때 타이머 정지
@@ -63,7 +64,17 @@ const Home = () => {
 
 	const handleGameStart = () => {
 		setLoadingProgress(0); // 로딩바 초기화
-		setViewState("loading");
+		setViewState("setting");
+	};
+
+	const handlePlayerName = (e) => {
+		// form 제출 시 input 값을 확정 이름으로 저장합니다.
+		e.preventDefault(); // form 기본 새로고침 동작을 막아 React 상태가 유지되도록 합니다.
+		const nextUserName = draftUserName.trim(); // 공백만 입력된 이름을 저장하지 않도록 앞뒤 공백을 제거합니다.
+		if (nextUserName === "") return; // 빈 이름이면 다음 화면으로 넘어가지 않도록 막습니다.
+		setUserName(nextUserName); // 확인 버튼을 눌렀을 때만 userName을 갱신합니다.
+		setLoadingProgress(0); // 이름 확정 후 로딩 화면을 처음부터 보여주기 위해 진행률을 초기화합니다.
+		setViewState("loading"); // 이름 저장 후 로딩 화면으로 이동합니다.
 	};
 
 	// 도로 건설 핸들러
@@ -109,13 +120,8 @@ const Home = () => {
 
 	//주사위 굴리기
 	const rollDice = useGameStore((state) => state.rollDice);
-	const [toastMsg, setToastMsg] = useState("");
 
 	const handleRollDice = () => {
-		if (phase !== "ROLL") {
-			setToastMsg("이미 이번 턴에 주사위를 굴렸습니다!");
-			return;
-		}
 		rollDice();
 	};
 
@@ -129,7 +135,7 @@ const Home = () => {
 		initPlayers([
 			{
 				id: 1,
-				name: "me",
+				name: userName,
 				resources: [10, 20, 40, 20, 10],
 				roads: [2, 8, 13, 14, 15, 16, 17, 18, 20, 21],
 				settlements: [1, 10, 11],
@@ -177,7 +183,7 @@ const Home = () => {
 		[2, 4, 8, 13, 14, 15, 16, 17, 18, 20, 21].forEach((item) =>
 			setEdgePin(item),
 		);
-	}, []);
+	}, [userName]);
 
 	// AI 턴 트리거
 	useEffect(() => {
@@ -185,15 +191,12 @@ const Home = () => {
 		if (phase === "GAME_OVER") return;
 		if (currentPlayerIndex === 0) return; // 내 턴이면 건너뜀
 
-		// phase별 딜레이: 주사위는 빠르게, 액션은 느리게
-    	const delay = phase === "ROLL" ? 800 : 1500;
-
 		const timer = setTimeout(() => {
 			aiTurn(currentPlayerIndex);
 		}, 800);
 
 		return () => clearTimeout(timer);
-	}, [currentPlayerIndex, phase, aiSignal]); // currentPlayerIndex 변경 시만 실행
+	}, [currentPlayerIndex]); // currentPlayerIndex 변경 시만 실행
 
 	// === 6. 화면 렌더링 분기 ===
 
@@ -203,7 +206,6 @@ const Home = () => {
 			<div className="introContainer">
 				{/* 👇 1. 섬 이미지를 contentWrapper 밖으로 꺼냅니다 */}
 				<img src={islandImg} alt="Catan Island" className="floatingIsland" />
-				<AiTurnManager/>
 
 				{/* 👇 2. 글자와 버튼만 남겨둡니다 (이제 섬이 밀어내지 않음) */}
 				<div className="contentWrapper">
@@ -222,7 +224,29 @@ const Home = () => {
 		);
 	}
 
-	// (B) 로딩 화면
+	// (B) 플레이어 이름 입력
+	if (viewState === "setting") {
+		return (
+			<div className="loadingContainer">
+				<div>
+					<p>당신의 이름을 입력하세요</p>
+				</div>
+				<form onSubmit={handlePlayerName}>
+					{" "}
+					{/* 확인 버튼으로 제출했을 때만 userName이 저장되도록 연결합니다. */}
+					<input
+						type="text"
+						onChange={(e) => setDraftUserName(e.target.value)} // 입력 중에는 임시 상태만 변경해 userName 의존 useEffect 실행을 막습니다.
+						value={draftUserName} // input에는 확정 이름이 아니라 입력 중인 값을 표시합니다.
+					/>
+					<button type="submit">확인</button>{" "}
+					{/* 클릭 시 form submit으로 handlePlayerName이 실행됩니다. */}
+				</form>
+			</div>
+		);
+	}
+
+	// (C) 로딩 화면
 	if (viewState === "loading") {
 		return (
 			<div className="loadingContainer">
@@ -238,7 +262,7 @@ const Home = () => {
 		);
 	}
 
-	// (C) 메인 게임 화면
+	// (D) 메인 게임 화면
 	return (
 		<main id="main">
 			<div id="wrap">
@@ -253,7 +277,6 @@ const Home = () => {
 					/>
 				</section>
 				<DiceRoller />
-				<Toast message={toastMsg} onClose={() => setToastMsg("")} />
 				<ActionPanel
 					showChangePanel={showChangePanel}
 					handleExchange={handleExchange}
