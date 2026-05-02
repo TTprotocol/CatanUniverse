@@ -119,6 +119,11 @@ const Home = () => {
 		}
 	};
 
+	//발전카드 구매 핸들러
+	const handleBuyDevCard = async () => {
+		useGameStore.getState().buyDevCard();
+	}
+
 	//robber 타일 핀 표시
 	useEffect(() => {
 		if (phase === "ROBBER" && isMyTurn) {
@@ -367,6 +372,7 @@ const Home = () => {
 					handleBuildCity={handleBuildCity}
 					handleBuildRoad={handleBuildRoad}
 					handleBuildVillage={handleBuildVillage}
+					handleBuyDevCard={handleBuyDevCard}
 					handleRollDice={handleRollDice}
 					handleEndTurn={handleEndTurn}
 					players={players}

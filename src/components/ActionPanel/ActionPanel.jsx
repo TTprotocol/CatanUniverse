@@ -11,6 +11,7 @@ export default function ActionPanel({
     handleBuildRoad,
     handleBuildVillage,
     handleBuildCity,
+    handleBuyDevCard,
     handleRollDice,
     handleEndTurn,
     players,
@@ -35,7 +36,7 @@ export default function ActionPanel({
                         </svg>
                     </ActionButton>
 
-                    <ActionButton className="development">
+                    <ActionButton className="development" onClick={handleBuyDevCard}>
                         <div></div>
                     </ActionButton>
                     <ActionButton className="buildRoad" onClick={handleBuildRoad}>

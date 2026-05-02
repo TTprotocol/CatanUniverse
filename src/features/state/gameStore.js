@@ -134,6 +134,8 @@ const useGameStore = create(
 			setupOrder: [0,1,2,3,3,2,1,0],
 			setupStep: 0,
 
+			devDeck: [14,5,2,2,2], //남은 발전카드 수 [기사, 승점, 도로건설, 자원발견, 독점]
+
 			// ✅ 게임 상태
 			dice1: null, // 첫 번째 주사위 숫자
 			dice2: null, // 두 번째 주사위 숫자
@@ -416,6 +418,44 @@ const useGameStore = create(
 				}
 			},
 
+			//발전카드 구매
+			buyDevCard: (playerIndex) => {
+				const { players, devDeck } = get();
+				const idx = playerIndex ?? get().currentPlayerIndex;
+
+				const totalRemaining = devDeck.reduce((a,b) => a+b, 0);
+				if (totalRemaining === 0) {
+					return { result: false, message: "발전카드가 모두 소진되었습니다."};
+				}
+
+				const updated = players.map(p => ({ ...p, resources: [...p.resources], devCards: [...p.devCards] }));
+				const p = updated[idx];
+
+				// 비용 확인: 양1, 밀1, 철1 ([0,0,1,1,1])
+				if (p.resources[2] < 1 || p.resources[3] < 1 || p.resources[4] < 1) {
+					return { result: false, message: "자원이 부족합니다." };
+				}
+
+				// 자원 차감
+				p.resources[2] -= 1; // 양
+				p.resources[3] -= 1; // 밀
+				p.resources[4] -= 1; // 철
+
+				// 남은 카드 중 랜덤 뽑기
+				const pool = devDeck.flatMap((count, i) => Array(count).fill(i));
+				const drawn = pool[Math.floor(Math.random() * pool.length)];
+
+				// 덱에서 차감
+				const newDeck = [...devDeck];
+				newDeck[drawn] -= 1;
+
+				p.devCards[drawn] = (p.devCards[drawn] || 0) + 1;
+
+				gameLog.getState().addLog(`${p.name}이(가) 발전카드를 구매했습니다.`);
+				set({ players: updated, devDeck: newDeck });
+				return { result: true, drawn };
+			},
+
 			// 플레이어 간 교환
 			tradeBetweenPlayers: (fromId, toId, offer, request) => {
 				// offer/request 형식: { tree: 1, wheat: 2 } 등
@@ -607,6 +647,7 @@ const useGameStore = create(
 					winner: null,
 					points: 0,
 					setupStep: 0,
+					devDeck: [14, 5, 2, 2, 2],
 				}),
 		}),
 		{
