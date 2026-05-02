@@ -71,13 +71,15 @@ const Home = () => {
 	};
 
 	const handlePlayerName = (e) => {
-		// form 제출 시 input 값을 확정 이름으로 저장합니다.
-		e.preventDefault(); // form 기본 새로고침 동작을 막아 React 상태가 유지되도록 합니다.
-		const nextUserName = draftUserName.trim(); // 공백만 입력된 이름을 저장하지 않도록 앞뒤 공백을 제거합니다.
-		if (nextUserName === "") return; // 빈 이름이면 다음 화면으로 넘어가지 않도록 막습니다.
-		setUserName(nextUserName); // 확인 버튼을 눌렀을 때만 userName을 갱신합니다.
-		setLoadingProgress(0); // 이름 확정 후 로딩 화면을 처음부터 보여주기 위해 진행률을 초기화합니다.
-		setViewState("loading"); // 이름 저장 후 로딩 화면으로 이동합니다.
+		e.preventDefault();
+
+		const nextUserName = draftUserName.trim();
+
+		if (nextUserName === "") return;
+
+		setUserName(nextUserName);
+		setLoadingProgress(0);
+		setViewState("loading");
 	};
 
 	// 도로 건설 핸들러
@@ -265,11 +267,13 @@ const Home = () => {
 						maxLength={6}
 						className="name-input-field"
 					/>
-					<button 
+					<button
 						type="submit"
 						className={`name-submit-btn ${draftUserName.trim() ? "active" : ""}`}
-                        disabled={!draftUserName.trim()}
-					>확인</button>{" "}
+						disabled={!draftUserName.trim()}
+					>
+						확인
+					</button>{" "}
 					{/* 클릭 시 form submit으로 handlePlayerName이 실행됩니다. */}
 				</form>
 			</div>
