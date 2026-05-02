@@ -126,8 +126,14 @@ function pickBestRobberMove(state, aiPlayer) {
     }
   }
 
-  // 적합 후보 없으면 제자리(피해자 없음)
-  return best || { targetTileId: robber, victimId: null };
+  // 적합 후보 없으면 현재,사막 제외 랜덤
+  return best || (() => {
+      const candidates = tiles.filter(
+          (t) => t.id !== robber && t.resource !== "사막" && t.number
+      );
+      const random = candidates[Math.floor(Math.random() * candidates.length)];
+      return { targetTileId: random?.id || robber, victimId: null };
+  })();
 }
 
 /* ----------------------------------------------------------------------
@@ -214,7 +220,7 @@ function enumerateActions(state, aiPlayer) {
 
         // 도로 — 내 네트워크에서 이어지는 미점유 위치만
         if (hasCost(aiPlayer.resources, COSTS.road)) {
-            const roadSpots = getRoadEdges(state, me);
+            const roadSpots = getRoadEdges(state, aiPlayer);
             roadSpots.forEach(edgeId => {
                 actions.push({ type: "BUILD_ROAD", edge: edgeId });
             });
@@ -222,7 +228,7 @@ function enumerateActions(state, aiPlayer) {
 
         // 마을 — 거리 규칙 + 도로 연결 + 미점유 검증된 위치만
         if (hasCost(aiPlayer.resources, COSTS.settle)) {
-            const settlementSpots = getSettlementSpots(state, me);
+            const settlementSpots = getSettlementSpots(state, aiPlayer);
             settlementSpots.forEach(cornerId => {
                 actions.push({ type: "BUILD_SETTLEMENT", location: cornerId });
             });
@@ -230,7 +236,7 @@ function enumerateActions(state, aiPlayer) {
 
         // 도시 — 내 마을 위치에서만
         if (hasCost(aiPlayer.resources, COSTS.city)) {
-            me.settlements.forEach(cornerId => {
+            aiPlayer.settlements.forEach(cornerId => {
                 actions.push({ type: "BUILD_CITY", location: cornerId });
             });
         }
@@ -291,7 +297,9 @@ function scoreAction(state, aiPlayer, action) {
     }
 
     case "BUILD_SETTLEMENT": {
-      const value = scoreSettlementSpot(action.spot, tilesById);
+      const corner = CORNER_PIN.find((c) => c.id === action.location);
+      const spot = { adjacentTiles: corner?.tile || [] };
+      const value = scoreSettlementSpot(spot, tilesById);
       const can  = hasCost(res, COSTS.settle);
       const near = hasCost(tryBankTrades(state, aiPlayer, COSTS.settle), COSTS.settle);
       return (can ? 80 : near ? 45 : 0) + value * 5;
@@ -326,49 +334,62 @@ function scoreAction(state, aiPlayer, action) {
  * -------------------------------------------------------------------- */
 function executeAction(state, aiPlayer, action) {
   const S = useGameStore.getState();
+  const playerIndex = S.currentPllayerIndex;
+
+  const RES_KEYS = ["tree,", "brick", "sheep", "wheat", "steel"];
 
   // 🚰 부족 자원을 은행/항구 교환으로 채우는 보조 함수
   const fillByBank = (cost) => {
-    const need = missingFor(aiPlayer.resources, cost);
+        cost.forEach((need, needIdx) => {
+            const lacking = need - (aiPlayer.resources[needIdx] || 0);
+            for (let i = 0; i < lacking; i++) {
+                const haveIdx = aiPlayer.resources
+                    .map((amt, idx) => ({ amt, idx }))
+                    .filter(({ idx }) => idx !== needIdx)
+                    .sort((a, b) => b.amt - a.amt)[0]?.idx;
+                if (haveIdx === undefined) break;
+                S.tradeWithBank?.(aiPlayer.id, RES_KEYS[haveIdx], RES_KEYS[needIdx]);
+            }
+        });
+    };
 
-    // 필요 수량만큼 반복 교환 시도
-    for (const [needType, lack] of Object.entries(need)) {
-      for (let i = 0; i < lack; i++) {
-        // "가장 많이 보유한" 자원부터 소진 (needType 제외)
-        const haveType = Object.entries(aiPlayer.resources)
-          .sort((a, b) => (b[1] || 0) - (a[1] || 0))
-          .find(([k, v]) => k !== needType && v > 0)?.[0];
+  // const fillByBank = (cost) => {
+  //   const need = missingFor(aiPlayer.resources, cost);
 
-        if (!haveType) break;
-        S.tradeWithBank?.(aiPlayer.id, haveType, needType);
-      }
-    }
-  };
+  //   // 필요 수량만큼 반복 교환 시도
+  //   for (const [needType, lack] of Object.entries(need)) {
+  //     for (let i = 0; i < lack; i++) {
+  //       // "가장 많이 보유한" 자원부터 소진 (needType 제외)
+  //       const haveType = Object.entries(aiPlayer.resources)
+  //         .sort((a, b) => (b[1] || 0) - (a[1] || 0))
+  //         .find(([k, v]) => k !== needType && v > 0)?.[0];
+
+  //       if (!haveType) break;
+  //       S.tradeWithBank?.(aiPlayer.id, haveType, needType);
+  //     }
+  //   }
+  // };
 
   switch (action.type) {
     case "UPGRADE_CITY":
       if (!hasCost(aiPlayer.resources, COSTS.city)) fillByBank(COSTS.city);
-      S.upgradeToCity?.(aiPlayer.id, action.location);
+      S.upgradeToCity?.(playerIndex, action.location);
       break;
 
     case "BUILD_SETTLEMENT":
       if (!hasCost(aiPlayer.resources, COSTS.settle)) fillByBank(COSTS.settle);
-      S.buildSettlement?.(
-        aiPlayer.id,
-        action.location,
-        action.spot?.adjacentTiles || []
-      );
+      S.buildSettlement?.(playerIndex, action.location);
       break;
 
     case "BUILD_ROAD":
       if (!hasCost(aiPlayer.resources, COSTS.road)) fillByBank(COSTS.road);
       // edge: { a, b } (노드ID) 형태라고 가정 — 프로젝트 유틸에 맞춰 조정
-      S.buildRoad?.(aiPlayer.id, action.edge.a, action.edge.b);
+      S.buildRoad?.(playerIndex, action.edge.a, action.edge.b);
       break;
 
     case "BUY_DEV_CARD":
       if (!hasCost(aiPlayer.resources, COSTS.dev)) fillByBank(COSTS.dev);
-      S.buyDevCard?.(aiPlayer.id);
+      S.buyDevCard?.(playerIndex);
       break;
 
     case "END_TURN":
