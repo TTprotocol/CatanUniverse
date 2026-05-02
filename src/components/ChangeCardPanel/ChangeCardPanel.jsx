@@ -3,7 +3,19 @@ import TradeCardSection from "./TradeCardSection";
 import useGameStore from "../../features/state/gameStore";
 
 const RES = ["tree", "brick", "sheep", "wheat", "steel"];
-
+const RES_NAMES = {
+    tree: "🌲나무",
+    brick: "🧱벽돌",
+    sheep: "🐑양",
+    wheat: "🌾밀",
+    steel: "🪨철",
+    // 숫자로 데이터가 넘어올 경우를 대비
+    "0": "🌲나무",
+    "1": "🧱벽돌",
+    "2": "🐑양",
+    "3": "🌾밀",
+    "4": "🪨철"
+};
 // AI가 제안을 수락할지 판단 (단순 로직: 요청 자원 보유 여부)
 function aiDecideAccept(aiPlayer, offer, request) {
     for (const [type, amt] of Object.entries(request || {})) {
@@ -199,7 +211,7 @@ export default function ChangeCardPanel() {
                 <div style={{ fontSize: "12px", fontWeight: "bold", color: '#333', whiteSpace: "nowrap", marginBottom: '12px'}}>
                     🤝 교환할 플레이어를 선택하세요
                 </div>
-                <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", alignItems: 'center', justifyContent: 'center' }}>
                     {acceptedPlayers.map((p) => (
                         <button
                             key={p.id}
@@ -213,8 +225,52 @@ export default function ChangeCardPanel() {
             </div>
         )}
         {phase === "ACCEPTED" && (
-            <div style={{...styles.msg, color: "#2a7a2a", backgroundColor: '#f8f9fa'}}>
-                ✅ {acceptedPlayer?.name}이(가) 수락했습니다!
+            <div style={{ padding: "15px", backgroundColor: '#f8f9fa', borderTopLeftRadius: '8px', borderTopRightRadius: '8px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#2a7a2a", marginBottom: "8px" }}>
+                    ✅ 거래 완료!
+                </div>
+                <div style={{ fontSize: "12px", color: '#555', marginBottom: '15px' }}>
+                    <b>{acceptedPlayer?.name}</b>님과 자원을 교환했습니다.
+                </div>
+
+                <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "10px",
+                    backgroundColor: "white",
+                    padding: "10px",
+                    borderRadius: "6px",
+                    border: "1px solid #ddd",
+                    marginBottom: "15px",
+                    fontSize: "12px"
+                }}>
+                    <div style={{ color: "#d9534f", fontWeight: "bold" }}>
+                        ➖ {Object.entries(giveCounts).map(([type, count]) => `${RES_NAMES[type]} ${count}`).join(", ")}
+                    </div>
+                    <span style={{ fontSize: "14px" }}>➡️</span>
+                    <div style={{ color: "#2a7a2a", fontWeight: "bold" }}>
+                        ➕ {Object.entries(receiveCounts).map(([type, count]) => `${RES_NAMES[type]} ${count}`).join(", ")}
+                    </div>
+                </div>
+
+                {/* 명확한 닫기 버튼 */}
+                <button
+                    onClick={reset}
+                    style={{
+                        padding: "8px 0",
+                        backgroundColor: "#2a7a2a",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "6px",
+                        fontWeight: "bold",
+                        cursor: "pointer",
+                        fontSize: "12px",
+                        width: "100%"
+                    }}
+                >
+                    확인 (패널 닫기)
+                </button>
             </div>
         )}
         {phase === "BANK" && (
