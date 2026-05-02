@@ -15,6 +15,7 @@ import { TILE_PIN } from "@/utils/constants";
 import islandImg from "../../assets/island_intro.png";
 import { aiTurn } from "@/features/ai/aiDecisionMaker";
 import DiceRoller from "../../components/Dice/DiceRoller";
+import { gameLog } from "../../features/state/gameStore";
 
 const Home = () => {
 	// === 1. 화면 전환 상태 관리 ===
@@ -149,6 +150,7 @@ const Home = () => {
 
 	// === 5. 게임 데이터 초기화 ===
 	useEffect(() => {
+		gameLog.getState().resetLog();
 		useGameStore.getState().initAll();
 		pinManagement.getState().reset();
 
