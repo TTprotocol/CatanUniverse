@@ -35,7 +35,7 @@ export const pinManagement = create(
 			setRobber: (pinId) => {
 				set(() => ({ robber: pinId }));
 				useGameStore.setState((state) => ({
-					board: {...state.board, robber: pinId}
+					board: { ...state.board, robber: pinId },
 				}));
 			},
 
@@ -176,9 +176,11 @@ const useGameStore = create(
 				// 🎲 로그 저장
 				// ✅ FIX: 불필요한 % 연산 제거
 				const currentPlayer = get().players[get().currentPlayerIndex];
-				gameLog.getState().addLog(
-					`${currentPlayer.name} 님이 주사위를 굴렸습니다: ${dice1} + ${dice2} = ${dice}`,
-				);
+				gameLog
+					.getState()
+					.addLog(
+						`${currentPlayer.name} 님이 주사위를 굴렸습니다: ${dice1} + ${dice2} = ${dice}`,
+					);
 
 				if (dice === 7) {
 					set({ phase: "ROBBER" });
@@ -200,11 +202,11 @@ const useGameStore = create(
 						`${players[currentIndex].name} 님이 턴을 넘겼습니다 : ${players[currentIndex].name} -> ${players[nextIndex].name}`,
 					);
 
-				set({ 
-					currentPlayerIndex: nextIndex, 
-					phase: "ROLL", 
+				set({
+					currentPlayerIndex: nextIndex,
+					phase: "ROLL",
 					dice: null,
-					actionsThisTurn: { built: false, robbed: false }, 
+					actionsThisTurn: { built: false, robbed: false },
 				});
 			},
 
@@ -516,7 +518,10 @@ const useGameStore = create(
 					.addLog(
 						`${p.name}이(가) ${position}번 위치에 정착지를 건설했습니다.`,
 					);
-				set({ players, actionsThisTurn: { ...get().actionsThisTurn, built: true } });
+				set({
+					players,
+					actionsThisTurn: { ...get().actionsThisTurn, built: true },
+				});
 				return true;
 			},
 
@@ -539,7 +544,10 @@ const useGameStore = create(
 				gameLog
 					.getState()
 					.addLog(`${p.name}이(가) ${position}번 위치에 도시를 건설했습니다.`);
-				set({ players, actionsThisTurn: { ...get().actionsThisTurn, built: true } });
+				set({
+					players,
+					actionsThisTurn: { ...get().actionsThisTurn, built: true },
+				});
 				return true;
 			},
 
@@ -560,7 +568,10 @@ const useGameStore = create(
 				gameLog
 					.getState()
 					.addLog(`${p.name}이(가) ${edgeId}번 위치에 도로를 건설했습니다.`);
-				set({ players, actionsThisTurn: { ...get().actionsThisTurn, built: true } });
+				set({
+					players,
+					actionsThisTurn: { ...get().actionsThisTurn, built: true },
+				});
 				return true;
 			},
 
@@ -578,7 +589,7 @@ const useGameStore = create(
 				});
 			}, // 보드 설정
 
-			triggerAiStep: () => set((s) => ({aiSignal: s.aiSignal +1})),
+			triggerAiStep: () => set((s) => ({ aiSignal: s.aiSignal + 1 })),
 
 			// 게임 상태 초기화 함수
 			initAll: () =>
