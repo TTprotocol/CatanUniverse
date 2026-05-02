@@ -220,7 +220,7 @@ const Home = () => {
 		}, 800);
 
 		return () => clearTimeout(timer);
-	}, [currentPlayerIndex]); // currentPlayerIndex 변경 시만 실행
+	}, [currentPlayerIndex, phase]); // currentPlayerIndex 변경 시만 실행
 
 	// === 6. 화면 렌더링 분기 ===
 
