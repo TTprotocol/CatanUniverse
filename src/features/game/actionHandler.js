@@ -186,86 +186,86 @@ export const useGetDevelopment = async () => {
 	// 발전카드 비용: 양1, 밀1, 철1
 };
 
-export const useBuildActions = ({ players, setPlayers }) => {
-	//정착지(마을) 건설
-	const buildSettlement = (playerId, location, adjacentTiles) => {
-		// 정착지 비용(카탄 규칙): 나무1, 벽돌1, 밀1, 양1
-		const cost = { 나무: 1, 벽돌: 1, 밀: 1, 양: 1 };
+// export const useBuildActions = ({ players, setPlayers }) => {
+// 	//정착지(마을) 건설
+// 	const buildSettlement = (playerId, location, adjacentTiles) => {
+// 		// 정착지 비용(카탄 규칙): 나무1, 벽돌1, 밀1, 양1
+// 		const cost = { 나무: 1, 벽돌: 1, 밀: 1, 양: 1 };
 
-		// 대상 플레이어
-		const player = players.find((p) => p.id === playerId);
-		if (!player) throw new Error("플레이어를 찾을 수 없습니다.");
+// 		// 대상 플레이어
+// 		const player = players.find((p) => p.id === playerId);
+// 		if (!player) throw new Error("플레이어를 찾을 수 없습니다.");
 
-		// 위치 중복 금지
-		if (player.buildings.some((b) => b.location === location)) {
-			throw new Error("이미 건물이 있는 위치입니다.");
-		}
+// 		// 위치 중복 금지
+// 		if (player.buildings.some((b) => b.location === location)) {
+// 			throw new Error("이미 건물이 있는 위치입니다.");
+// 		}
 
-		// 비용 보유 확인
-		const ok = Object.entries(cost).every(
-			([type, amt]) => (player.resources[type] || 0) >= amt,
-		);
+// 		// 비용 보유 확인
+// 		const ok = Object.entries(cost).every(
+// 			([type, amt]) => (player.resources[type] || 0) >= amt,
+// 		);
 
-		if (!ok) throw new Error("자원이 부족합니다.");
+// 		if (!ok) throw new Error("자원이 부족합니다.");
 
-		// 새 건물
-		const newBuilding = { type: "settlement", location, adjacentTiles };
+// 		// 새 건물
+// 		const newBuilding = { type: "settlement", location, adjacentTiles };
 
-		// 비용 차감 + 건물 추가
-		const updatedPlayer = {
-			...player,
-			resources: Object.fromEntries(
-				Object.entries(player.resources).map(([type, val]) => [
-					type,
-					val - (cost[type] || 0),
-				]),
-			),
-			buildings: [...player.buildings, newBuilding],
-		};
+// 		// 비용 차감 + 건물 추가
+// 		const updatedPlayer = {
+// 			...player,
+// 			resources: Object.fromEntries(
+// 				Object.entries(player.resources).map(([type, val]) => [
+// 					type,
+// 					val - (cost[type] || 0),
+// 				]),
+// 			),
+// 			buildings: [...player.buildings, newBuilding],
+// 		};
 
-		setPlayers(players.map((p) => (p.id === playerId ? updatedPlayer : p)));
-	};
+// 		setPlayers(players.map((p) => (p.id === playerId ? updatedPlayer : p)));
+// 	};
 
-	// 도시 업그레이드(정착지 → 도시)
-	const upgradeToCity = (playerId, location) => {
-		// 비용: 밀2, 철3
-		const cost = { 밀: 2, 철: 3 };
+// 	// 도시 업그레이드(정착지 → 도시)
+// 	const upgradeToCity = (playerId, location) => {
+// 		// 비용: 밀2, 철3
+// 		const cost = { 밀: 2, 철: 3 };
 
-		const player = players.find((p) => p.id === playerId);
-		if (!player) throw new Error("플레이어를 찾을 수 없습니다.");
+// 		const player = players.find((p) => p.id === playerId);
+// 		if (!player) throw new Error("플레이어를 찾을 수 없습니다.");
 
-		// 해당 위치에 '정착지'가 있어야 함
-		const idx = player.buildings.findIndex(
-			(b) => b.location === location && b.type === "settlement",
-		);
-		if (idx === -1) throw new Error("정착지가 없습니다.");
+// 		// 해당 위치에 '정착지'가 있어야 함
+// 		const idx = player.buildings.findIndex(
+// 			(b) => b.location === location && b.type === "settlement",
+// 		);
+// 		if (idx === -1) throw new Error("정착지가 없습니다.");
 
-		const ok = Object.entries(cost).every(
-			([type, amt]) => (player.resources[type] || 0) >= amt,
-		);
-		if (!ok) throw new Error("자원이 부족합니다.");
+// 		const ok = Object.entries(cost).every(
+// 			([type, amt]) => (player.resources[type] || 0) >= amt,
+// 		);
+// 		if (!ok) throw new Error("자원이 부족합니다.");
 
-		// 건물 타입 변경
-		const updatedBuildings = [...player.buildings];
-		updatedBuildings[idx].type = "city";
+// 		// 건물 타입 변경
+// 		const updatedBuildings = [...player.buildings];
+// 		updatedBuildings[idx].type = "city";
 
-		// 비용 차감
-		const updatedPlayer = {
-			...player,
-			resources: Object.fromEntries(
-				Object.entries(player.resources).map(([type, val]) => [
-					type,
-					val - (cost[type] || 0),
-				]),
-			),
-			buildings: updatedBuildings,
-		};
+// 		// 비용 차감
+// 		const updatedPlayer = {
+// 			...player,
+// 			resources: Object.fromEntries(
+// 				Object.entries(player.resources).map(([type, val]) => [
+// 					type,
+// 					val - (cost[type] || 0),
+// 				]),
+// 			),
+// 			buildings: updatedBuildings,
+// 		};
 
-		setPlayers(players.map((p) => (p.id === playerId ? updatedPlayer : p)));
-	};
+// 		setPlayers(players.map((p) => (p.id === playerId ? updatedPlayer : p)));
+// 	};
 
-	return { buildSettlement, upgradeToCity };
-};
+// 	return { buildSettlement, upgradeToCity };
+// };
 
 /*
  * 3) 도둑 관련 로직(주사위 합 7일 때)
