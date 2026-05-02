@@ -57,7 +57,7 @@ export const pinManagement = create(
 			},
 
 			// 핀 초기화
-			reset: () => set({ cornerPin: [], edgePin: [], robber: 7 }),
+			reset: () => set({ cornerPin: [], edgePin: [], robber: 10 }),
 		}),
 		{
 			name: "pin_management",

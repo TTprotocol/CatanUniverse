@@ -126,10 +126,10 @@ function pickBestRobberMove(state, aiPlayer) {
     }
   }
 
-  // 적합 후보 없으면 현재,사막 제외 랜덤
+  // 적합 후보 없으면 현재 제외 랜덤
   return best || (() => {
       const candidates = tiles.filter(
-          (t) => t.id !== robber && t.resource !== "사막" && t.number
+          (t) => t.id !== robber
       );
       const random = candidates[Math.floor(Math.random() * candidates.length)];
       return { targetTileId: random?.id || robber, victimId: null };
