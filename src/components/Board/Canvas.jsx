@@ -118,6 +118,14 @@ function GameBoard({
 						// display: "block",
 					}}
 					onClick={() => {
+						const {phase, setupSettlement } = useGameStore.getState();
+
+						if (phase === "SETUP_SETTLEMENT") {
+							setupSettlement(pin.id);
+							setVisibleCorners([]);
+							return;
+						}
+
 						const isUsedCorner = getCornerPins(pin.id);
 
 						const buildResult = isUsedCorner
@@ -206,6 +214,14 @@ function GameBoard({
 						zIndex: 3,
 					}}
 					onClick={() => {
+						const { phase, setupRoad } = useGameStore.getState();
+
+						if (phase === "SETUP_ROAD") {
+							setupRoad(pin.id);
+							setVisibleEdges([]);
+							return;
+						}
+
 						const buildResult = buildRoads(pin.id);
 
 						console.log(

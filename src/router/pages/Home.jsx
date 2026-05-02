@@ -11,9 +11,9 @@ import {
 	useCheckSettlement,
 	useCheckCity,
 } from "@/features/game/actionHandler";
-import { TILE_PIN } from "@/utils/constants";
+import { CORNER_PIN, TILE_PIN, EDGE_PIN } from "@/utils/constants";
 import islandImg from "../../assets/island_intro.png";
-import { aiTurn } from "@/features/ai/aiDecisionMaker";
+import { aiTurn, aiSetupTurn } from "@/features/ai/aiDecisionMaker";
 import DiceRoller from "../../components/Dice/DiceRoller";
 import { gameLog } from "../../features/state/gameStore";
 
@@ -137,6 +137,46 @@ const Home = () => {
 		setShowChangePanel((prev) => !prev);
 	};
 
+	// 초기 배치 단계 핀 표시
+	useEffect(() => {
+		if (phase === "SETUP_SETTLEMENT" && currentPlayerIndex === 0) {
+			// 내 턴: 마을 놓을 코너 핀 표시
+			const usedCorners = new Set(pinManagement.getState().getCornerPins());
+
+			const blocked = new Set();
+			players.forEach(p => {
+				[...p.settlements, ...p.cities].forEach(bId => {
+					blocked.add(bId);
+					CORNER_PIN.find(c => c.id === bId)?.nextCorner?.forEach(nc => blocked.add(nc));
+				});
+			});
+
+			const available = CORNER_PIN
+				.map(p => p.id)
+				.filter(id => !usedCorners.has(id) && !blocked.has(id));
+
+			setVisibleCornerPins(available);
+			setVisibleEdgePins([]);
+			setVisibleTilePins([]);
+		} else if (phase === "SETUP_ROAD" && currentPlayerIndex === 0) {
+			// 내 턴: 도로 놓을 엣지 핀 표시 (방금 지은 마을 기준)
+			const me = players[0];
+			const lastSettlement = me?.settlements[me.settlements.length - 1];
+			const pin = CORNER_PIN.find(p => p.id === lastSettlement);
+
+			const usedEdges = new Set(pinManagement.getState().getEdgePins());
+    		const available = (pin?.edge || []).filter(eId => !usedEdges.has(eId));
+			
+			setVisibleEdgePins(available);
+			setVisibleCornerPins([]);
+			setVisibleTilePins([]);
+		} else if (!phase.startsWith("SETUP")) {
+			// setup 끝나면 핀 초기화
+			setVisibleCornerPins([]);
+			setVisibleEdgePins([]);
+		}
+	}, [phase, currentPlayerIndex]);
+
 	//주사위 굴리기
 	const rollDice = useGameStore((state) => state.rollDice);
 
@@ -216,7 +256,11 @@ const Home = () => {
 		if (currentPlayerIndex === 0) return; // 내 턴이면 건너뜀
 
 		const timer = setTimeout(() => {
-			aiTurn(currentPlayerIndex);
+			if (phase === "SETUP_SETTLEMENT" || phase === "SETUP_ROAD") {
+				aiSetupTurn();
+			} else {
+				aiTurn(currentPlayerIndex);
+			}
 		}, 800);
 
 		return () => clearTimeout(timer);

@@ -130,6 +130,10 @@ const useGameStore = create(
 				robber: null, // 도둑이 위치한 타일 ID
 			},
 
+			//초기 다리,마을 짓기 순서
+			setupOrder: [0,1,2,3,3,2,1,0],
+			setupStep: 0,
+
 			// ✅ 게임 상태
 			dice1: null, // 첫 번째 주사위 숫자
 			dice2: null, // 두 번째 주사위 숫자
@@ -202,6 +206,47 @@ const useGameStore = create(
 					dice: null,
 					actionsThisTurn: { built: false, robbed: false }, 
 				});
+			},
+
+			//초기 마을 건설 (자원 차감 없음)
+			setupSettlement: (position) => {
+				const { players, currentPlayerIndex, setupOrder, setupStep } = get();
+				const idx = setupOrder[setupStep];
+				const updated = players.map((p,i) => {
+					if (i!== idx) return p;
+					return {
+						...p,
+						settlements: [...p.settlements, position],
+						points: p.points + 1,
+					};
+				});
+				pinManagement.getState().setCornerPin(position);
+				gameLog.getState().addLog(`${players[idx].name}이(가) ${position}번에 마을을 건설했습니다.`);
+				set({ players: updated, phase: "SETUP_ROAD" });
+			},
+
+			//초기 도로 건설 (자원 차감 없음)
+			setupRoad: (edgeId) => {
+				const { players, setupOrder, setupStep } = get();
+				const idx = setupOrder[setupStep];
+				const updated = players.map((p, i) => {
+					if (i !== idx) return p;
+					return { ...p, roads: [...p.roads, edgeId] };
+				});
+				pinManagement.getState().setEdgePin(edgeId);
+				gameLog.getState().addLog(`${players[idx].name}이(가) ${edgeId}번에 도로를 건설했습니다.`);
+
+				const nextStep = setupStep + 1;
+				const totalSteps = get().setupOrder.length;
+
+				if (nextStep >= totalSteps) {
+				// 모든 배치 완료 → 게임 시작
+					set({ players: updated, setupStep: nextStep, phase: "ROLL", currentPlayerIndex: 0 });
+				} else {
+					// 다음 플레이어로
+					const nextPlayerIdx = get().setupOrder[nextStep];
+					set({ players: updated, setupStep: nextStep, phase: "SETUP_SETTLEMENT", currentPlayerIndex: nextPlayerIdx });
+				}
 			},
 
 			moveRobber: (position) => {
@@ -547,9 +592,10 @@ const useGameStore = create(
 					dice1: null,
 					dice2: null,
 					dice: null,
-					phase: "ROLL",
+					phase: "SETUP_SETTLEMENT",
 					winner: null,
 					points: 0,
+					setupStep: 0,
 				}),
 		}),
 		{

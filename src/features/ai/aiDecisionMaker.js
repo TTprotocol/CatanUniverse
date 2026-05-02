@@ -402,6 +402,42 @@ function executeAction(state, aiPlayer, action) {
   }
 }
 
+//초기 도로, 마을 건설 로직
+export function aiSetupTurn() {
+    const S = useGameStore.getState();
+    const { phase, setupOrder, setupStep, players } = S;
+    const idx = setupOrder[setupStep];
+    const aiPlayer = players[idx];
+
+    if (phase === "SETUP_SETTLEMENT") {
+        // 사용 안 된 코너 중 랜덤 선택
+        const usedCorners = new Set(pinManagement.getState().getCornerPins());
+        const blocked = new Set();
+        players.forEach(p => {
+            [...p.settlements, ...p.cities].forEach(bId => {
+                blocked.add(bId);
+                CORNER_PIN.find(c => c.id === bId)?.nextCorner?.forEach(nc => blocked.add(nc));
+            });
+        });
+        const available = CORNER_PIN
+            .map(c => c.id)
+            .filter(id => !usedCorners.has(id) && !blocked.has(id));
+        if (available.length === 0) return;
+        const pick = available[Math.floor(Math.random() * available.length)];
+        S.setupSettlement(pick);
+
+    } else if (phase === "SETUP_ROAD") {
+        // 방금 지은 마을 기준 인접 엣지 중 랜덤 선택
+        const lastSettlement = aiPlayer.settlements[aiPlayer.settlements.length - 1];
+        const pin = CORNER_PIN.find(c => c.id === lastSettlement);
+        const usedEdges = new Set(pinManagement.getState().getEdgePins());
+        const available = (pin?.edge || []).filter(eId => !usedEdges.has(eId));
+        if (available.length === 0) return;
+        const pick = available[Math.floor(Math.random() * available.length)];
+        S.setupRoad(pick);
+    }
+}
+
 /* ----------------------------------------------------------------------
  * 8) ROBBER 단계: 도둑 이동 + 피해자 강탈 실행
  *   - moveRobber가 내부에서 robber 위치 갱신 + 강탈 1장 수행하도록 구현 필요
