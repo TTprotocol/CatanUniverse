@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import "@/styles/Home.css";
 import "@/styles/Intro.css";
 import GameBoard from "@/components/Board/Canvas";
@@ -258,11 +258,22 @@ const Home = () => {
 		});
 	}, [userName]);
 
+	const prevPhaseRef = useRef(null);
+
 	// AI 턴 트리거
 	useEffect(() => {
 		if (!players || players.length === 0) return;
 		if (phase === "GAME_OVER") return;
 		if (currentPlayerIndex === 0) return; // 내 턴이면 건너뜀
+
+		const phaseJustChanged = prevPhaseRef.current !== phase;
+		prevPhaseRef.current = phase;
+
+		const delay = 
+			phase === "ROLL"                          ? 600   : 
+			phase === "ACTION" && phaseJustChanged    ? 2900  : 
+			phase === "ACTION"                        ? 1200  : 
+			800;
 
 		const timer = setTimeout(() => {
 			if (phase === "SETUP_SETTLEMENT" || phase === "SETUP_ROAD") {
@@ -270,7 +281,7 @@ const Home = () => {
 			} else {
 				aiTurn(currentPlayerIndex);
 			}
-		}, 800);
+		}, delay);
 
 		return () => clearTimeout(timer);
 	}, [currentPlayerIndex, phase, aiSignal]); // currentPlayerIndex 변경 시만 실행

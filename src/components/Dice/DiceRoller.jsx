@@ -36,14 +36,14 @@ export default function DiceRoller() {
         //결과 텍스트
         const t2= setTimeout(() => setShowResult(true), 1600);
         //페이드아웃
-        const t3 = setTimeout(() => setFadeOut(true), 3200);
+        const t3 = setTimeout(() => setFadeOut(true), 2100);
         //완전히 숨김
         const t4 = setTimeout(() => {
             setVisible(false);
             setDropped(false);
             setShowResult(false);
             setFadeOut(false);
-        }, 3700);
+        }, 2900);
 
         return () => [t1, t2, t3, t4].forEach(clearTimeout);
     }, [dice1, dice2]);
