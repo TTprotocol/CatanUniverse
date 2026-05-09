@@ -36,6 +36,8 @@ const Home = () => {
 		useGameStore();
 	const { setCornerPin, setEdgePin, setRobber } = pinManagement();
 
+	const aiSignal = useGameStore((state) => state.aiSignal);
+
 	const isMyTurn = currentPlayerIndex === 0;
 
 	// === 3. 로딩 타이머 로직 ===
@@ -271,7 +273,7 @@ const Home = () => {
 		}, 800);
 
 		return () => clearTimeout(timer);
-	}, [currentPlayerIndex, phase]); // currentPlayerIndex 변경 시만 실행
+	}, [currentPlayerIndex, phase, aiSignal]); // currentPlayerIndex 변경 시만 실행
 
 	// === 6. 화면 렌더링 분기 ===
 

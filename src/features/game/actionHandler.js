@@ -63,8 +63,16 @@ const robOneResource = (victim, thief) => {
 // 1-1. (건설 가능한 도로 위치 계산)
 export const useCheckRoad = async () => {
 	const curPlayer = getGameState().getCurPlayer(); // 실행 시점의 최신 store state 사용
+	const { players } = getGameState();
 
 	if (!curPlayer) return [];
+
+	//상대방이 점유한 코너 목록
+	const opponentCorners = new Set(
+		players
+			.filter((p) => p.id !== curPlayer.id)
+			.flatMap((p) => [...p.settlements, ...p.cities]),
+	);
 
 	// 1. 내 마을/도시 주변 엣지 탐색
 	const tempEdge = [...curPlayer.settlements, ...curPlayer.cities]
@@ -76,7 +84,8 @@ export const useCheckRoad = async () => {
 	const tempCorner = curPlayer.roads
 		.map((roadId) => EDGE_PIN.find((edge) => edge.id === roadId))
 		.filter(Boolean)
-		.flatMap((edge) => edge.corner);
+		.flatMap((edge) => edge.corner)
+		.filter((cornerId) => !opponentCorners.has(cornerId));
 
 	// 3. 그 corner들에 연결된 edge 추가
 	const roadEdge = tempCorner
@@ -119,7 +128,7 @@ export const useCheckSettlement = async () => {
 
 	// 3. 해당 코너 주위의 마을/도시가 있으면 제외
 	const nearCorner = new Set(
-		[...curPlayer.settlements, ...curPlayer.cities]
+		[...buildCorner]
 			.map((item) => CORNER_PIN.find((corner) => corner.id === item))
 			.filter(Boolean)
 			.flatMap((corner) => corner.nextCorner),

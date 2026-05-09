@@ -334,9 +334,9 @@ function scoreAction(state, aiPlayer, action) {
  * -------------------------------------------------------------------- */
 function executeAction(state, aiPlayer, action) {
   const S = useGameStore.getState();
-  const playerIndex = S.currentPllayerIndex;
+  const playerIndex = S.currentPlayerIndex;
 
-  const RES_KEYS = ["tree,", "brick", "sheep", "wheat", "steel"];
+  const RES_KEYS = ["tree", "brick", "sheep", "wheat", "steel"];
 
   // 🚰 부족 자원을 은행/항구 교환으로 채우는 보조 함수
   const fillByBank = (cost) => {
@@ -373,18 +373,18 @@ function executeAction(state, aiPlayer, action) {
   switch (action.type) {
     case "UPGRADE_CITY":
       if (!hasCost(aiPlayer.resources, COSTS.city)) fillByBank(COSTS.city);
-      S.upgradeToCity?.(playerIndex, action.location);
+      S.buildCityAI?.(playerIndex, action.location);
       break;
 
     case "BUILD_SETTLEMENT":
       if (!hasCost(aiPlayer.resources, COSTS.settle)) fillByBank(COSTS.settle);
-      S.buildSettlement?.(playerIndex, action.location);
+      S.buildSettlementAI?.(playerIndex, action.location);
       break;
 
     case "BUILD_ROAD":
       if (!hasCost(aiPlayer.resources, COSTS.road)) fillByBank(COSTS.road);
       // edge: { a, b } (노드ID) 형태라고 가정 — 프로젝트 유틸에 맞춰 조정
-      S.buildRoad?.(playerIndex, action.edge.a, action.edge.b);
+      S.buildRoadAI?.(playerIndex, action.edge);
       break;
 
     case "BUY_DEV_CARD":
