@@ -21,7 +21,7 @@ export default function ActionPanel({
             <OwnCards players={Array.isArray(players) ? players : []} />
 
             {showChangePanel && (
-                <ChangeCardPanel />
+                <ChangeCardPanel onClose={handleExchange} />
             )}
 
             <div className="actions">

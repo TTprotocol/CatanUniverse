@@ -99,6 +99,8 @@ export default function ChangeCardPanel() {
         setAcceptedPlayers([]);
     };
 
+    
+
     // ── offer 집계 ──
     const toCountMap = (arr) =>
         arr.reduce((acc, t) => ({ ...acc, [t]: (acc[t] || 0) + 1 }), {});
