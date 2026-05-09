@@ -360,6 +360,8 @@ export const distributeResourcesByDicePure = ({
 	tiles,
 	robberTileId,
 }) => {
+	console.log("test");
+	console.log("players : ", players);
 	if (!dice || dice === 7) return; // 7은 도둑 이벤트에서 처리
 	if (!Array.isArray(players) || players.length === 0) return;
 	if (!Array.isArray(tiles) || tiles.length === 0) return;

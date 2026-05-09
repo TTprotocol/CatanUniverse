@@ -3,31 +3,45 @@ import ResourceCard from "../Card/ResourceCard";
 import DevelopmentCard from "../Card/DevelopmentCard";
 
 export default function OwnCards({ players = [] }) {
+	const me = Array.isArray(players) && players.length > 0 ? players[0] : null;
+	if (!me) return null;
 
-    const me = Array.isArray(players) && players.length > 0 ? players[0] : null;
-    if (!me) return null;
+	const RESOURCE_TYPES = ["tree", "brick", "sheep", "wheat", "steel"];
+	const DEV_CARD_TYPES = [
+		"knight",
+		"victoryPoint",
+		"roadBuilding",
+		"yearOfPlenty",
+		"monopoly",
+	];
 
-    const RESOURCE_TYPES = ["tree", "brick", "sheep", "wheat", "steel"];
-    const DEV_CARD_TYPES = ["knight","victoryPoint","roadBuilding","yearOfPlenty","monopoly"];
-
-    console.log("OwnCards me:", me);
-    return (
-        <div className="ownCards">
-            <div className="ownResourceCard">
-                {(Array.isArray(me.resources) ? me.resources : []).map((count, index) =>
-                    count > 0 ? (
-                        <ResourceCard key={RESOURCE_TYPES[index]} type={RESOURCE_TYPES[index]} count={count} />
-                    ) : null
-                )}
-            </div>
-            <div className="borderStick"></div>
-            <div className="ownDevelopmentCard">
-                {(Array.isArray(me.devCards) ? me.devCards : []).map((count, index) =>
-                    count > 0 ? (
-                        <DevelopmentCard key={DEV_CARD_TYPES[index]} type={DEV_CARD_TYPES[index]} count={count} />
-                    ) : null
-                )}
-            </div>
-        </div>
-    );
+	// console.log("OwnCards me:", me);
+	return (
+		<div className="ownCards">
+			<div className="ownResourceCard">
+				{(Array.isArray(me.resources) ? me.resources : []).map(
+					(count, index) =>
+						count > 0 ? (
+							<ResourceCard
+								key={RESOURCE_TYPES[index]}
+								type={RESOURCE_TYPES[index]}
+								count={count}
+							/>
+						) : null,
+				)}
+			</div>
+			<div className="borderStick"></div>
+			<div className="ownDevelopmentCard">
+				{(Array.isArray(me.devCards) ? me.devCards : []).map((count, index) =>
+					count > 0 ? (
+						<DevelopmentCard
+							key={DEV_CARD_TYPES[index]}
+							type={DEV_CARD_TYPES[index]}
+							count={count}
+						/>
+					) : null,
+				)}
+			</div>
+		</div>
+	);
 }

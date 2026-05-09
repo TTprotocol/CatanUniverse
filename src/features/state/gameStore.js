@@ -6,6 +6,7 @@ import { persist } from "zustand/middleware";
 import { DEFAULT_TILES, TILE_PIN } from "@/utils/constants";
 
 import distributeResourcesByDice from "../game/resourceDistributor"; // 자원분배 로직
+// import { distributeResourcesByDicePure } from "@/features/game/actionHandler.js";
 
 // 모든 플레이어를 통틀어서 사용된 핀들을 관리.
 export const pinManagement = create(
@@ -131,10 +132,10 @@ const useGameStore = create(
 			},
 
 			//초기 다리,마을 짓기 순서
-			setupOrder: [0,1,2,3,3,2,1,0],
+			setupOrder: [0, 1, 2, 3, 3, 2, 1, 0],
 			setupStep: 0,
 
-			devDeck: [14,5,2,2,2], //남은 발전카드 수 [기사, 승점, 도로건설, 자원발견, 독점]
+			devDeck: [14, 5, 2, 2, 2], //남은 발전카드 수 [기사, 승점, 도로건설, 자원발견, 독점]
 
 			// ✅ 게임 상태
 			dice1: null, // 첫 번째 주사위 숫자
@@ -172,8 +173,18 @@ const useGameStore = create(
 				set({ dice1, dice2, dice, phase: dice === 7 ? "ROBBER" : "ACTION" }); // set({ dice1, dice2, dice }): dice 상태를 새 값으로 업데이트 + phase 변경
 
 				console.log(`dice1 : ${dice1}, dice2: ${dice2}, dice: ${dice}`);
+
+				const { players, currentPlayerIndex, setPlayers, board } = get();
+
 				// 주사위 숫자에 따라 자원 분배 로직을 이후에 연결
-				distributeResourcesByDice();
+				// distributeResourcesByDice();
+
+				// distributeResourcesByDicePure(
+				// 	players,
+				// 	setPlayers,
+				// 	dice,
+				// 	pinManagement.getState().getRobber(),
+				// );
 
 				// 🎲 로그 저장
 				// ✅ FIX: 불필요한 % 연산 제거
@@ -187,7 +198,14 @@ const useGameStore = create(
 				if (dice === 7) {
 					set({ phase: "ROBBER" });
 				} else {
+					// 주사위 숫자에 따라 자원 분배 로직을 이후에 연결
 					distributeResourcesByDice();
+					// distributeResourcesByDicePure(
+					// 	players,
+					// 	setPlayers,
+					// 	dice,
+					// 	pinManagement.getState().getRobber(),
+					// );
 				}
 			},
 
@@ -216,8 +234,8 @@ const useGameStore = create(
 			setupSettlement: (position) => {
 				const { players, currentPlayerIndex, setupOrder, setupStep } = get();
 				const idx = setupOrder[setupStep];
-				const updated = players.map((p,i) => {
-					if (i!== idx) return p;
+				const updated = players.map((p, i) => {
+					if (i !== idx) return p;
 					return {
 						...p,
 						settlements: [...p.settlements, position],
@@ -225,7 +243,11 @@ const useGameStore = create(
 					};
 				});
 				pinManagement.getState().setCornerPin(position);
-				gameLog.getState().addLog(`${players[idx].name}이(가) ${position}번에 마을을 건설했습니다.`);
+				gameLog
+					.getState()
+					.addLog(
+						`${players[idx].name}이(가) ${position}번에 마을을 건설했습니다.`,
+					);
 				set({ players: updated, phase: "SETUP_ROAD" });
 			},
 
@@ -238,18 +260,32 @@ const useGameStore = create(
 					return { ...p, roads: [...p.roads, edgeId] };
 				});
 				pinManagement.getState().setEdgePin(edgeId);
-				gameLog.getState().addLog(`${players[idx].name}이(가) ${edgeId}번에 도로를 건설했습니다.`);
+				gameLog
+					.getState()
+					.addLog(
+						`${players[idx].name}이(가) ${edgeId}번에 도로를 건설했습니다.`,
+					);
 
 				const nextStep = setupStep + 1;
 				const totalSteps = get().setupOrder.length;
 
 				if (nextStep >= totalSteps) {
-				// 모든 배치 완료 → 게임 시작
-					set({ players: updated, setupStep: nextStep, phase: "ROLL", currentPlayerIndex: 0 });
+					// 모든 배치 완료 → 게임 시작
+					set({
+						players: updated,
+						setupStep: nextStep,
+						phase: "ROLL",
+						currentPlayerIndex: 0,
+					});
 				} else {
 					// 다음 플레이어로
 					const nextPlayerIdx = get().setupOrder[nextStep];
-					set({ players: updated, setupStep: nextStep, phase: "SETUP_SETTLEMENT", currentPlayerIndex: nextPlayerIdx });
+					set({
+						players: updated,
+						setupStep: nextStep,
+						phase: "SETUP_SETTLEMENT",
+						currentPlayerIndex: nextPlayerIdx,
+					});
 				}
 			},
 
@@ -423,12 +459,16 @@ const useGameStore = create(
 				const { players, devDeck } = get();
 				const idx = playerIndex ?? get().currentPlayerIndex;
 
-				const totalRemaining = devDeck.reduce((a,b) => a+b, 0);
+				const totalRemaining = devDeck.reduce((a, b) => a + b, 0);
 				if (totalRemaining === 0) {
-					return { result: false, message: "발전카드가 모두 소진되었습니다."};
+					return { result: false, message: "발전카드가 모두 소진되었습니다." };
 				}
 
-				const updated = players.map(p => ({ ...p, resources: [...p.resources], devCards: [...p.devCards] }));
+				const updated = players.map((p) => ({
+					...p,
+					resources: [...p.resources],
+					devCards: [...p.devCards],
+				}));
 				const p = updated[idx];
 
 				// 비용 확인: 양1, 밀1, 철1 ([0,0,1,1,1])
@@ -613,6 +653,11 @@ const useGameStore = create(
 					actionsThisTurn: { ...get().actionsThisTurn, built: true },
 				});
 				return true;
+			},
+
+			// 플레이어 상태 저장
+			setPlayers: (nextPlayers) => {
+				set({ players: nextPlayers });
 			},
 
 			// 게임 시작용 초기화 함수

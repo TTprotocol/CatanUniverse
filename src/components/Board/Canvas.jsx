@@ -118,7 +118,7 @@ function GameBoard({
 						// display: "block",
 					}}
 					onClick={() => {
-						const {phase, setupSettlement } = useGameStore.getState();
+						const { phase, setupSettlement } = useGameStore.getState();
 
 						if (phase === "SETUP_SETTLEMENT") {
 							setupSettlement(pin.id);

@@ -46,22 +46,31 @@ const distributeResourcesByDice = () => {
 
 	// 2. 각 플레이어별 자원 계산
 	const updatedPlayers = players.map((player) => {
+		// console.log("player : ", player);
+
 		//기존 자원 상태 복사
 		const newResources = [...player.resources];
+		// console.log("newResources : ", newResources);
 
 		//플레이어가 보유한 건물(정착지, 도시)를 순회
 		// 1. 정착지 순회
 		player.settlements.length !== 0 &&
 			getTiles.forEach((tile) => {
+				// console.log("tile : ", tile);
 				player.settlements.forEach((settlement) => {
+					// console.log("settlement : ", settlement);
 					if (tile.corner.includes(settlement)) {
 						// console.log(RESOURCE_TYPE[tile.resourceId] + " 정착지 자원 ++");
 						addLog(
 							`정착지 ${settlement}에 ${
 								RESOURCE_TYPE[tile.resourceId]
-							} 자원 1개를 추가합니다.`
+							} 자원 1개를 추가합니다.`,
 						);
-						newResources[tile.resourceId]++;
+						newResources[tile.resourceId] += 1;
+						// console.log(
+						// 	"newResources[tile.resourceId] += 1 : ",
+						// 	newResources[tile.resourceId],
+						// );
 					}
 				});
 			});
@@ -75,9 +84,9 @@ const distributeResourcesByDice = () => {
 						addLog(
 							`도시 ${city}에 ${
 								RESOURCE_TYPE[tile.resourceId]
-							} 자원 2개를 추가합니다.`
+							} 자원 2개를 추가합니다.`,
 						);
-						newResources[tile.resourceId]++;
+						newResources[tile.resourceId] += 2;
 					}
 				});
 			});
@@ -106,10 +115,13 @@ const distributeResourcesByDice = () => {
 		// });
 
 		//해당 플레이어의 자원 업데이트
+		// console.log("player : ", player);
+		// console.log("newResources : ", newResources);
 		return { ...player, resources: newResources };
 	});
 
 	// 3. 플레이어 상태 업데이트
+	// console.log("updatedPlayers : ", updatedPlayers);
 	useGameStore.setState({ players: updatedPlayers });
 
 	// 4. 게임 로그에 자원 분배 기록 추가

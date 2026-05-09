@@ -124,7 +124,7 @@ const Home = () => {
 	//발전카드 구매 핸들러
 	const handleBuyDevCard = async () => {
 		useGameStore.getState().buyDevCard();
-	}
+	};
 
 	//robber 타일 핀 표시
 	useEffect(() => {
@@ -153,16 +153,18 @@ const Home = () => {
 			const usedCorners = new Set(pinManagement.getState().getCornerPins());
 
 			const blocked = new Set();
-			players.forEach(p => {
-				[...p.settlements, ...p.cities].forEach(bId => {
+			players.forEach((p) => {
+				[...p.settlements, ...p.cities].forEach((bId) => {
 					blocked.add(bId);
-					CORNER_PIN.find(c => c.id === bId)?.nextCorner?.forEach(nc => blocked.add(nc));
+					CORNER_PIN.find((c) => c.id === bId)?.nextCorner?.forEach((nc) =>
+						blocked.add(nc),
+					);
 				});
 			});
 
-			const available = CORNER_PIN
-				.map(p => p.id)
-				.filter(id => !usedCorners.has(id) && !blocked.has(id));
+			const available = CORNER_PIN.map((p) => p.id).filter(
+				(id) => !usedCorners.has(id) && !blocked.has(id),
+			);
 
 			setVisibleCornerPins(available);
 			setVisibleEdgePins([]);
@@ -171,11 +173,11 @@ const Home = () => {
 			// 내 턴: 도로 놓을 엣지 핀 표시 (방금 지은 마을 기준)
 			const me = players[0];
 			const lastSettlement = me?.settlements[me.settlements.length - 1];
-			const pin = CORNER_PIN.find(p => p.id === lastSettlement);
+			const pin = CORNER_PIN.find((p) => p.id === lastSettlement);
 
 			const usedEdges = new Set(pinManagement.getState().getEdgePins());
-    		const available = (pin?.edge || []).filter(eId => !usedEdges.has(eId));
-			
+			const available = (pin?.edge || []).filter((eId) => !usedEdges.has(eId));
+
 			setVisibleEdgePins(available);
 			setVisibleCornerPins([]);
 			setVisibleTilePins([]);
@@ -207,18 +209,18 @@ const Home = () => {
 			{
 				id: 1,
 				name: userName,
-				resources: [10, 20, 40, 20, 10],
-				roads: [2, 8, 13, 14, 15, 16, 17, 18, 20, 21],
-				settlements: [1, 10, 11],
-				cities: [9],
-				devCards: [0, 0, 1, 2, 0],
+				resources: [0, 0, 0, 0, 0],
+				roads: [],
+				settlements: [],
+				cities: [],
+				devCards: [0, 0, 0, 0, 0],
 				useKnight: 0,
 				points: 0,
 			},
 			{
 				id: 2,
 				name: "player1",
-				resources: [1, 1, 1, 0, 0],
+				resources: [0, 0, 0, 0, 0],
 				roads: [],
 				settlements: [],
 				cities: [],
@@ -230,10 +232,10 @@ const Home = () => {
 				id: 3,
 				name: "player2",
 				resources: [0, 0, 0, 0, 0],
-				roads: [40],
+				roads: [],
 				settlements: [],
 				cities: [],
-				devCards: [1, 2, 3, 1, 0],
+				devCards: [0, 0, 0, 0, 0],
 				useKnight: 0,
 				points: 0,
 			},
@@ -269,11 +271,14 @@ const Home = () => {
 		const phaseJustChanged = prevPhaseRef.current !== phase;
 		prevPhaseRef.current = phase;
 
-		const delay = 
-			phase === "ROLL"                          ? 600   : 
-			phase === "ACTION" && phaseJustChanged    ? 2900  : 
-			phase === "ACTION"                        ? 1200  : 
-			800;
+		const delay =
+			phase === "ROLL"
+				? 600
+				: phase === "ACTION" && phaseJustChanged
+					? 2900
+					: phase === "ACTION"
+						? 1200
+						: 800;
 
 		const timer = setTimeout(() => {
 			if (phase === "SETUP_SETTLEMENT" || phase === "SETUP_ROAD") {
