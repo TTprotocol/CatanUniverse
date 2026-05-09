@@ -26,7 +26,7 @@ function aiDecideAccept(aiPlayer, offer, request) {
 }
 
 // phase: "SELECT" → "OFFERING" → "ACCEPTED" | "BANK"
-export default function ChangeCardPanel() {
+export default function ChangeCardPanel({onClose}) {
     const players = useGameStore((state) => state.players);
     const currentPlayerIndex = useGameStore((state) => state.currentPlayerIndex);
     const tradeBetweenPlayers = useGameStore((state) => state.tradeBetweenPlayers);
@@ -97,7 +97,14 @@ export default function ChangeCardPanel() {
         setOfferResults([]);
         setAcceptedPlayer(null);
         setAcceptedPlayers([]);
+
+        // 자원 교환 후 패널 닫기 버튼 누르면 자원교환패널 전체 창닫기
+        if(onClose) {
+            onClose();
+        }
     };
+
+    
 
     // ── offer 집계 ──
     const toCountMap = (arr) =>
