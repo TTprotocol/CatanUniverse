@@ -300,3 +300,11 @@
 	padding: 0;
 	z-index: 10;
 }
+
+.not-my-turn {
+	filter: blur(3px) grayscale(30%); /* 블러 처리 및 살짝 흑백 처리로 비활성화 느낌 강조 */
+    opacity: 0.6; /* 살짝 투명하게 */
+    pointer-events: none; /* 🚀 핵심: 마우스 클릭, 호버 등 모든 이벤트를 완벽히 차단 */
+    transition: all 0.3s ease; /* 턴이 바뀔 때 스무스하게 변하도록 애니메이션 효과 */
+    user-select: none; /* 드래그 방지 */
+}
