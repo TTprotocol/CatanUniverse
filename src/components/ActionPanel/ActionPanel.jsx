@@ -20,7 +20,10 @@ export default function ActionPanel({
     const currentPlayerIndex = useGameStore((state) => state.currentPlayerIndex);
     const currentPlayer = players[currentPlayerIndex];
     const myPlayerName = useGameStore((state) => state.myPlayerName);
+    const phase = useGameStore((state) => state.myPlayerName);
     const isMyTurn = currentPlayer?.name === myPlayerName;
+    const isSetupPhase = phase === 'SETUP_SETTLEMENT' || phase === "SETUP_ROAD";
+    const shouldBlur = !isSetupPhase && !isMyTurn;
 
     return (
         <section className="actionPanel">
@@ -30,7 +33,7 @@ export default function ActionPanel({
                 <ChangeCardPanel onClose={handleExchange} />
             )}
 
-            <div className={`actions ${isMyTurn ? "not-my-turn" : ""}`}>
+            <div className={`actions ${!shouldBlur ? "notMyTurn" : ""}`}>
                 <ActionButton className="rollDice" onClick={handleRollDice}>
                     <img src={rollDiceImg} alt="주사위" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                 </ActionButton>

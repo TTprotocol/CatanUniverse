@@ -27,7 +27,6 @@ export default function ActionButton({ className, onClick, children, ...props })
   const canBuildVillage = wood >= 1 && brick >= 1 && sheep >= 1 && wheat >= 1;
   const canBuildCity = wheat >= 2 && steel >= 3;
   const canBuyDevCard = sheep >= 1 && wheat >= 1 && steel >= 1;
-
   const canTrade = true;
 
   return (
