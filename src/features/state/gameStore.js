@@ -153,6 +153,7 @@ const useGameStore = create(
 			actionsThisTurn: {
 				built: false,
 				robbed: false,
+				devCardUsed: false,
 			},
 			roadBuildingLeft: 0,  // 도로 건설 카드 사용 시 남은 무료 도로 수
 
@@ -228,7 +229,7 @@ const useGameStore = create(
 					currentPlayerIndex: nextIndex,
 					phase: "ROLL",
 					dice: null,
-					actionsThisTurn: { built: false, robbed: false },
+					actionsThisTurn: { built: false, robbed: false, devCardUsed: false },
 				});
 			},
 
@@ -312,37 +313,36 @@ const useGameStore = create(
 			buildRoads: (position) => {
 				const index = get().currentPlayerIndex; // 현재 플레이어의 인덱스
 				const players = [...get().players]; // 기존 플레이어 배열 복사
+				const { phase, roadBuildingLeft } = get();
+			  	const isFree = phase === "ROAD_BUILDING"; // 도로건설 카드 사용 중
 
-				if (
-					players[index].resources[0] <= 0 || // 나무
-					players[index].resources[1] <= 0 // 벽돌
-				) {
-					// 자원이 부족하거나,
+				if (!isFree && (players[index].resources[0] <= 0 || players[index].resources[1] <= 0)) {
 					return { result: false, message: "자원이 부족합니다." };
-				} else if (pinManagement.getState().getEdgePins(position)) {
-					// 이미 핀이 사용된 경우
-					return { result: false, message: "해당 핀에 건설할 수 없습니다." };
-				} else {
-					players[index].roads.push(position); // 현재 플레이어의 정착지(마을) 추가
-
-					pinManagement.getState().setEdgePin(position); // 핀 사용 처리
-
-					// 자원 차감
-					players[index].resources[0] -= 1; // 나무
-					players[index].resources[1] -= 1; // 벽돌
-
-					// 로그 저장
-					gameLog
-						.getState()
-						.addLog(
-							`${players[index].name} 님이 ${position} 위치에 도로를 건설했습니다.`,
-						);
-
-					set({ players }); // 상태 업데이트
-
-					return { result: true, message: "건설되었습니다." };
 				}
-			},
+
+				if (pinManagement.getState().getEdgePins(position)) {
+					return { result: false, message: "해당 핀에 건설할 수 없습니다." };
+				}
+
+				players[index].roads.push(position);
+				pinManagement.getState().setEdgePin(position);
+
+				if (!isFree) {
+					players[index].resources[0] -= 1;
+					players[index].resources[1] -= 1;
+				}
+
+				gameLog.getState().addLog(`${players[index].name} 님이 ${position} 위치에 도로를 건설했습니다.`);
+
+				const newLeft = isFree ? roadBuildingLeft - 1 : roadBuildingLeft;
+				set({
+					players,
+					roadBuildingLeft: newLeft,
+					phase: isFree && newLeft <= 0 ? "ACTION" : phase,
+				});
+
+				return { result: true, message: "건설되었습니다." };
+				},
 
 			// 정착지를 건설할 때 사용하는 함수
 			// get()으로 현재 상태 확인, set()으로 업데이트
@@ -550,14 +550,14 @@ const useGameStore = create(
 					gameLog.getState().addLog(`⚔️ ${p.name}이(가) 최강 기사단을 획득했습니다!`);
 				}
 
-				set({ players: updated, largestArmyOwner: newLargestArmyOwner, phase: "ROBBER" });
+				set({ players: updated, largestArmyOwner: newLargestArmyOwner, phase: "ROBBER", actionsThisTurn: { ...get().actionsThisTurn, devCardUsed: true } });
 				gameLog.getState().addLog(`${p.name}이(가) 기사 카드를 사용했습니다.`);
 				return { result: true };
 				}
 
 				// ── 도로 건설 카드 (2개 무료 도로)
 				case 2: {
-				set({ players: updated, phase: "ROAD_BUILDING", roadBuildingLeft: 2 });
+				set({ players: updated, phase: "ROAD_BUILDING", roadBuildingLeft: 2, actionsThisTurn: { ...get().actionsThisTurn, devCardUsed: true } });
 				gameLog.getState().addLog(`${p.name}이(가) 도로 건설 카드를 사용했습니다.`);
 				return { result: true };
 				}
@@ -570,7 +570,7 @@ const useGameStore = create(
 				extraParam.forEach((resIdx) => {
 					if (resIdx >= 0 && resIdx <= 4) p.resources[resIdx] += 1;
 				});
-				set({ players: updated });
+				set({ players: updated, actionsThisTurn: { ...get().actionsThisTurn, devCardUsed: true } });
 				gameLog.getState().addLog(
 					`${p.name}이(가) 자원 발견 카드로 자원 2장을 획득했습니다.`
 				);
@@ -591,7 +591,7 @@ const useGameStore = create(
 					}
 				});
 				p.resources[extraParam] += totalStolen;
-				set({ players: updated });
+				set({ players: updated, actionsThisTurn: { ...get().actionsThisTurn, devCardUsed: true } });
 				const RES_NAME = ["나무", "벽돌", "양", "밀", "철"];
 				gameLog.getState().addLog(
 					`${p.name}이(가) 독점 카드로 ${RES_NAME[extraParam]} ${totalStolen}장을 획득했습니다.`
