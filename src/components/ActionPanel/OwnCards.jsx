@@ -7,6 +7,7 @@ import DevCardUsePanel from "./DevCardUsePanel";
 export default function OwnCards({ players = [] }) {
 	const me = Array.isArray(players) && players.length > 0 ? players[0] : null;
 	const phase = useGameStore((s) => s.phase);
+	const actionsThisTurn = useGameStore((s) => s.actionsThisTurn);
 	const [selectedCardIndex, setSelectedCardIndex] = useState(null);
 
 	if (!me) return null;
@@ -14,9 +15,10 @@ export default function OwnCards({ players = [] }) {
 	const RESOURCE_TYPES = ["tree", "brick", "sheep", "wheat", "steel"];
 	const DEV_CARD_TYPES = ["knight", "victoryPoint", "roadBuilding", "yearOfPlenty", "monopoly"];
 
-	const canUseCard = phase === "ACTION";
+	const canUseCard = phase === "ACTION" && !actionsThisTurn.devCardUsed;
 
 	const handleCardClick = (index) => {
+		console.log("클릭됨", index, "phase:", phase, "canUseCard:", canUseCard);
 		if (!canUseCard) return;
 		if (index === 1) return; // 승점 카드는 패시브
 		setSelectedCardIndex(index === selectedCardIndex ? null : index);

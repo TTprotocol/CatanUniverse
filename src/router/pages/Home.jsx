@@ -141,6 +141,17 @@ const Home = () => {
 		}
 	}, [phase]);
 
+	//다리 건설 발전 카드 때 핀 표시
+	useEffect(() => {
+		if (phase === "ROAD_BUILDING" && isMyTurn) {
+			useCheckRoad().then((edges) => {
+			setVisibleEdgePins(edges);
+			setVisibleCornerPins([]);
+			setVisibleTilePins([]);
+			});
+		}
+	}, [phase]);
+
 	// 교환 핸들러
 	const handleExchange = () => {
 		setShowChangePanel((prev) => !prev);
