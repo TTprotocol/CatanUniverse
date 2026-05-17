@@ -4,6 +4,7 @@ import ChangeCardPanel from "../ChangeCardPanel/ChangeCardPanel";
 import ActionButton from "./ActionButton";
 import OwnCards from "./OwnCards";
 import rollDiceImg from "../../assets/dice/rollDice.png";
+import useGameStore from "../../features/state/gameStore";
 
 export default function ActionPanel({
     showChangePanel,
@@ -16,6 +17,11 @@ export default function ActionPanel({
     handleEndTurn,
     players,
 }) {
+    const currentPlayerIndex = useGameStore((state) => state.currentPlayerIndex);
+    const currentPlayer = players[currentPlayerIndex];
+    const myPlayerName = useGameStore((state) => state.myPlayerName);
+    const isMyTurn = currentPlayer?.name === myPlayerName;
+
     return (
         <section className="actionPanel">
             <OwnCards players={Array.isArray(players) ? players : []} />
@@ -24,7 +30,7 @@ export default function ActionPanel({
                 <ChangeCardPanel onClose={handleExchange} />
             )}
 
-            <div className="actions">
+            <div className={`actions ${isMyTurn ? "not-my-turn" : ""}`}>
                 <ActionButton className="rollDice" onClick={handleRollDice}>
                     <img src={rollDiceImg} alt="주사위" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                 </ActionButton>

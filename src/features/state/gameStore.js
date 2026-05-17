@@ -106,7 +106,8 @@ const useGameStore = create(
 		(set, get) => ({
 			// ✅ 현재 턴인 플레이어 인덱스 (0부터 시작)
 			currentPlayerIndex: 0,
-
+			myPlayerName: "", 
+			setMyPlayerName: (name) => set({ myPlayerName: name }),
 			// ✅ 전체 플레이어 정보
 			// 게임 시작 시 initPlayers()로 채운다.
 			players: [
@@ -815,6 +816,7 @@ const useGameStore = create(
 				longestRoadOwner: state.longestRoadOwner,
 				largestArmyOwner: state.largestArmyOwner,
 				winner: state.winner,
+				myPlayerName: state.myPlayerName,
 			}),
 		},
 	),
