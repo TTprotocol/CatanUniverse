@@ -153,6 +153,7 @@ const useGameStore = create(
 				built: false,
 				robbed: false,
 			},
+			roadBuildingLeft: 0,  // 도로 건설 카드 사용 시 남은 무료 도로 수
 
 			// 실제 게임 유저만 반환
 			getCurPlayer: (userId = 0) => {
@@ -490,10 +491,116 @@ const useGameStore = create(
 				newDeck[drawn] -= 1;
 
 				p.devCards[drawn] = (p.devCards[drawn] || 0) + 1;
+				if (drawn === 1) {
+					p.points += 1; // 승점 카드: 보유 즉시 +1점 (패시브)
+					gameLog.getState().addLog(`${p.name}이(가) 승점 카드를 획득했습니다! (+1점)`);
+				}
 
 				gameLog.getState().addLog(`${p.name}이(가) 발전카드를 구매했습니다.`);
 				set({ players: updated, devDeck: newDeck });
 				return { result: true, drawn };
+			},
+
+			// 발전카드 사용
+			// cardIndex: 0=기사, 1=승점(사용불가), 2=도로건설, 3=자원발견, 4=독점
+			// extraParam: yearOfPlenty → [resIdx1, resIdx2], monopoly → resIdx
+			useDevCard: (cardIndex, extraParam = null) => {
+			const { players, currentPlayerIndex, largestArmyOwner } = get();
+			const updated = players.map((p) => ({
+				...p,
+				resources: [...p.resources],
+				devCards: [...p.devCards],
+			}));
+			const p = updated[currentPlayerIndex];
+
+			// 보유 확인
+			if (!p.devCards[cardIndex] || p.devCards[cardIndex] < 1) {
+				return { result: false, message: "해당 카드가 없습니다." };
+			}
+
+			// 승점 카드는 사용 불가 (패시브)
+			if (cardIndex === 1) {
+				return { result: false, message: "승점 카드는 자동 적용됩니다." };
+			}
+
+			// 카드 차감
+			p.devCards[cardIndex] -= 1;
+
+			switch (cardIndex) {
+				// ── 기사 카드
+				case 0: {
+				p.usedKnight = (p.usedKnight || 0) + 1;
+
+				// 최강 기사단 체크 (3장 이상 + 현 보유자보다 많을 때)
+				let newLargestArmyOwner = largestArmyOwner;
+				const currentOwner = largestArmyOwner !== null
+					? updated.find((pl) => pl.id === largestArmyOwner)
+					: null;
+				const currentOwnerKnights = currentOwner?.usedKnight || 0;
+
+				if (p.usedKnight >= 3 && p.usedKnight > currentOwnerKnights) {
+					// 기존 보유자 승점 -2
+					if (currentOwner) {
+					currentOwner.points -= 2;
+					}
+					// 새 보유자 승점 +2
+					p.points += 2;
+					newLargestArmyOwner = p.id;
+					gameLog.getState().addLog(`⚔️ ${p.name}이(가) 최강 기사단을 획득했습니다!`);
+				}
+
+				set({ players: updated, largestArmyOwner: newLargestArmyOwner, phase: "ROBBER" });
+				gameLog.getState().addLog(`${p.name}이(가) 기사 카드를 사용했습니다.`);
+				return { result: true };
+				}
+
+				// ── 도로 건설 카드 (2개 무료 도로)
+				case 2: {
+				set({ players: updated, phase: "ROAD_BUILDING", roadBuildingLeft: 2 });
+				gameLog.getState().addLog(`${p.name}이(가) 도로 건설 카드를 사용했습니다.`);
+				return { result: true };
+				}
+
+				// ── 자원 발견 카드 (extraParam: [resIdx1, resIdx2])
+				case 3: {
+				if (!Array.isArray(extraParam) || extraParam.length !== 2) {
+					return { result: false, message: "자원 2개를 선택해야 합니다." };
+				}
+				extraParam.forEach((resIdx) => {
+					if (resIdx >= 0 && resIdx <= 4) p.resources[resIdx] += 1;
+				});
+				set({ players: updated });
+				gameLog.getState().addLog(
+					`${p.name}이(가) 자원 발견 카드로 자원 2장을 획득했습니다.`
+				);
+				return { result: true };
+				}
+
+				// ── 독점 카드 (extraParam: resIdx 0~4)
+				case 4: {
+				if (extraParam === null || extraParam < 0 || extraParam > 4) {
+					return { result: false, message: "독점할 자원을 선택해야 합니다." };
+				}
+				let totalStolen = 0;
+				updated.forEach((pl, i) => {
+					if (i !== currentPlayerIndex) {
+					const amount = pl.resources[extraParam] || 0;
+					pl.resources[extraParam] = 0;
+					totalStolen += amount;
+					}
+				});
+				p.resources[extraParam] += totalStolen;
+				set({ players: updated });
+				const RES_NAME = ["나무", "벽돌", "양", "밀", "철"];
+				gameLog.getState().addLog(
+					`${p.name}이(가) 독점 카드로 ${RES_NAME[extraParam]} ${totalStolen}장을 획득했습니다.`
+				);
+				return { result: true };
+				}
+
+				default:
+				return { result: false, message: "알 수 없는 카드입니다." };
+			}
 			},
 
 			// 플레이어 간 교환
