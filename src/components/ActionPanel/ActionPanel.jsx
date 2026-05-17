@@ -6,59 +6,107 @@ import OwnCards from "./OwnCards";
 import rollDiceImg from "../../assets/dice/rollDice.png";
 
 export default function ActionPanel({
-    showChangePanel,
-    handleExchange,
-    handleBuildRoad,
-    handleBuildVillage,
-    handleBuildCity,
-    handleBuyDevCard,
-    handleRollDice,
-    handleEndTurn,
-    players,
+	showChangePanel,
+	handleExchange,
+	handleBuildRoad,
+	handleBuildVillage,
+	handleBuildCity,
+	handleBuyDevCard,
+	handleRollDice,
+	handleEndTurn,
+	players,
 }) {
+	return (
+		<section className="actionPanel">
+			<OwnCards players={Array.isArray(players) ? players : []} />
 
+			{showChangePanel && <ChangeCardPanel onClose={handleExchange} />}
 
+			<div className="actions">
+				<ActionButton
+					className="rollDice"
+					onClick={handleRollDice}
+					isDice={true}
+				>
+					<img
+						src={rollDiceImg}
+						alt="주사위"
+						style={{ width: "100%", height: "100%", objectFit: "contain" }}
+					/>
+				</ActionButton>
+				<div className="action-group">
+					<ActionButton
+						className="changeCards"
+						onClick={handleExchange}
+						isDice={false}
+					>
+						{/* 교환 아이콘 */}
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+							className="size-6"
+						>
+							<path
+								fillRule="evenodd"
+								d="M15.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 1 1-1.06-1.06l3.22-3.22H7.5a.75.75 0 0 1 0-1.5h11.69l-3.22-3.22a.75.75 0 0 1 0-1.06Zm-7.94 9a.75.75 0 0 1 0 1.06l-3.22 3.22H16.5a.75.75 0 0 1 0 1.5H4.81l3.22 3.22a.75.75 0 1 1-1.06 1.06l-4.5-4.5a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 0 1 1.06 0Z"
+								clipRule="evenodd"
+							/>
+						</svg>
+					</ActionButton>
 
-
-    return (
-        <section className="actionPanel">
-            <OwnCards players={Array.isArray(players) ? players : []} />
-
-            {showChangePanel && (
-                <ChangeCardPanel onClose={handleExchange} />
-            )}
-
-            <div className='actions'>
-                <ActionButton className="rollDice" onClick={handleRollDice}>
-                    <img src={rollDiceImg} alt="주사위" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-                </ActionButton>
-                <div className="action-group">
-                    <ActionButton className="changeCards" onClick={handleExchange}>
-                    {/* 교환 아이콘 */}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
-                            <path fillRule="evenodd" d="M15.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 1 1-1.06-1.06l3.22-3.22H7.5a.75.75 0 0 1 0-1.5h11.69l-3.22-3.22a.75.75 0 0 1 0-1.06Zm-7.94 9a.75.75 0 0 1 0 1.06l-3.22 3.22H16.5a.75.75 0 0 1 0 1.5H4.81l3.22 3.22a.75.75 0 1 1-1.06 1.06l-4.5-4.5a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 0 1 1.06 0Z" clipRule="evenodd" />
-                        </svg>
-                    </ActionButton>
-
-                    <ActionButton className="development" onClick={handleBuyDevCard} data-tooltip="🐑1 🌾1 🪨1">
-                        <div></div>
-                    </ActionButton>
-                    <ActionButton className="buildRoad" onClick={handleBuildRoad} data-tooltip="🌲1 🧱1">
-                        <div></div>
-                    </ActionButton>
-                    <ActionButton className="buildVillage" onClick={handleBuildVillage} data-tooltip="🌲1 🧱1 🐑1 🌾1">
-                        <div></div>
-                    </ActionButton>
-                    <ActionButton className="buildCity" onClick={handleBuildCity} data-tooltip="🌾2 🪨3">
-                        <div></div>
-                    </ActionButton>
-                    <ActionButton className="endTurn" onClick={handleEndTurn}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
-                            <path fillRule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clipRule="evenodd" />
-                        </svg>
-                    </ActionButton>
-                </div>
-            </div>
-        </section>
-    );
+					<ActionButton
+						className="development"
+						onClick={handleBuyDevCard}
+						isDice={false}
+						data-tooltip="🐑1 🌾1 🪨1"
+					>
+						<div></div>
+					</ActionButton>
+					<ActionButton
+						className="buildRoad"
+						onClick={handleBuildRoad}
+						isDice={false}
+						data-tooltip="🌲1 🧱1"
+					>
+						<div></div>
+					</ActionButton>
+					<ActionButton
+						className="buildVillage"
+						onClick={handleBuildVillage}
+						isDice={false}
+						data-tooltip="🌲1 🧱1 🐑1 🌾1"
+					>
+						<div></div>
+					</ActionButton>
+					<ActionButton
+						className="buildCity"
+						onClick={handleBuildCity}
+						isDice={false}
+						data-tooltip="🌾2 🪨3"
+					>
+						<div></div>
+					</ActionButton>
+					<ActionButton
+						className="endTurn"
+						onClick={handleEndTurn}
+						isDice={false}
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+							className="size-6"
+						>
+							<path
+								fillRule="evenodd"
+								d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z"
+								clipRule="evenodd"
+							/>
+						</svg>
+					</ActionButton>
+				</div>
+			</div>
+		</section>
+	);
 }
