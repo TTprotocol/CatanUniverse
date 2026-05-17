@@ -25,9 +25,9 @@ export default function ActionPanel({
             )}
 
             <div className="actions">
-                    <ActionButton className="rollDice" onClick={handleRollDice}>
-                        <img src={rollDiceImg} alt="주사위" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-                    </ActionButton>
+                <ActionButton className="rollDice" onClick={handleRollDice}>
+                    <img src={rollDiceImg} alt="주사위" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                </ActionButton>
                 <div className="action-group">
                     <ActionButton className="changeCards" onClick={handleExchange}>
                     {/* 교환 아이콘 */}

@@ -1,7 +1,7 @@
 import React from "react";
 import useGameStore from '../../features/state/gameStore';
 
-export default function ActionButton({ className, onClick, children }) {
+export default function ActionButton({ className, onClick, children, ...props }) {
   const {players, currentPlayerIndex} = useGameStore();
   
   //자원 배열 형태 가정 : [나무(0), 벽돌(1), 양(2), 밀(3), 철(4)]
@@ -35,6 +35,7 @@ export default function ActionButton({ className, onClick, children }) {
       className={`action-btn ${className} ${statusClass}`} 
       onClick={isActionAllowed ? onClick : undefined}
       disabled={!isActionAllowed}
+      {...props}
     >
       {children}
     </button>

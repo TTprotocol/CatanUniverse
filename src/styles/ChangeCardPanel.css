@@ -219,37 +219,19 @@
 	position: relative;
 }
 
-.action-btn::after {
+.action-btn[data-tooltip]::after {
 	content: attr(data-tooltip);
 	position: absolute;
 	bottom: 120%;
 	left: 50%;
 	transform: translateX(-50%) translateY(10px);
-	background-color: rgba(0, 0, 0, 0.85); /* 다크 그레이 반투명 배경 */
-    color: white;
+	background-color: rgba(255, 255, 255, 0.85);
+    color: #333;
     font-size: 13px;
     font-weight: bold;
     padding: 8px 12px;
     border-radius: 8px;
-    white-space: nowrap; /* 글씨가 줄바꿈되지 않게 방지 */
-    pointer-events: none; /* 마우스가 툴팁을 가려도 클릭을 방해하지 않음 */
-    /* 애니메이션 설정: 처음엔 투명하게 숨겨둠 */
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.2s ease-in-out;
-    z-index: 100;
-}
-
-.action-btn::before {
-    content: "";
-    position: absolute;
-    bottom: 105%; /* 버튼과 말풍선 사이 */
-    left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    /* CSS로 삼각형 그리기 */
-    border-width: 6px;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 0.85) transparent transparent transparent;
+    white-space: nowrap; 
     pointer-events: none;
     opacity: 0;
     visibility: hidden;
@@ -257,11 +239,27 @@
     z-index: 100;
 }
 
-.action-btn:hover::after,
-.action-btn:hover::before {
-    opacity: 1; /* 보이게 함 */
+.action-btn[data-tooltip]::before {
+    content: "";
+    position: absolute;
+    bottom: 105%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    border-width: 6px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.85) transparent transparent transparent;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease-in-out;
+    z-index: 100;
+}
+
+.action-btn[data-tooltip]:hover::after,
+.action-btn[data-tooltip]:hover::before {
+    opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(0); /* 아래로 내려뒀던 걸 원래 위치로 올림 */
+    transform: translateX(-50%) translateY(0);
 }
 
 .action-btn.disabled {
@@ -301,10 +299,4 @@
 	text-align: center;
 	padding: 0;
 	z-index: 10;
-}
-
-.endTurn::after, .endTurn::before,
-.changeCards::after, .changeCards::before,
-.rollDice::after, .rollDice::before {
-    display: none;
 }
