@@ -36,16 +36,16 @@ export default function ActionPanel({
                         </svg>
                     </ActionButton>
 
-                    <ActionButton className="development" onClick={handleBuyDevCard}>
+                    <ActionButton className="development" onClick={handleBuyDevCard} data-tooltip="🐑1 🌾1 🪨1">
                         <div></div>
                     </ActionButton>
-                    <ActionButton className="buildRoad" onClick={handleBuildRoad}>
+                    <ActionButton className="buildRoad" onClick={handleBuildRoad} data-tooltip="🌲1 🧱1">
                         <div></div>
                     </ActionButton>
-                    <ActionButton className="buildVillage" onClick={handleBuildVillage}>
+                    <ActionButton className="buildVillage" onClick={handleBuildVillage} data-tooltip="🌲1 🧱1 🐑1 🌾1">
                         <div></div>
                     </ActionButton>
-                    <ActionButton className="buildCity" onClick={handleBuildCity}>
+                    <ActionButton className="buildCity" onClick={handleBuildCity} data-tooltip="🌾2 🪨3">
                         <div></div>
                     </ActionButton>
                     <ActionButton className="endTurn" onClick={handleEndTurn}>
