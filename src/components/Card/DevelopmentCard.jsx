@@ -5,7 +5,7 @@ import roadBuildImg from "@/assets/progCard/progressiveCard-roadBuilding.png";
 import victoryImg from "@/assets/progCard/progressiveCard-score.png";
 import yearOfPlentyImg from "@/assets/progCard/progressiveCard-yearOfPlenty.png";
 
-function DevelopmentCard({ type, count, size }) {
+function DevelopmentCard({ type, count, size, onClick, className }) {
   const cardInfo = {
     knight: { name: "기사", image: knightImg },
     victoryPoint: { name: "승점", image: victoryImg },
@@ -26,7 +26,11 @@ function DevelopmentCard({ type, count, size }) {
   if (!resource) return null;
 
   return (
-    <div className="resourceCard">
+    <div
+      className={`resourceCard ${className || ""}`}
+      onClick={onClick}
+      style={{ cursor: onClick ? "pointer" : "default" }}
+    >
       <img
         src={resource.image}
         alt={resource.name}

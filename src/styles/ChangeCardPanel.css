@@ -300,3 +300,17 @@
 	padding: 0;
 	z-index: 10;
 }
+
+.devCardWrapper {
+	display: inline-block;
+	border-radius: 4px;
+	cursor: default;
+}
+
+.devCardWrapper.usable {
+	cursor: pointer;
+}
+
+.devCardWrapper.selected {
+	outline: 2px solid #000;
+}
