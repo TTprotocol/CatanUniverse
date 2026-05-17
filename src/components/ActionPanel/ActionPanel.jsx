@@ -4,7 +4,6 @@ import ChangeCardPanel from "../ChangeCardPanel/ChangeCardPanel";
 import ActionButton from "./ActionButton";
 import OwnCards from "./OwnCards";
 import rollDiceImg from "../../assets/dice/rollDice.png";
-import useGameStore from "../../features/state/gameStore";
 
 export default function ActionPanel({
     showChangePanel,
@@ -17,13 +16,9 @@ export default function ActionPanel({
     handleEndTurn,
     players,
 }) {
-    const currentPlayerIndex = useGameStore((state) => state.currentPlayerIndex);
-    const currentPlayer = players[currentPlayerIndex];
-    const myPlayerName = useGameStore((state) => state.myPlayerName);
-    const phase = useGameStore((state) => state.myPlayerName);
-    const isMyTurn = currentPlayer?.name === myPlayerName;
-    const isSetupPhase = phase === 'SETUP_SETTLEMENT' || phase === "SETUP_ROAD";
-    const shouldBlur = !isSetupPhase && !isMyTurn;
+
+
+
 
     return (
         <section className="actionPanel">
@@ -33,7 +28,7 @@ export default function ActionPanel({
                 <ChangeCardPanel onClose={handleExchange} />
             )}
 
-            <div className={`actions ${!shouldBlur ? "notMyTurn" : ""}`}>
+            <div className='actions'>
                 <ActionButton className="rollDice" onClick={handleRollDice}>
                     <img src={rollDiceImg} alt="주사위" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                 </ActionButton>
