@@ -1,33 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import ResourceCard from "../Card/ResourceCard";
 import DevelopmentCard from "../Card/DevelopmentCard";
+import useGameStore from "../../features/state/gameStore";
+import DevCardUsePanel from "./DevCardUsePanel";
 
 export default function OwnCards({ players = [] }) {
 	const me = Array.isArray(players) && players.length > 0 ? players[0] : null;
+	const phase = useGameStore((s) => s.phase);
+	const [selectedCardIndex, setSelectedCardIndex] = useState(null);
+
 	if (!me) return null;
 
 	const RESOURCE_TYPES = ["tree", "brick", "sheep", "wheat", "steel"];
-	const DEV_CARD_TYPES = [
-		"knight",
-		"victoryPoint",
-		"roadBuilding",
-		"yearOfPlenty",
-		"monopoly",
-	];
+	const DEV_CARD_TYPES = ["knight", "victoryPoint", "roadBuilding", "yearOfPlenty", "monopoly"];
 
-	// console.log("OwnCards me:", me);
+	const canUseCard = phase === "ACTION";
+
+	const handleCardClick = (index) => {
+		if (!canUseCard) return;
+		if (index === 1) return; // 승점 카드는 패시브
+		setSelectedCardIndex(index === selectedCardIndex ? null : index);
+	};
+
 	return (
 		<div className="ownCards">
 			<div className="ownResourceCard">
-				{(Array.isArray(me.resources) ? me.resources : []).map(
-					(count, index) =>
-						count > 0 ? (
-							<ResourceCard
-								key={RESOURCE_TYPES[index]}
-								type={RESOURCE_TYPES[index]}
-								count={count}
-							/>
-						) : null,
+				{(Array.isArray(me.resources) ? me.resources : []).map((count, index) =>
+					count > 0 ? (
+						<ResourceCard
+							key={RESOURCE_TYPES[index]}
+							type={RESOURCE_TYPES[index]}
+							count={count}
+						/>
+					) : null,
 				)}
 			</div>
 			<div className="borderStick"></div>
@@ -38,8 +43,17 @@ export default function OwnCards({ players = [] }) {
 							key={DEV_CARD_TYPES[index]}
 							type={DEV_CARD_TYPES[index]}
 							count={count}
+							onClick={() => handleCardClick(index)}
+							className={`${canUseCard && index !== 1 ? "usable" : ""} ${selectedCardIndex === index ? "selected" : ""}`}
 						/>
 					) : null,
+				)}
+
+				{selectedCardIndex !== null && (
+					<DevCardUsePanel
+						cardIndex={selectedCardIndex}
+						onClose={() => setSelectedCardIndex(null)}
+					/>
 				)}
 			</div>
 		</div>
